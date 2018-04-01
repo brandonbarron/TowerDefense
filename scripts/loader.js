@@ -3,48 +3,53 @@ Master = {
     components: {},
     renderer: {},
     utilities: {},
-    assets: {}
+    assets: {},
 };
+
 
 Master.loader = (function () {
     'use strict';
 
-<<<<<<< HEAD
-    let scriptOrder = [{
-        scripts: ['scripts/components/utility/input.js'],
-        message: 'input loaded',
+    let scriptOrder = [
+        {
+        scripts: ['scripts/components/utility/input.js', 'scripts/components/utility/objects.js'],
+        message: 'utility components loaded',
         onComplete: null,
-    }, {
-        scripts: ['scripts/renderer.js'],
-        message: 'renderer loaded',
-        onComplete: null,
-    }, {
+        },
+        {
         scripts: ['scripts/components/gameplay/game.js', 'scripts/components/gameplay/graphics.js',
             'scripts/components/gameplay/score.js'],
         message: 'game components loaded',
         onComplete: null
-    }, {
+        },
+        {
         scripts: ['scripts/components/menu/menu.js', 'scripts/components/menu/main.js',
             'scripts/components/menu/about.js', 'scripts/components/menu/screens.js',
             'scripts/components/menu/highscores.js', 'scripts/components/menu/newgame.js'],
         message: 'menu components loaded',
         onComplete: null,
-    },
+        },
     ],
-        assetOrder = [{
+    assetOrder = [
+        {
             key: 'player-self',
             source: 'assets/playerShip1_blue.png'
-        }, {
+        },
+        {
             key: 'player-other',
             source: 'assets/playerShip1_red.png'
-        }, {
+        },
+        {
             key: 'explosion',
             source: 'assets/explosion.png'
-        }];
-
+        },
+        {
+            key: 'background',
+            source: 'assets/grassBackground.jpg'
+        }
+    ];
+    
     function loadScripts(scripts, onComplete) {
-        //
-        // When we run out of things to load, that is when we call onComplete.
         if (scripts.length > 0) {
             let entry = scripts[0];
             require(entry.scripts, function () {
@@ -81,11 +86,10 @@ Master.loader = (function () {
         }
     }
 
-
     function loadAsset(source, onSuccess, onError) {
         let xhr = new XMLHttpRequest(),
             asset = null,
-            fileExtension = source.substr(source.lastIndexOf('.') + 1);    // Source: http://stackoverflow.com/questions/680929/how-to-extract-extension-from-filename-string-in-javascript
+            fileExtension = source.substr(source.lastIndexOf('.') + 1);
 
         if (fileExtension) {
             xhr.open('GET', source, true);
@@ -118,9 +122,6 @@ Master.loader = (function () {
 
     function mainComplete() { Master.menu.initialize() }
 
-    //
-    // Start with loading the assets, then the scripts.
-    console.log('Starting to dynamically load project assets');
     loadAssets(assetOrder,
         function (source, asset) {    // Store it on success
             Master.assets[source.key] = asset;
@@ -129,8 +130,7 @@ Master.loader = (function () {
             console.log(error);
         },
         function () {
-            console.log('All assets loaded');
-            console.log('Starting to dynamically load project scripts');
+            console.log('assets loaded');
             loadScripts(scriptOrder, mainComplete);
         }
     );
