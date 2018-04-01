@@ -1,0 +1,86 @@
+* {
+    padding: 0;
+    margin: 0 auto;
+}
+
+#game {
+    /* background: url('images/background.jpg'); */
+    background: blue;
+	width: 960px;
+	height: 640px;
+    font-size: 40px;
+}
+
+#game .screen {
+    /* padding-top: 5em; */
+	width: 100%;
+	height: 100%;
+	display: none;
+	z-index: 10;
+}
+
+#game .screen.active {
+	display: block;
+}
+
+#main-menu {
+    padding-top: 5em;
+	cursor: pointer;
+	font-size: 0.75em;
+}
+
+ul.menu {
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+ul.menu li {
+	margin-bottom: 0.8em;
+}
+
+ul.menu li button {
+	font-family: Arial, sans-serif;
+    font-size: 0.6em;
+	color: white;
+	width: 15em;
+    height: 1.5em;
+    background: transparent;
+	border: 0.1em solid lightgrey;
+}
+
+ul.menu li button:hover {
+    background: black;
+    color: white;
+}
+
+ul.menu li button:active {
+	color: #CECEF6;
+	background: rgb(0, 0, 0);
+}
+
+#high-scores, #about {
+	color: white;
+	padding-top: 3em;
+}
+
+#game div h1 {
+	/* font-size: 1em; */
+	text-align: center;
+}
+
+#high-scores ol {
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+#game div p {
+	font-size: 0.5em;
+}
+
+#about p {
+	text-align: center;
+}
