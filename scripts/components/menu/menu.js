@@ -1,7 +1,3 @@
-
-let Menu = {
-    screens: {},
-};
 Master.menu = (function(screens) {
 	'use strict';
 	
@@ -19,7 +15,6 @@ Master.menu = (function(screens) {
 
 	function initialize(socket) {
         let screen = null;
-        console.log('initalize screen');
 		for (screen in screens)
 			if (screens.hasOwnProperty(screen))
 				screens[screen].initialize();

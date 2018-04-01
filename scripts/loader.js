@@ -14,7 +14,8 @@ Master.loader = (function () {
         {
             scripts: [
                 'scripts/components/utility/input.js',
-                'scripts/components/utility/objects.js'
+                'scripts/components/utility/objects.js',
+                'scripts/components/utility/graphics.js',
             ],
             message: 'utility components loaded',
             onComplete: null,
@@ -24,8 +25,8 @@ Master.loader = (function () {
                 'scripts/components/gameplay/game.js',
                 'scripts/components/gameplay/particles.js',
                 'scripts/components/gameplay/graphics.js',
-                'scripts/components/gameplay/score.js',
                 'scripts/components/gameplay/spritemanager.js',
+                'scripts/components/gameplay/score.js',
             ],
             message: 'game components loaded',
             onComplete: null
