@@ -28,7 +28,7 @@ Master.loader = (function () {
         {
             scripts: ['scripts/components/menu/menu.js', 'scripts/components/menu/main.js',
                 'scripts/components/menu/about.js', 'scripts/components/menu/screens.js',
-                'scripts/components/menu/highscores.js'],
+                'scripts/components/menu/highscores.js', 'scripts/components/menu/newgame.js'],
             message: 'menu components loaded',
             onComplete: null,
         },
