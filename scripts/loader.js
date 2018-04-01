@@ -9,6 +9,7 @@ Master = {
 Master.loader = (function () {
     'use strict';
 
+<<<<<<< HEAD
     let scriptOrder = [{
         scripts: ['scripts/components/utility/input.js'],
         message: 'input loaded',
@@ -18,18 +19,17 @@ Master.loader = (function () {
         message: 'renderer loaded',
         onComplete: null,
     }, {
-        scripts: ['scripts/components/menu/menu.js', 'scripts/components/menu/main.js',
-            'scripts/components/menu/about.js', 'scripts/components/menu/screens.js',
-            'scripts/components/menu/highscores.js'],
-        message: 'menu components loaded',
-        onComplete: null,
-    }, {
         scripts: ['scripts/components/gameplay/game.js', 'scripts/components/gameplay/graphics.js',
             'scripts/components/gameplay/score.js'],
         message: 'game components loaded',
         onComplete: null
+    }, {
+        scripts: ['scripts/components/menu/menu.js', 'scripts/components/menu/main.js',
+            'scripts/components/menu/about.js', 'scripts/components/menu/screens.js',
+            'scripts/components/menu/highscores.js', 'scripts/components/menu/newgame.js'],
+        message: 'menu components loaded',
+        onComplete: null,
     },
-
     ],
         assetOrder = [{
             key: 'player-self',

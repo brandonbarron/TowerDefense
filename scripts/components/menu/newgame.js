@@ -1,4 +1,4 @@
-MyMenu.screens['new-game'] = (function (menu, input) {
+Menu.screens['new-game'] = (function (menu, input) {
 
     function initialize() { 
         Master.game.initialize(menu, input); 
