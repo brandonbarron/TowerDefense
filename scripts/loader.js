@@ -12,43 +12,56 @@ Master.loader = (function () {
 
     let scriptOrder = [
         {
-        scripts: ['scripts/components/utility/input.js', 'scripts/components/utility/objects.js'],
-        message: 'utility components loaded',
-        onComplete: null,
+            scripts: [
+                'scripts/components/utility/input.js',
+                'scripts/components/utility/objects.js'
+            ],
+            message: 'utility components loaded',
+            onComplete: null,
         },
         {
-        scripts: ['scripts/components/gameplay/game.js', 'scripts/components/gameplay/graphics.js',
-            'scripts/components/gameplay/score.js'],
-        message: 'game components loaded',
-        onComplete: null
+            scripts: [
+                'scripts/components/gameplay/game.js',
+                'scripts/components/gameplay/particles.js',
+                'scripts/components/gameplay/graphics.js',
+                'scripts/components/gameplay/score.js',
+                'scripts/components/gameplay/spritemanager.js',
+            ],
+            message: 'game components loaded',
+            onComplete: null
         },
         {
-        scripts: ['scripts/components/menu/menu.js', 'scripts/components/menu/main.js',
-            'scripts/components/menu/about.js', 'scripts/components/menu/screens.js',
-            'scripts/components/menu/highscores.js', 'scripts/components/menu/newgame.js'],
-        message: 'menu components loaded',
-        onComplete: null,
+            scripts: [
+                'scripts/components/menu/menu.js',
+                'scripts/components/menu/main.js',
+                'scripts/components/menu/about.js',
+                'scripts/components/menu/screens.js',
+                'scripts/components/menu/highscores.js',
+                'scripts/components/menu/newgame.js',
+            ],
+            message: 'menu components loaded',
+            onComplete: null,
         },
     ],
-    assetOrder = [
-        {
-            key: 'player-self',
-            source: 'assets/playerShip1_blue.png'
-        },
-        {
-            key: 'player-other',
-            source: 'assets/playerShip1_red.png'
-        },
-        {
-            key: 'explosion',
-            source: 'assets/explosion.png'
-        },
-        {
-            key: 'background',
-            source: 'assets/grassBackground.jpg'
-        }
-    ];
-    
+        assetOrder = [
+            {
+                key: 'player-self',
+                source: 'assets/playerShip1_blue.png'
+            },
+            {
+                key: 'player-other',
+                source: 'assets/playerShip1_red.png'
+            },
+            {
+                key: 'explosion',
+                source: 'assets/explosion.png'
+            },
+            {
+                key: 'background',
+                source: 'assets/grassBackground.jpg'
+            }
+        ];
+
     function loadScripts(scripts, onComplete) {
         if (scripts.length > 0) {
             let entry = scripts[0];
