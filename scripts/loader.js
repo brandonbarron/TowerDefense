@@ -9,27 +9,39 @@ Master = {
 Master.loader = (function () {
     'use strict';
 
-<<<<<<< HEAD
-    let scriptOrder = [{
-        scripts: ['scripts/components/utility/input.js'],
-        message: 'input loaded',
-        onComplete: null,
-    }, {
-        scripts: ['scripts/renderer.js'],
-        message: 'renderer loaded',
-        onComplete: null,
-    }, {
-        scripts: ['scripts/components/gameplay/game.js', 'scripts/components/gameplay/graphics.js',
-            'scripts/components/gameplay/score.js'],
-        message: 'game components loaded',
-        onComplete: null
-    }, {
-        scripts: ['scripts/components/menu/menu.js', 'scripts/components/menu/main.js',
-            'scripts/components/menu/about.js', 'scripts/components/menu/screens.js',
-            'scripts/components/menu/highscores.js', 'scripts/components/menu/newgame.js'],
-        message: 'menu components loaded',
-        onComplete: null,
-    },
+    let scriptOrder = [
+        {
+            scripts: ['scripts/components/utility/input.js'],
+            message: 'input loaded',
+            onComplete: null,
+        },
+        {
+            scripts: ['scripts/renderer.js'],
+            message: 'renderer loaded',
+            onComplete: null,
+        },
+        {
+            scripts: [
+                'scripts/components/gameplay/game.js',
+                'scripts/components/gameplay/particles.js',
+                'scripts/components/gameplay/graphics.js',
+                'scripts/components/gameplay/spritemanager.js',
+            ],
+            message: 'game components loaded',
+            onComplete: null
+        },
+        {
+            scripts: [
+                'scripts/components/menu/menu.js', 
+                'scripts/components/menu/main.js',
+                'scripts/components/menu/about.js', 
+                'scripts/components/menu/screens.js',
+                'scripts/components/menu/highscores.js', 'scripts/components/menu/newgame.js',
+            ],
+            message: 'menu components loaded',
+            onComplete: null,
+        },
+
     ],
         assetOrder = [{
             key: 'player-self',
@@ -42,6 +54,18 @@ Master.loader = (function () {
             source: 'assets/explosion.png'
         }];
 
+    //------------------------------------------------------------------
+    //
+    // Helper function used to load scripts in the order specified by the
+    // 'scripts' parameter.  'scripts' expects an array of objects with
+    // the following format...
+    //    {
+    //        scripts: [script1, script2, ...],
+    //        message: 'Console message displayed after loading is complete',
+    //        onComplete: function to call when loading is complete, may be null
+    //    }
+    //
+    //------------------------------------------------------------------
     function loadScripts(scripts, onComplete) {
         //
         // When we run out of things to load, that is when we call onComplete.
@@ -60,6 +84,21 @@ Master.loader = (function () {
         }
     }
 
+    //------------------------------------------------------------------
+    //
+    // Helper function used to load assets in the order specified by the
+    // 'assets' parameter.  'assets' expects an array of objects with
+    // the following format...
+    //    {
+    //        key: 'asset-1',
+    //        source: 'assets/url/asset.png'
+    //    }
+    //
+    // onSuccess is invoked per asset as: onSuccess(key, asset)
+    // onError is invoked per asset as: onError(error)
+    // onComplete is invoked once per 'assets' array as: onComplete()
+    //
+    //------------------------------------------------------------------
     function loadAssets(assets, onSuccess, onError, onComplete) {
         //
         // When we run out of things to load, that is when we call onComplete.
@@ -81,7 +120,13 @@ Master.loader = (function () {
         }
     }
 
-
+    //------------------------------------------------------------------
+    //
+    // This function is used to asynchronously load image and audio assets.
+    // On success the asset is provided through the onSuccess callback.
+    // Reference: http://www.html5rocks.com/en/tutorials/file/xhr2/
+    //
+    //------------------------------------------------------------------
     function loadAsset(source, onSuccess, onError) {
         let xhr = new XMLHttpRequest(),
             asset = null,
@@ -116,7 +161,16 @@ Master.loader = (function () {
         xhr.send();
     }
 
-    function mainComplete() { Master.menu.initialize() }
+    //------------------------------------------------------------------
+    //
+    // Called when all the scripts are loaded, it kicks off the demo app.
+    //
+    //------------------------------------------------------------------
+    function mainComplete() {
+        console.log('it is all loaded up');
+        //MyGame.main.initialize();
+        Master.menu.initialize()
+    }
 
     //
     // Start with loading the assets, then the scripts.

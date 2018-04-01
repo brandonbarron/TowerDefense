@@ -2,6 +2,7 @@ let http = require('http'),
     path = require('path'),
     fs = require('fs');
     // game = require('./scripts/components/menu/menu');
+    score = require('./scripts/server/scores');
 
 let mimeTypes = {
         '.js' : 'text/javascript',
@@ -39,7 +40,7 @@ let server = http.createServer(handleRequest);
 
 server.listen(3000, function() {
     //game.initialize(server);
-    
+    score.initialize(server);
     //console.log(game.game);
     //MyGame.game({screens: {}})
     //MyGame.game.initialize(server)
