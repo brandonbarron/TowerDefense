@@ -4,8 +4,7 @@
 }
 
 #game {
-    /* background: url('images/background.jpg'); */
-    background: blue;
+    background: url('images/grassBackground.jpg');
 	width: 960px;
 	height: 640px;
     font-size: 40px;

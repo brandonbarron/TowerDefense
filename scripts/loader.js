@@ -1,4 +1,4 @@
-MyGame = {
+Master = {
     input: {},
     components: {},
     renderer: {},
@@ -6,94 +6,34 @@ MyGame = {
     assets: {}
 };
 
-//------------------------------------------------------------------
-//
-// Purpose of this code is to bootstrap (maybe I should use that as the name)
-// the rest of the application.  Only this file is specified in the index.html
-// file, then the code in this file gets all the other code and assets
-// loaded.
-//
-//------------------------------------------------------------------
-MyGame.loader = (function() {
+Master.loader = (function () {
     'use strict';
-    /*let scriptOrder = [
-        {
-            scripts: ['../shared/network-ids'],
-            message: 'Network Ids loaded',
-            onComplete: null,
-        }, {
-            scripts: ['../shared/queue'],
-            message: 'Utilities loaded',
-            onComplete: null,
-        }, {
-            scripts: ['input'],
-            message: 'Input loaded',
-            onComplete: null
-        }, {
-            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite'],
-            message: 'Player models loaded',
-            onComplete: null
-        }, {
-            scripts: ['rendering/graphics'],
-            message: 'Graphics loaded',
-            onComplete: null
-        }, {
-            scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite'],
-            message: 'Renderers loaded',
-            onComplete: null
-        }, {
-            scripts: ['game'],
-            message: 'Gameplay model loaded',
-            onComplete: null
-        }],
-        assetOrder = [{
-            key: 'player-self',
-            source: 'assets/playerShip1_blue.png'
-        }, {
-            key: 'player-other',
-            source: 'assets/playerShip1_red.png'
-        }, {
-            key: 'explosion',
-            source: 'assets/explosion.png'
-        }];*/
 
-        let scriptOrder = [
-            {
-                scripts: ['scripts/input.js'],
-                message: 'input loaded',
-                onComplete: null,
-            },
-            {
-                scripts: ['scripts/renderer.js'],
-                message: 'renderer loaded',
-                onComplete: null,
-            },
-            {
-                scripts: ['scripts/game.js'],
-                message: 'game loaded',
-                onComplete: null,
-            },
-            {
-                scripts: ['scripts/mainmenu.js'],
-                message: 'mainmenu loaded',
-                onComplete: null,
-            },
-            {
-                scripts: ['scripts/gameplay.js'],
-                message: 'gameplay loaded',
-                onComplete: null,
-            },
-            {
-                scripts: ['scripts/highscores.js'],
-                message: 'highscores loaded',
-                onComplete: null,
-            },
-            {
-                scripts: ['scripts/about.js'],
-                message: 'about loaded',
-                onComplete: null,
-            },
-        ],
+    let scriptOrder = [
+        {
+            scripts: ['scripts/components/utility/input.js'],
+            message: 'input loaded',
+            onComplete: null,
+        },
+        {
+            scripts: ['scripts/renderer.js'],
+            message: 'renderer loaded',
+            onComplete: null,
+        },
+        {
+            scripts: ['scripts/components/gameplay/game.js'],
+            message: 'game components loaded',
+            onComplete: null
+        },
+        {
+            scripts: ['scripts/components/menu/menu.js', 'scripts/components/menu/main.js',
+                'scripts/components/menu/about.js', 'scripts/components/menu/screens.js',
+                'scripts/components/menu/highscores.js'],
+            message: 'menu components loaded',
+            onComplete: null,
+        },
+
+    ],
         assetOrder = [{
             key: 'player-self',
             source: 'assets/playerShip1_blue.png'
@@ -122,7 +62,7 @@ MyGame.loader = (function() {
         // When we run out of things to load, that is when we call onComplete.
         if (scripts.length > 0) {
             let entry = scripts[0];
-            require(entry.scripts, function() {
+            require(entry.scripts, function () {
                 console.log(entry.message);
                 if (entry.onComplete) {
                     entry.onComplete();
@@ -156,12 +96,12 @@ MyGame.loader = (function() {
         if (assets.length > 0) {
             let entry = assets[0];
             loadAsset(entry.source,
-                function(asset) {
+                function (asset) {
                     onSuccess(entry, asset);
                     assets.splice(0, 1);
                     loadAssets(assets, onSuccess, onError, onComplete);
                 },
-                function(error) {
+                function (error) {
                     onError(error);
                     assets.splice(0, 1);
                     loadAssets(assets, onSuccess, onError, onComplete);
@@ -179,7 +119,7 @@ MyGame.loader = (function() {
     //
     //------------------------------------------------------------------
     function loadAsset(source, onSuccess, onError) {
-    	let xhr = new XMLHttpRequest(),
+        let xhr = new XMLHttpRequest(),
             asset = null,
             fileExtension = source.substr(source.lastIndexOf('.') + 1);    // Source: http://stackoverflow.com/questions/680929/how-to-extract-extension-from-filename-string-in-javascript
 
@@ -187,7 +127,7 @@ MyGame.loader = (function() {
             xhr.open('GET', source, true);
             xhr.responseType = 'blob';
 
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     if (fileExtension === 'png' || fileExtension === 'jpg') {
                         asset = new Image();
@@ -196,7 +136,7 @@ MyGame.loader = (function() {
                     } else {
                         if (onError) { onError('Unknown file extension: ' + fileExtension); }
                     }
-                    asset.onload = function() {
+                    asset.onload = function () {
                         window.URL.revokeObjectURL(asset.src);
                     };
                     asset.src = window.URL.createObjectURL(xhr.response);
@@ -220,20 +160,20 @@ MyGame.loader = (function() {
     function mainComplete() {
         console.log('it is all loaded up');
         //MyGame.main.initialize();
-        MyGame.game.initialize()
+        Master.menu.initialize()
     }
 
     //
     // Start with loading the assets, then the scripts.
     console.log('Starting to dynamically load project assets');
     loadAssets(assetOrder,
-        function(source, asset) {    // Store it on success
-            MyGame.assets[source.key] = asset;
+        function (source, asset) {    // Store it on success
+            Master.assets[source.key] = asset;
         },
-        function(error) {
+        function (error) {
             console.log(error);
         },
-        function() {
+        function () {
             console.log('All assets loaded');
             console.log('Starting to dynamically load project scripts');
             loadScripts(scriptOrder, mainComplete);
