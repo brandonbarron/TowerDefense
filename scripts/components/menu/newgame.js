@@ -1,11 +1,11 @@
 Menu.screens['new-game'] = (function (menu, input) {
 
     function initialize() { 
-        Master.game.initialize(menu, input); 
+        Game.game.initialize(menu, input); 
      }
 
     function run() {
-        Master.game.run();
+        Game.game.run();
     }
 
     return {

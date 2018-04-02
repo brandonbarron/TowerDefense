@@ -50,7 +50,7 @@ Game.graphics = (function () {
 
     that.drawBackground = function () {
         context.save();
-        context.drawImage(image, 0, 0);
+        context.drawImage(image, 0, 0, 1280, 720);
         context.restore();
     }
 

@@ -1,2 +1,2 @@
 Menu = { screens: {} };
-Game = { graphics: {} };
+Game = { game: {}, graphics: {} };

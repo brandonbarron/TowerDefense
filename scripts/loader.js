@@ -22,11 +22,11 @@ Master.loader = (function () {
         },
         {
             scripts: [
-                'scripts/components/gameplay/game.js',
-                'scripts/components/gameplay/particles.js',
                 'scripts/components/gameplay/graphics.js',
+                'scripts/components/gameplay/particles.js',
                 'scripts/components/gameplay/spritemanager.js',
                 'scripts/components/gameplay/score.js',
+                'scripts/components/gameplay/game.js',
             ],
             message: 'game components loaded',
             onComplete: null
