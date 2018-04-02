@@ -10,7 +10,7 @@
 // }
 //
 //------------------------------------------------------------------
-Master.spriteManager = function (spec) {
+Game.spriteManager = function (spec) {
     'use strict';
 
     let that = {};

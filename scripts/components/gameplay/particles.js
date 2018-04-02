@@ -3,7 +3,7 @@
 // //
 // // ------------------------------------------------------------------
 
-Master.particles = (function (spec) {
+Game.particles = (function (spec) {
 	'use strict';
 
 	var canvas = document.getElementById('canvas-main'),
