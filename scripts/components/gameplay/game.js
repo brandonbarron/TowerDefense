@@ -1,5 +1,6 @@
 Game.game = ( function (menu, input) {
     
+<<<<<<< HEAD
     let that = {},
         _graphics = Game.graphics,
         _keyboard = input.Keyboard(),
@@ -9,6 +10,19 @@ Game.game = ( function (menu, input) {
     
     function update() { 
         _keyboard.update();
+=======
+    //game components
+    let that = {}, playingGame,
+        lastTimeStamp = performance.now();
+
+
+    //variables
+    let _graphics = Game.graphics,
+        _keyboard = input.Keyboard();
+    
+    function update(elapsedTime) { 
+        _keyboard.update(elapsedTime);
+>>>>>>> 0f7ac9d80c7473fba30bff9ad82f175153974542
     }
 
     function render() { 
@@ -28,7 +42,8 @@ Game.game = ( function (menu, input) {
             _graphics.clear();
             return;
         }
-        update();
+        update(curTime - lastTimeStamp, curTime);
+        lastTimeStamp = curTime;
         render();
 
         if (!cancelNextRequest) {
@@ -55,11 +70,11 @@ Game.game = ( function (menu, input) {
             _menu.showScreen('main-menu');
         });
         _keyboard.registerCommand(KeyEvent.DOM_VK_RIGHT, function () {
-            _paddle.move('right');
+            // _paddle.move('right');
         });
 
         _keyboard.registerCommand(KeyEvent.DOM_VK_LEFT, function () {
-            _paddle.move('left');
+            // _paddle.move('left');
         });
     }
 

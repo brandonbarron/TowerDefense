@@ -134,7 +134,7 @@ Master.loader = (function () {
         xhr.send();
     }
 
-    function mainComplete() { Master.menu.initialize() }
+    function mainComplete() { Menu.menu.initialize() }
 
     loadAssets(assetOrder,
         function (source, asset) {    // Store it on success

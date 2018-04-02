@@ -13,4 +13,4 @@ Menu.screens['about'] = (function(menu) {
 		initialize : initialize,
 		run : run
 	};
-}(Master.menu));
+}(Menu.menu));

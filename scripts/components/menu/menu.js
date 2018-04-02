@@ -1,5 +1,7 @@
-Master.menu = (function(screens) {
+Menu.menu = (function() {
 	'use strict';
+
+	let _screens = Menu.screens;
 	
 	function showScreen(id) {
 		let screen = 0;
@@ -9,15 +11,15 @@ Master.menu = (function(screens) {
 		for (screen = 0; screen < active.length; screen++)
 			active[screen].classList.remove('active');
 
-		screens[id].run();
+		_screens[id].run();
 		document.getElementById(id).classList.add('active');
 	}
 
 	function initialize(socket) {
         let screen = null;
-		for (screen in screens)
-			if (screens.hasOwnProperty(screen))
-				screens[screen].initialize();
+		for (screen in _screens)
+			if (_screens.hasOwnProperty(screen))
+				_screens[screen].initialize();
 
 		showScreen('main-menu');
 	}
@@ -26,4 +28,4 @@ Master.menu = (function(screens) {
 		initialize : initialize,
 		showScreen : showScreen
 	};
-}(Menu.screens));
+}());
