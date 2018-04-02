@@ -2,7 +2,7 @@ Game.score = (function (graphics) {
     let that = {}, curScore, remainingLives,
         canvas, context;
 
-    initialize = function () {
+    that.initialize = function () {
         // canvas = document.getElementById('canvas-main');
         // context = canvas.getContext('2d');
 
@@ -18,7 +18,7 @@ Game.score = (function (graphics) {
         // this.remainingLives = 3;
     }
 
-    draw = function () {
+    that.draw = function () {
 
         // for (let i = 0; i < this.remainingLives; i++)
         //     graphics.drawRectangle({ x: i * 30, y: 635 }, { width: 25, height: 8 }, 'red');

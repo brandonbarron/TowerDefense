@@ -5,6 +5,7 @@ Menu.screens['new-game'] = (function (menu, input) {
      }
 
     function run() {
+        Game.game.initialize(menu, input); //needs to be called when user crreates second game
         Game.game.run();
     }
 
