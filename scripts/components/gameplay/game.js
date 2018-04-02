@@ -1,22 +1,26 @@
 Game.game = ( function (input) {
     
     //game components
-    let that = {}, playingGame, image,
+    let that = {}, 
+        playingGame, 
+        image, 
         lastTimeStamp = performance.now();
 
 
     //variables
     let _graphics = Game.graphics,
+        _spriteManager = Game.spriteManager,
         _keyboard;
     
     function update(elapsedTime) { 
         _keyboard.update(elapsedTime);
+        _spriteManager.update(elapsedTime);
     }
 
     function render() { 
         _graphics.clear();
         _graphics.drawImage({image: image, x: 0, y: 0, w: 1280, h: 720});
-
+        _spriteManager.render();
     }
     
     function gameLoop (curTime) {
@@ -35,7 +39,8 @@ Game.game = ( function (input) {
         _keyboard = Master.input.Keyboard();
         registerKeyCommands();
         _graphics.initialize();
-
+        _spriteManager = Game.spriteManager;//TODO: why is it always undefined unless I assign it here?
+        _spriteManager.addTestSprite();
         image = new Image();
         image.onload = function () { ready = true; };
         image.src = "assets/grassBackground.jpg";

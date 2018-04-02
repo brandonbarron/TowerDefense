@@ -10,7 +10,7 @@
 // }
 //
 //------------------------------------------------------------------
-Game.spriteManager = function (spec) {
+Game.spriteManager = function (graphics) {
     'use strict';
 
     let that = {};
@@ -73,6 +73,14 @@ Game.spriteManager = function (spec) {
 			spec.center.x -= (vectorX * spec.moveRate * elapsedTime);
 			spec.center.y -= (vectorY * spec.moveRate * elapsedTime);
 		};
+
+		that.getLoc = function() {
+			return {
+				x: spec.center.x,
+				y: spec.center.y,
+				rotation: spec.rotation
+			}
+		};
 		
 		return that;
 	}
@@ -134,12 +142,22 @@ Game.spriteManager = function (spec) {
 		};
 		
 		return that;
-    }
+	}
+	
+	function updateLoc(sprite) {
+		let loc = sprite.getLoc();
+		if(loc.x < 200) {
+			sprite.rotateRight();
+		}/* else {
+			sprite.moveForward();
+		}*/
+	};
     
-    that.update = function() {
+    that.update = function(elapsedTime) {
         for(let i = 0; i < allSprites.length; i++) {
-            allSprites[i].update();
-        }
+			updateLoc(allSprites[i]);
+            allSprites[i].update(elapsedTime);
+		}
     };
 
     that.render = function() {
@@ -154,7 +172,20 @@ Game.spriteManager = function (spec) {
     
     that.addSprite = function(spec) {
         allSprites.push(AnimatedModel(spec));
-    };
+	};
+	
+	that.addTestSprite = function() {
+		allSprites.push(AnimatedModel({
+			spriteSheet : 'assets/creep1-blue.png',
+			spriteCount : 6,
+			spriteTime : [1000, 200, 100, 1000, 100, 200],	// milliseconds per sprite animation frame
+			center : { x : 23, y : 23 },
+			rotation : 0,
+			orientation : 0,				// Sprite orientation with respect to "forward"
+			moveRate : 200 / 1000000000,			// pixels per millisecond
+			rotateRate : 3.14159 / 1000		// Radians per millisecond
+		}));
+	};
 
 	return that;
 }(Master.graphics);

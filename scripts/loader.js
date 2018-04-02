@@ -60,7 +60,11 @@ Master.loader = (function () {
             {
                 key: 'background',
                 source: 'assets/grassBackground.jpg'
-            }
+            },
+            {
+                key: 'creep1',
+                source: 'assets/creep1-blue.png'
+            },
         ];
 
     function loadScripts(scripts, onComplete) {
