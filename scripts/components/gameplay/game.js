@@ -1,16 +1,5 @@
 Game.game = ( function (menu, input) {
     
-<<<<<<< HEAD
-    let that = {},
-        _graphics = Game.graphics,
-        _keyboard = input.Keyboard(),
-        playingGame,
-        cancelNextRequest = false;
-    let _menu = menu;//TODO: somehow the menu is undefined it is assigned to later in initialize
-    
-    function update() { 
-        _keyboard.update();
-=======
     //game components
     let that = {}, playingGame,
         lastTimeStamp = performance.now();
@@ -22,7 +11,6 @@ Game.game = ( function (menu, input) {
     
     function update(elapsedTime) { 
         _keyboard.update(elapsedTime);
->>>>>>> 0f7ac9d80c7473fba30bff9ad82f175153974542
     }
 
     function render() { 
