@@ -13,4 +13,4 @@ Menu.screens['new-game'] = (function (menu, input) {
         run: run
     };
 
-}(Master.menu, Master.input));
+}(Menu.menu, Master.input));

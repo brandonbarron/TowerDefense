@@ -30,4 +30,4 @@ Menu.screens['high-scores'] = (function(menu) {
 		initialize : initialize,
 		run : run
 	};
-}(Master.menu));
+}(Menu.menu));

@@ -22,4 +22,4 @@ Menu.screens['main-menu'] = (function(menu) {
 		initialize : initialize,
 		run : run
 	};
-}(Master.menu));
+}(Menu.menu));

@@ -1,11 +1,17 @@
 Game.game = ( function (menu, input) {
     
-    let that = {},
-        _graphics = Game.graphics,
-        _keyboard = input.Keyboard(),
-        playingGame;
+    //game components
+    let that = {}, playingGame,
+        lastTimeStamp = performance.now();
+
+
+    //variables
+    let _graphics = Game.graphics,
+        _keyboard = input.Keyboard();
     
-    function update() { }
+    function update(elapsedTime) { 
+        _keyboard.update(elapsedTime);
+    }
 
     function render() { 
         _graphics.clear();
@@ -24,7 +30,8 @@ Game.game = ( function (menu, input) {
             _graphics.clear();
             return;
         }
-        update();
+        update(curTime - lastTimeStamp, curTime);
+        lastTimeStamp = curTime;
         render();
         requestAnimationFrame(gameLoop);
     }
@@ -46,11 +53,11 @@ Game.game = ( function (menu, input) {
             menu.showScreen('main-menu');
         });
         _keyboard.registerCommand(KeyEvent.DOM_VK_RIGHT, function () {
-            _paddle.move('right');
+            // _paddle.move('right');
         });
 
         _keyboard.registerCommand(KeyEvent.DOM_VK_LEFT, function () {
-            _paddle.move('left');
+            // _paddle.move('left');
         });
     }
 

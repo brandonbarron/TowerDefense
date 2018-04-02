@@ -1,2 +1,2 @@
-Menu = { screens: {} };
+Menu = { menu: {}, screens: {} };
 Game = { game: {}, graphics: {} };
