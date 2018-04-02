@@ -1,14 +1,10 @@
 Game.graphics = (function () {
-    let canvas, context, image;
+    let canvas, context;
     let that = { };
 
     that.initialize = function () {
         canvas = document.getElementById('canvas-main');
         context = canvas.getContext('2d');
-        
-        image = new Image();
-        image.onload = function () { ready = true; };
-        image.src = "assets/grassBackground.jpg";
     }
 
     CanvasRenderingContext2D.prototype.clear = function () {
@@ -48,9 +44,9 @@ Game.graphics = (function () {
         context.restore();
     }
 
-    that.drawBackground = function () {
+    that.drawImage = function (spec) {
         context.save();
-        context.drawImage(image, 0, 0, 1280, 720);
+        context.drawImage(spec.image, spec.x, spec.y, spec.w, spec.h);
         context.restore();
     }
 

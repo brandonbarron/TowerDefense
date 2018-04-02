@@ -1,13 +1,13 @@
-Game.game = ( function (menu, input) {
+Game.game = ( function (input) {
     
     //game components
-    let that = {}, playingGame,
+    let that = {}, playingGame, image,
         lastTimeStamp = performance.now();
 
 
     //variables
     let _graphics = Game.graphics,
-        _keyboard = input.Keyboard();
+        _keyboard;
     
     function update(elapsedTime) { 
         _keyboard.update(elapsedTime);
@@ -15,19 +15,13 @@ Game.game = ( function (menu, input) {
 
     function render() { 
         _graphics.clear();
-        _graphics.drawBackground();
+        _graphics.drawImage({image: image, x: 0, y: 0, w: 1280, h: 720});
 
-        // graphics.drawText(
-        //     { x: 240, y: 639 },
-        //     'Score: ' + this.curScore,
-        //     'black',
-        //     '12px Arial'
-        // );
     }
     
     function gameLoop (curTime) {
         if (!playingGame) {
-            _graphics.clear();
+            reset();
             return;
         }
         update(curTime - lastTimeStamp, curTime);
@@ -38,8 +32,13 @@ Game.game = ( function (menu, input) {
     
     that.initialize = function() {
         playingGame = true;
+        _keyboard = Master.input.Keyboard();
         registerKeyCommands();
         _graphics.initialize();
+
+        image = new Image();
+        image.onload = function () { ready = true; };
+        image.src = "assets/grassBackground.jpg";
     }
 
     that.run = function() { requestAnimationFrame(gameLoop); }
@@ -50,7 +49,7 @@ Game.game = ( function (menu, input) {
         _keyboard.registerCommand(KeyEvent.DOM_VK_ESCAPE, function () {
             playingGame = false;
             // cancelNextRequest = true;
-            menu.showScreen('main-menu');
+            Menu.menu.showScreen('main-menu');
         });
         _keyboard.registerCommand(KeyEvent.DOM_VK_RIGHT, function () {
             // _paddle.move('right');
@@ -61,5 +60,9 @@ Game.game = ( function (menu, input) {
         });
     }
 
+    function reset() {
+        _graphics.clear();
+        playingGame = true;
+    }
 
-}(Master.menu, Master.input)); 
+}(Master.input)); 
