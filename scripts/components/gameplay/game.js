@@ -5,22 +5,26 @@ Game.game = ( function (input) {
         playingGame, 
         image, 
         lastTimeStamp = performance.now();
-
+    
 
     //variables
     let _graphics = Game.graphics,
         _spriteManager = Game.spriteManager,
+        _turretManager = Game.turretManager,
         _keyboard;
     
     function update(elapsedTime) { 
         _keyboard.update(elapsedTime);
         _spriteManager.update(elapsedTime);
+        _turretManager.update(elapsedTime);
     }
 
     function render() { 
-        _graphics.clear();
-        _graphics.drawImage({image: image, x: 0, y: 0, w: 1280, h: 720});
+        _graphics.Tools().clear();
+        _graphics.Tools().drawImage({image: image, x: 0, y: 0, w: 1280, h: 720});
         _spriteManager.render();
+        _turretManager.render();
+        
     }
     
     function gameLoop (curTime) {
@@ -38,12 +42,18 @@ Game.game = ( function (input) {
         playingGame = true;
         _keyboard = Master.input.Keyboard();
         registerKeyCommands();
-        _graphics.initialize();
+        //_graphics.initialize();
         _spriteManager = Game.spriteManager;//TODO: why is it always undefined unless I assign it here?
         _spriteManager.addTestSprite();
+
+        _turretManager = Game.turretManager;
+        _turretManager.addTestTurret();
+        
         image = new Image();
         image.onload = function () { ready = true; };
         image.src = "assets/grassBackground.jpg";
+        
+        
     }
 
     that.run = function() { requestAnimationFrame(gameLoop); }
@@ -53,7 +63,6 @@ Game.game = ( function (input) {
     function registerKeyCommands() {
         _keyboard.registerCommand(KeyEvent.DOM_VK_ESCAPE, function () {
             playingGame = false;
-            // cancelNextRequest = true;
             Menu.menu.showScreen('main-menu');
         });
         _keyboard.registerCommand(KeyEvent.DOM_VK_RIGHT, function () {
@@ -66,7 +75,9 @@ Game.game = ( function (input) {
     }
 
     function reset() {
-        _graphics.clear();
+        _graphics.Tools().clear();
+        _spriteManager.reset();
+        _turretManager.reset();
         playingGame = true;
     }
 

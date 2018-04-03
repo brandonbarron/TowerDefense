@@ -23,8 +23,8 @@ Game.spriteManager = function (graphics) {
 	//
 	//------------------------------------------------------------------
 	function AnimatedModel(spec) {
-		var that = {},
-			sprite = graphics.SpriteSheet(spec);	// We contain a SpriteSheet, not inherited from, big difference
+		var that = {};
+		let sprite = graphics.SpriteSheet(spec);	// We contain a SpriteSheet, not inherited from, big difference
         
 		that.update = function(elapsedTime) {
 			sprite.update(elapsedTime);
@@ -54,6 +54,7 @@ Game.spriteManager = function (graphics) {
 				vectorY = Math.sin(spec.rotation + spec.orientation);
 			//
 			// With the normalized direction vector, move the center of the sprite
+			//console.log(spec, 'spec');
 			spec.center.x += (vectorX * spec.moveRate * elapsedTime);
 			spec.center.y += (vectorY * spec.moveRate * elapsedTime);
 		};
@@ -144,18 +145,22 @@ Game.spriteManager = function (graphics) {
 		return that;
 	}
 	
-	function updateLoc(sprite) {
+	function updateLoc(sprite, elapsedTime) {
 		let loc = sprite.getLoc();
 		if(loc.x < 200) {
-			sprite.rotateRight();
-		}/* else {
-			sprite.moveForward();
-		}*/
+			sprite.moveForward(elapsedTime);
+		} else if(loc.rotation < 1.57)  {
+			//sprite.moveForward();
+			sprite.rotateRight(elapsedTime);
+			sprite.rotateRight(elapsedTime+50);
+		} else if(loc.y < 200) {
+			sprite.moveForward(elapsedTime);
+		}
 	};
     
     that.update = function(elapsedTime) {
         for(let i = 0; i < allSprites.length; i++) {
-			updateLoc(allSprites[i]);
+			updateLoc(allSprites[i], elapsedTime);
             allSprites[i].update(elapsedTime);
 		}
     };
@@ -178,14 +183,19 @@ Game.spriteManager = function (graphics) {
 		allSprites.push(AnimatedModel({
 			spriteSheet : 'assets/creep1-blue.png',
 			spriteCount : 6,
+			sprite: 0,
 			spriteTime : [1000, 200, 100, 1000, 100, 200],	// milliseconds per sprite animation frame
 			center : { x : 23, y : 23 },
 			rotation : 0,
 			orientation : 0,				// Sprite orientation with respect to "forward"
-			moveRate : 200 / 1000000000,			// pixels per millisecond
+			moveRate : 200 / 10000,			// pixels per millisecond
 			rotateRate : 3.14159 / 1000		// Radians per millisecond
 		}));
 	};
 
+	that.reset = function() {
+		allSprites.length = 0;
+	};
+
 	return that;
-}(Master.graphics);
+}(Game.graphics);

@@ -1,4 +1,4 @@
-Master.graphics = (function() {
+/*Master.graphics = (function() {
     let canvas = document.getElementById('canvas-main'),
         context = canvas.getContext('2d');
 
@@ -16,7 +16,7 @@ Master.graphics = (function() {
 	// Provides rendering support for a sprite animated from a sprite sheet.
 	//
 	//------------------------------------------------------------------
-	function SpriteSheet(spec) {
+	/*function SpriteSheet(spec) {
 		var that = {},
 			image = new Image();
 
@@ -101,10 +101,10 @@ Master.graphics = (function() {
 		};
 
 		return that;
-	}
+	}*/
 
-    return {
+    /*return {
         clear : clear,
-        SpriteSheet : SpriteSheet
+        //SpriteSheet : SpriteSheet
     };
-}());
+}());*/

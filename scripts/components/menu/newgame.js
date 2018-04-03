@@ -7,6 +7,7 @@ Menu.screens['new-game'] = (function (menu, input) {
      }
 
     function run() {
+        _game.initialize(input);//we need to call this again if the user quits then returns later
         _game.run();
     }
 

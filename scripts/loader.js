@@ -25,6 +25,7 @@ Master.loader = (function () {
                 'scripts/components/gameplay/graphics.js',
                 'scripts/components/gameplay/particles.js',
                 'scripts/components/gameplay/spritemanager.js',
+                'scripts/components/gameplay/turretManager.js',
                 'scripts/components/gameplay/score.js',
                 'scripts/components/gameplay/game.js',
             ],
@@ -64,6 +65,22 @@ Master.loader = (function () {
             {
                 key: 'creep1',
                 source: 'assets/creep1-blue.png'
+            },
+            {
+                key: 'turret-1-1',
+                source: 'assets/turret-1-1.png'
+            },
+            {
+                key: 'turret-1-2',
+                source: 'assets/turret-1-2.png'
+            },
+            {
+                key: 'turret-1-3',
+                source: 'assets/turret-1-3.png'
+            },
+            {
+                key: 'turret-base',
+                source: 'assets/turret-base.png'
             },
         ];
 
