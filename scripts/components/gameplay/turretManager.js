@@ -1,8 +1,9 @@
-Game.turretManager = function (graphics) {
+Game.turretManager = function (graphics, missileManager) {
 	'use strict';
 
 	let that = {};
 	let allTurrets = [];
+	let nextMissileId = 1;
 
 	function AnimatedModel(spec) {
 		var that = {};
@@ -18,14 +19,36 @@ Game.turretManager = function (graphics) {
 				}
 			);	// We contain a SpriteSheet, not inherited from, big difference
 
+		let demoTime = 1000;
+		let totalTime = 0;
 		that.update = function (elapsedTime) {
 			baseSprite.update(elapsedTime);
-
 			sprite.update(elapsedTime);
+			
+			let radius = 4.0;
+			let speed = 0.1;
+			let timeRemaining = 1500;
+
+			totalTime += elapsedTime;
+			if(totalTime > demoTime) {
+				//console.log('shooting');
+				missileNew({
+					id: nextMissileId++,
+            		radius: radius,
+            		speed: speed,
+            		direction: spec.rotation,
+            		position: {
+                		x: spec.center.x,
+                		y: spec.center.y
+            		},
+            		timeRemaining: timeRemaining
+				});
+				demoTime += 750;
+			}
 		};
 
 		that.render = function () {
-			//graphics.Tools().drawImage({image: baseImg, x: 0, y: 0, w: 40, h: 40});
+			//graphics.drawImage({image: baseImg, x: 0, y: 0, w: 40, h: 40});
 			//baseSprite.draw();
 			baseSprite.draw();
 			sprite.draw();
@@ -46,6 +69,10 @@ Game.turretManager = function (graphics) {
 				rotation: spec.rotation
 			}
 		};
+
+		function missileNew(data) {
+			missileManager.addMissile(data);
+		}
 
 		return that;
 	}
@@ -81,9 +108,11 @@ Game.turretManager = function (graphics) {
 		}));
 	};
 
+	
+
 	that.reset = function () {
 		allTurrets.length = 0;
 	};
 
 	return that;
-}(Game.graphics);
+}(Game.graphics, Game.missileManager);

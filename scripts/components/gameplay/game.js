@@ -11,20 +11,22 @@ Game.game = ( function (input) {
     let _graphics = Game.graphics,
         _spriteManager = Game.spriteManager,
         _turretManager = Game.turretManager,
+        _missileManager = Game.missileManager,
         _keyboard;
     
     function update(elapsedTime) { 
         _keyboard.update(elapsedTime);
         _spriteManager.update(elapsedTime);
         _turretManager.update(elapsedTime);
+        _missileManager.update(elapsedTime);
     }
 
     function render() { 
-        _graphics.Tools().clear();
-        _graphics.Tools().drawImage({image: image, x: 0, y: 0, w: 1280, h: 720});
+        _graphics.clear();
+        _graphics.drawImage({image: image, x: 0, y: 0, w: 1280, h: 720});
         _spriteManager.render();
         _turretManager.render();
-        
+        _missileManager.render();
     }
     
     function gameLoop (curTime) {
@@ -48,6 +50,8 @@ Game.game = ( function (input) {
 
         _turretManager = Game.turretManager;
         _turretManager.addTestTurret();
+
+        _missileManager = Game.missileManager;
         
         image = new Image();
         image.onload = function () { ready = true; };
@@ -75,7 +79,7 @@ Game.game = ( function (input) {
     }
 
     function reset() {
-        _graphics.Tools().clear();
+        _graphics.clear();
         _spriteManager.reset();
         _turretManager.reset();
         playingGame = true;
