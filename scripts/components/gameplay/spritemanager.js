@@ -158,7 +158,10 @@ Game.spriteManager = function (graphics) {
 		}
 	};
     
-    that.update = function(elapsedTime) {
+    that.update = function(elapsedTime, gameRunning) {
+		if(!gameRunning) {
+			//return;
+		}
         for(let i = 0; i < allSprites.length; i++) {
 			updateLoc(allSprites[i], elapsedTime);
             allSprites[i].update(elapsedTime);
@@ -192,6 +195,10 @@ Game.spriteManager = function (graphics) {
 			rotateRate : 3.14159 / 1000		// Radians per millisecond
 		}));
 	};
+
+	that.getAllSprites = function() {
+		return allSprites;
+	}
 
 	that.reset = function() {
 		allSprites.length = 0;

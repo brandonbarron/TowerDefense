@@ -12,7 +12,10 @@ Game.missileManager = function (graphics) {
         return distance <= radii;
     }
 
-    that.update = function(elapsedTime) {
+    that.update = function(elapsedTime, gameRunning) {
+        if(!gameRunning) {
+            //return;
+        }
         let removeMissiles = [];
         for (let missile in missiles) {
             if (!missiles[missile].update(elapsedTime)) {

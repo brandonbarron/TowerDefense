@@ -3,6 +3,11 @@
     margin: 0 auto;
 }
 
+body {
+	margin: 0;
+	background-color: #000000;
+}
+
 #game {
 	background: blue;
 	width: 1280px;

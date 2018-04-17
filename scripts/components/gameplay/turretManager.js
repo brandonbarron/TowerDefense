@@ -7,7 +7,17 @@ Game.turretManager = function (graphics, missileManager) {
 
 	function AnimatedModel(spec) {
 		var that = {};
-		var sprite = graphics.SpriteSheet(spec);
+		var sprite = graphics.SpriteSheet({
+			spriteSheet: 'assets/turret-1-1.png',
+			sprite: 0,
+			spriteCount: 1,
+			spriteTime: [1000],	// milliseconds per sprite animation frame
+			center: { x : spec.center.x, y : spec.center.y },
+			rotation: 0,//spec.rotation,
+			//orientation: 0,				// Sprite orientation with respect to "forward"
+			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
+			}
+		);
 		var baseSprite = graphics.SpriteSheet({
 				spriteSheet : 'assets/turret-base.png',
 				spriteCount : 1,
@@ -18,10 +28,60 @@ Game.turretManager = function (graphics, missileManager) {
 				rotateRate : 0		// Radians per millisecond
 				}
 			);	// We contain a SpriteSheet, not inherited from, big difference
-
-		let demoTime = 1000;
+		let target = { x: 0, y : 0 };
+		let fireTime = 1000;
 		let totalTime = 0;
-		that.update = function (elapsedTime) {
+		let shootDist = 350;
+		//from sample code
+		function crossProduct2d(v1, v2) {
+			return (v1.x * v2.y) - (v1.y * v2.x);
+		}
+		
+		function computeAngle(rotation, ptCenter, ptTarget) {
+			var v1 = {
+					x : Math.cos(rotation),
+					y : Math.sin(rotation)
+				},
+				v2 = {
+					x : ptTarget.x - ptCenter.x,
+					y : ptTarget.y - ptCenter.y
+				},
+				dp,
+				angle;
+	
+			v2.len = Math.sqrt((v2.x * v2.x) + (v2.y * v2.y));
+			v2.x /= v2.len;
+			v2.y /= v2.len;
+	
+			dp = (v1.x * v2.x) + (v1.y * v2.y);
+			angle = Math.acos(dp);
+	
+			//
+			// Get the cross product of the two vectors so we can know
+			// which direction to rotate.
+			let cp = crossProduct2d(v1, v2);
+	
+			return {
+				angle : angle,
+				crossProduct : cp
+			};
+		}
+	
+		function testTolerance(value, test, tolerance) {
+			if (Math.abs(value - test) < tolerance) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		
+		that.update = function (elapsedTime, gameRunning) {
+			if(!gameRunning){
+				//return;
+				spec.rotation = 0;
+			}
+			//console.log(spec.rotation);
 			baseSprite.update(elapsedTime);
 			sprite.update(elapsedTime);
 			
@@ -29,21 +89,40 @@ Game.turretManager = function (graphics, missileManager) {
 			let speed = 0.1;
 			let timeRemaining = 1500;
 
+			let shouldFire = true;
+			let theRotation = sprite.getRot();
+			//TODO: I have no idea why its always 90 degrees off
+			var result = computeAngle(theRotation - 1.570796, spec.center, target);
+			if (testTolerance(result.angle, 0, 0.01) === false) {
+				shouldFire = false;
+				if (result.crossProduct > 0) {
+					sprite.rotateRight(spec.rotateRate);
+					//spec.rotation += spec.rotateRate;
+				} else {
+					sprite.rotateLeft(spec.rotateRate);
+					//spec.rotation -= spec.rotateRate;
+				}
+			} else {
+				let dist = Math.sqrt(Math.pow(target.x - spec.center.x, 2) + Math.pow(target.y - spec.center.y, 2))
+				if(dist > shootDist) {
+					shouldFire = false;
+				}
+			}
 			totalTime += elapsedTime;
-			if(totalTime > demoTime) {
-				//console.log('shooting');
+			if(totalTime > fireTime && shouldFire) {
+				console.log('shooting');
 				missileNew({
 					id: nextMissileId++,
             		radius: radius,
             		speed: speed,
-            		direction: spec.rotation,
+            		direction: theRotation - 1.570796,
             		position: {
                 		x: spec.center.x,
                 		y: spec.center.y
             		},
             		timeRemaining: timeRemaining
 				});
-				demoTime += 750;
+				fireTime += 750;
 			}
 		};
 
@@ -54,13 +133,13 @@ Game.turretManager = function (graphics, missileManager) {
 			sprite.draw();
 		};
 
-		that.rotateRight = function (elapsedTime) {
+		/*that.rotateRight = function (elapsedTime) {
 			spec.rotation += spec.rotateRate * (elapsedTime);
 		};
 
 		that.rotateLeft = function (elapsedTime) {
 			spec.rotation -= spec.rotateRate * (elapsedTime);
-		};
+		};*/
 
 		that.getLoc = function () {
 			return {
@@ -70,18 +149,44 @@ Game.turretManager = function (graphics, missileManager) {
 			}
 		};
 
+		that.setTarget = function(x, y) {
+			target = {
+				x : x,
+				y : y
+			};
+		};
+
 		function missileNew(data) {
 			missileManager.addMissile(data);
 		}
+		
 
 		return that;
 	}
 
+	function findClosestSprite(turret, allSprites) {
+		let bestI = 0;
+		let bestDist = 1000000000;
+		for(let i = 0; i < allSprites.length; i++) {
+			let spriteLoc = allSprites[i].getLoc();
+			let turretLoc = turret.getLoc();
+			let dist = Math.sqrt(Math.pow(spriteLoc.x - turretLoc.x, 2) + Math.pow(spriteLoc.y - turretLoc.y, 2))
+			if(bestDist > dist) {
+				bestI = 0;
+				bestDist = dist;
+			}
+		}
+		return bestI;
+	}
 
-	that.update = function (elapsedTime) {
+
+	that.update = function (elapsedTime, gameRunning, allSprites) {
 		for (let i = 0; i < allTurrets.length; i++) {
-			allTurrets[i].rotateRight(elapsedTime);
-			allTurrets[i].update(elapsedTime);
+			//allTurrets[i].rotateRight(elapsedTime);
+			let spriteI = findClosestSprite(allTurrets[i], allSprites);
+			let spriteLoc = allSprites[spriteI].getLoc();
+			allTurrets[i].setTarget(spriteLoc.x, spriteLoc.y)
+			allTurrets[i].update(elapsedTime, gameRunning);
 		}
 	};
 
@@ -103,8 +208,8 @@ Game.turretManager = function (graphics, missileManager) {
 			spriteTime: [1000],	// milliseconds per sprite animation frame
 			center: { x: 300, y: 300 },
 			rotation: 0,
-			orientation: 0,				// Sprite orientation with respect to "forward"
-			rotateRate: 3.14159 / 1000		// Radians per millisecond
+			//orientation: 0,				// Sprite orientation with respect to "forward"
+			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
 		}));
 	};
 

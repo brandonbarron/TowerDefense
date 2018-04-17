@@ -167,6 +167,17 @@ Game.graphics = (function () {
             // Starts out empty, but gets replaced once the image is loaded!
         };
 
+        that.rotateRight = function(angle) {
+			spec.rotation += angle;
+		};
+
+		that.rotateLeft = function(angle) {
+			spec.rotation -= angle;
+        }
+        that.getRot = function() {
+            return spec.rotation;
+        }
+
         return that;
     }
 
