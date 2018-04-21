@@ -85,31 +85,72 @@ Game.game = (function (input) {
         });
         _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () {
             showGrid ? showGrid = false : showGrid = true;
+            //hey Chris... showGrid = !showGrid; ;)
+        });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () {
+            _turretManager.toggleShowFireDistance();
         });
 
-        _keyboard.registerCommand(KeyEvent.DOM_VK_LEFT, function () {
-            // _paddle.move('left');
-        });
+        document.getElementById('id-upgrade-turret').disabled = true;
+        document.getElementById('id-sell-turret').disabled = true;
+
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX;
             let y = event.clientY;
-            console.log(x, y);
-            if(isNewTurretMode) {
+            if (isNewTurretMode) {
                 _turretManager.chooseTurretLoc(x, y);
             } else {
-                _turretManager.selectTurret(x, y);
+                let oneSelected = _turretManager.selectTurret(x, y);
+                let canUpgrade = false;
+                if (oneSelected) {
+                    canUpgrade = _turretManager.canUpgrade();
+                }
+                document.getElementById('id-upgrade-turret').disabled = !canUpgrade;
+                document.getElementById('id-sell-turret').disabled = !oneSelected;
+            }
+        });
+
+        _mouse.registerCommand('mousemove', function (event) {
+            let x = event.clientX;
+            let y = event.clientY;
+            if (isNewTurretMode) {
+                _turretManager.chooseTurretLoc(x, y);
             }
         });
 
         document.getElementById('id-new-turret-type1').addEventListener(
             'click',
-            function () { 
+            function () {
                 chooseTurretType = 1;
+                _turretManager.chooseTurretTypes(chooseTurretType)
                 isNewTurretMode = true;
             }
         );
-
         
+        //make sure the button and 'u' are the same
+        document.getElementById('id-upgrade-turret').addEventListener(
+            'click',
+            function () {
+                _turretManager.upgradeTurret();
+            }
+        );
+        _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () {
+            _turretManager.upgradeTurret();
+        });
+
+        //make sure the button and 'u' are the same
+        document.getElementById('id-sell-turret').addEventListener(
+            'click',
+            function () {
+                _turretManager.sellSelectedTurret();
+            }
+        );
+        _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () {
+            _turretManager.sellSelectedTurret();
+        });
+
+
+
     }
 
     that.run = function () { requestAnimationFrame(gameLoop); }
@@ -124,12 +165,12 @@ Game.game = (function (input) {
 
     function drawBackAndBorder() {
         _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
-        _graphics.drawRectangle({x: 0, y: 0}, {width: 1280, height: 20}, 'grey');
-        _graphics.drawRectangle({x: 0, y: 0}, {width: 40, height: 300}, 'grey');
-        _graphics.drawRectangle({x: 0, y: 705}, {width: 1280, height: 20}, 'grey');
-        _graphics.drawRectangle({x: 0, y: 420}, {width: 40, height: 300}, 'grey');
-        _graphics.drawRectangle({x: 1240, y: 0}, {width: 40, height: 300}, 'grey');
-        _graphics.drawRectangle({x: 1240, y: 420}, {width: 40, height: 300}, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 1280, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 705 }, { width: 1280, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 420 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 1240, y: 0 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 1240, y: 420 }, { width: 40, height: 300 }, 'grey');
     }
 
     return that;

@@ -1,30 +1,30 @@
-Master.input = (function() {
+Master.input = (function () {
 	'use strict';
-	
+
 	function Mouse() {
 		let that = {
-				mouseDown : [],
-				mouseUp : [],
-				mouseMove : [],
-				handlersDown : [],
-				handlersUp : [],
-				handlersMove : []
-			};
-		
+			mouseDown: [],
+			mouseUp: [],
+			mouseMove: [],
+			handlersDown: [],
+			handlersUp: [],
+			handlersMove: []
+		};
+
 		function mouseDown(e) {
 			that.mouseDown.push(e);
 		}
-		
+
 		function mouseUp(e) {
 			that.mouseUp.push(e);
 		}
-		
+
 		function mouseMove(e) {
 			//console.log(e);
 			that.mouseMove.push(e);
 		}
-		
-		that.update = function(elapsedTime) {
+
+		that.update = function (elapsedTime) {
 			let event;
 			let handler;
 
@@ -35,27 +35,27 @@ Master.input = (function() {
 					that.handlersDown[handler](that.mouseDown[event], elapsedTime);
 				}
 			}
-			
+
 			for (event = 0; event < that.mouseUp.length; event++) {
 				for (handler = 0; handler < that.handlersUp.length; handler++) {
 					that.handlersUp[handler](that.mouseUp[event], elapsedTime);
 				}
 			}
-			
+
 			for (event = 0; event < that.mouseMove.length; event++) {
 				for (handler = 0; handler < that.handlersMove.length; handler++) {
 					that.handlersMove[handler](that.mouseMove[event], elapsedTime);
 				}
 			}
-			
+
 			//
 			// Now that we have processed all the inputs, reset everything back to the empty state
 			that.mouseDown.length = 0;
 			that.mouseUp.length = 0;
 			that.mouseMove.length = 0;
 		};
-		
-		that.registerCommand = function(type, handler) {
+
+		that.registerCommand = function (type, handler) {
 			if (type === 'mousedown') {
 				that.handlersDown.push(handler);
 			}
@@ -66,63 +66,86 @@ Master.input = (function() {
 				that.handlersMove.push(handler);
 			}
 		};
-		
+
 		window.addEventListener('mousedown', mouseDown);
 		window.addEventListener('mouseup', mouseUp);
 		window.addEventListener('mousemove', mouseMove);
-		
+
 		return that;
 	}
-	
+
 	function Keyboard() {
 		let that = {
-				keys : {},
-				handlers : []
-			};
-		
-		function keyPress(e) {
+			keys: {},
+			handlers: []
+		};
+
+		/*function keyPress(e) {
 			that.keys[e.keyCode] = e.timeStamp;
 		}
 		
 		function keyRelease(e) {
 			delete that.keys[e.keyCode];
+		}*/
+
+		function keyPress(e) {
+			//that.keys[e.keyCode] = e.timeStamp;
 		}
-		
+
+		function keyRelease(e) {
+			//delete that.keys[e.keyCode];
+			if (e.keyCode) {
+				that.keys[e.keyCode] = e.timeStamp;
+			} else {
+				that.keys[e.target.id] = e.timeStamp;
+			}
+		}
+
 		// ------------------------------------------------------------------
 		//
 		// Allows the client code to register a keyboard handler
 		//
 		// ------------------------------------------------------------------
-		that.registerCommand = function(key, handler) {
-			that.handlers.push({ key : key, handler : handler });
+		that.registerCommand = function (key, handler) {
+			//that.handlers.push({ key: key, handler: handler });
+			that.handlers[key] = handler;
 		};
-		
+
 		// ------------------------------------------------------------------
 		//
 		// Allows the client to invoke all the handlers for the registered key/handlers.
 		//
 		// ------------------------------------------------------------------
-		that.update = function(elapsedTime) {
-			let key = 0;
+		that.update = function (elapsedTime) {
+			/*let key = 0;
 
 			for (key = 0; key < that.handlers.length; key++) {
 				if (typeof that.keys[that.handlers[key].key] !== 'undefined') {
 					that.handlers[key].handler(elapsedTime);
+					delete that.keys[key];
+				}
+			}*/
+			for (let key in that.keys) {
+				if (that.keys.hasOwnProperty(key)) {
+					if (that.handlers[key]) {
+						that.handlers[key](elapsedTime);
+						delete that.keys[key];
+					}
 				}
 			}
 		};
-		
+
 		//
 		// These are used to keep track of which keys are currently pressed
 		window.addEventListener('keydown', keyPress);
 		window.addEventListener('keyup', keyRelease);
-		
+
 		return that;
 	}
-	
+
 	return {
-		Keyboard : Keyboard,
-		Mouse : Mouse
+		Keyboard: Keyboard,
+		Mouse: Mouse
 	};
 }());
 
