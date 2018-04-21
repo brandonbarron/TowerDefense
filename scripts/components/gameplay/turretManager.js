@@ -32,6 +32,7 @@ Game.turretManager = function (graphics, missileManager) {
 		let fireTime = 1000;
 		let totalTime = 0;
 		let shootDist = 350;
+		let isSelected = false;
 		//from sample code
 		function crossProduct2d(v1, v2) {
 			return (v1.x * v2.y) - (v1.y * v2.x);
@@ -129,6 +130,9 @@ Game.turretManager = function (graphics, missileManager) {
 		that.render = function () {
 			//graphics.drawImage({image: baseImg, x: 0, y: 0, w: 40, h: 40});
 			//baseSprite.draw();
+			if(isSelected) {
+				graphics.drawCircle(spec.center, 20, { start: 0, end: 2 * Math.PI }, '#0000FF');
+			}
 			baseSprite.draw();
 			sprite.draw();
 		};
@@ -155,6 +159,15 @@ Game.turretManager = function (graphics, missileManager) {
 				y : y
 			};
 		};
+
+		that.selected = function() {
+			isSelected = true;
+		}
+
+		that.unselect = function() {
+			isSelected = false;
+		}
+
 
 		function missileNew(data) {
 			missileManager.addMissile(data);
@@ -213,6 +226,28 @@ Game.turretManager = function (graphics, missileManager) {
 		}));
 	};
 
+	function isBetween(a, b, x) {
+		return x > a && x < b;
+	}
+
+	that.selectTurret = function(x, y) {
+		let selectOne = false;
+		for (let i = 0; i < allTurrets.length; i++) {
+			let loc = allTurrets[i].getLoc();
+			let turSize = 20;
+			let left = loc.x - turSize;
+			let right = loc.x + turSize;
+			let top = loc.y - turSize;
+			let bot = loc.y + turSize;
+
+			if(isBetween(left, right, x) && isBetween(top, bot, y) && !selectOne) {
+				allTurrets[i].selected();
+				selectOne = true;
+			} else {
+				allTurrets[i].unselect();
+			}
+		}
+	}
 	
 
 	that.reset = function () {

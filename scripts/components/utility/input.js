@@ -20,6 +20,7 @@ Master.input = (function() {
 		}
 		
 		function mouseMove(e) {
+			//console.log(e);
 			that.mouseMove.push(e);
 		}
 		

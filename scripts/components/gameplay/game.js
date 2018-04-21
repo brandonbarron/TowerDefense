@@ -13,11 +13,13 @@ Game.game = ( function (input) {
         _turretManager = Game.turretManager,
         _missileManager = Game.missileManager,
         _score = Game.score,
-        _keyboard;
+        _keyboard,
+        _mouse;
     
     function update(elapsedTime) { 
         let gameRunning = _score.update(elapsedTime);
         _keyboard.update(elapsedTime);
+        _mouse.update(elapsedTime);
         _spriteManager.update(elapsedTime, gameRunning);
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
         _missileManager.update(elapsedTime, gameRunning);
@@ -46,7 +48,8 @@ Game.game = ( function (input) {
     that.initialize = function() {
         playingGame = true;
         _keyboard = Master.input.Keyboard();
-        registerKeyCommands();
+        _mouse = Master.input.Mouse();
+        
         //_graphics.initialize();
         _spriteManager = Game.spriteManager;//TODO: why is it always undefined unless I assign it here?
         _spriteManager.addTestSprite();
@@ -57,7 +60,7 @@ Game.game = ( function (input) {
         _missileManager = Game.missileManager;
 
         _score = Game.score
-        
+        registerKeyCommands();
         image = new Image();
         image.onload = function () { ready = true; };
         image.src = "assets/grassBackground.jpg";
@@ -80,6 +83,12 @@ Game.game = ( function (input) {
 
         _keyboard.registerCommand(KeyEvent.DOM_VK_LEFT, function () {
             // _paddle.move('left');
+        });
+        _mouse.registerCommand('mouseup', function (event) {
+            let x = event.clientX;
+            let y = event.clientY;
+            
+            _turretManager.selectTurret(x, y);
         });
     }
 
