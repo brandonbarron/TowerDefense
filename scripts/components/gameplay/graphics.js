@@ -15,6 +15,17 @@ Game.graphics = (function () {
         this.restore();
     };
 
+    function drawRectangleBorder(position, size, color) {
+        context.save();
+        context.beginPath();
+        context.rect(position.x, position.y, size.width, size.height);
+        context.lineWdith = .75;
+        context.strokeStyle = color;
+        context.stroke();
+        context.closePath();
+        context.restore();
+    }
+
     function drawRectangle(position, size, fill) {
         context.save();
         context.beginPath();
@@ -282,6 +293,7 @@ Game.graphics = (function () {
     return {
         //initialize: initialize,
         drawRectangle: drawRectangle,
+        drawRectangleBorder: drawRectangleBorder,
         drawCircle: drawCircle,
         drawText: drawText,
         drawImage: drawImage,

@@ -1,18 +1,20 @@
 Game.game = (function (input) {
 
-    //game components
+    //variables
     let that = {},
         playingGame,
         image,
-        lastTimeStamp = performance.now();
+        lastTimeStamp = performance.now(),
+        showGrid;
 
 
-    //variables
+    //game components
     let _graphics = Game.graphics,
         _spriteManager = Game.spriteManager,
         _turretManager = Game.turretManager,
         _missileManager = Game.missileManager,
         _score = Game.score,
+        _grid = Game.grid,
         _keyboard,
         _mouse;
 
@@ -29,7 +31,8 @@ Game.game = (function (input) {
 
     function render() {
         _graphics.clear();
-        _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
+        drawBackAndBorder();
+        if (showGrid) _grid.renderGrid();
         _spriteManager.render();
         _turretManager.render();
         _missileManager.render();
@@ -49,6 +52,7 @@ Game.game = (function (input) {
 
     that.initialize = function () {
         playingGame = true;
+        showGrid = false;
         _keyboard = Master.input.Keyboard();
         _mouse = Master.input.Mouse();
 
@@ -60,6 +64,8 @@ Game.game = (function (input) {
         _turretManager.addTestTurret();
 
         _missileManager = Game.missileManager;
+
+        _grid.initialize();
 
         _score = Game.score
         registerKeyCommands();
@@ -77,8 +83,8 @@ Game.game = (function (input) {
             playingGame = false;
             Menu.menu.showScreen('main-menu');
         });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_RIGHT, function () {
-            // _paddle.move('right');
+        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () {
+            showGrid ? showGrid = false : showGrid = true;
         });
 
         _keyboard.registerCommand(KeyEvent.DOM_VK_LEFT, function () {
@@ -114,6 +120,16 @@ Game.game = (function (input) {
         _turretManager.reset();
         _score.reset();
         playingGame = true;
+    }
+
+    function drawBackAndBorder() {
+        _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
+        _graphics.drawRectangle({x: 0, y: 0}, {width: 1280, height: 20}, 'grey');
+        _graphics.drawRectangle({x: 0, y: 0}, {width: 40, height: 300}, 'grey');
+        _graphics.drawRectangle({x: 0, y: 705}, {width: 1280, height: 20}, 'grey');
+        _graphics.drawRectangle({x: 0, y: 420}, {width: 40, height: 300}, 'grey');
+        _graphics.drawRectangle({x: 1240, y: 0}, {width: 40, height: 300}, 'grey');
+        _graphics.drawRectangle({x: 1240, y: 420}, {width: 40, height: 300}, 'grey');
     }
 
     return that;
