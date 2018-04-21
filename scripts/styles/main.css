@@ -33,6 +33,27 @@ body {
 	font-size: 0.75em;
 }
 
+#new-game {
+	height: 920px;
+	position: relative;
+	width: 1280px;
+}
+
+#canvas-main {
+	height: 100%;
+  	width: 100%;
+}
+
+#gamePlay-menu {
+    padding-top: 0;
+	cursor: pointer;
+	font-size: 0.75em;
+	bottom: 0;
+  	left: 0;
+  	position: absolute;
+  	width: 100%;
+}
+
 ul.menu {
 	text-align: center;
 	padding: 0;

@@ -113,7 +113,7 @@ Game.graphics = (function () {
                     spec.center.y - spec.height / 2,
                     spec.width, spec.height);
 
-                context.restore();
+                    context.restore();
             };
             //
             // Once the image is loaded, we can compute the height and width based upon

@@ -1,11 +1,11 @@
-Game.game = ( function (input) {
-    
+Game.game = (function (input) {
+
     //game components
-    let that = {}, 
-        playingGame, 
-        image, 
+    let that = {},
+        playingGame,
+        image,
         lastTimeStamp = performance.now();
-    
+
 
     //variables
     let _graphics = Game.graphics,
@@ -15,8 +15,10 @@ Game.game = ( function (input) {
         _score = Game.score,
         _keyboard,
         _mouse;
-    
-    function update(elapsedTime) { 
+
+    let isNewTurretMode = false;
+
+    function update(elapsedTime) {
         let gameRunning = _score.update(elapsedTime);
         _keyboard.update(elapsedTime);
         _mouse.update(elapsedTime);
@@ -25,16 +27,16 @@ Game.game = ( function (input) {
         _missileManager.update(elapsedTime, gameRunning);
     }
 
-    function render() { 
+    function render() {
         _graphics.clear();
-        _graphics.drawImage({image: image, x: 0, y: 0, w: 1280, h: 720});
+        _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
         _spriteManager.render();
         _turretManager.render();
         _missileManager.render();
         _score.render();
     }
-    
-    function gameLoop (curTime) {
+
+    function gameLoop(curTime) {
         if (!playingGame) {
             reset();
             return;
@@ -44,12 +46,12 @@ Game.game = ( function (input) {
         render();
         requestAnimationFrame(gameLoop);
     }
-    
-    that.initialize = function() {
+
+    that.initialize = function () {
         playingGame = true;
         _keyboard = Master.input.Keyboard();
         _mouse = Master.input.Mouse();
-        
+
         //_graphics.initialize();
         _spriteManager = Game.spriteManager;//TODO: why is it always undefined unless I assign it here?
         _spriteManager.addTestSprite();
@@ -64,13 +66,11 @@ Game.game = ( function (input) {
         image = new Image();
         image.onload = function () { ready = true; };
         image.src = "assets/grassBackground.jpg";
-        
-        
+
+
     }
 
-    that.run = function() { requestAnimationFrame(gameLoop); }
-    
-    return that;
+    let chooseTurretType = 0;
 
     function registerKeyCommands() {
         _keyboard.registerCommand(KeyEvent.DOM_VK_ESCAPE, function () {
@@ -87,10 +87,26 @@ Game.game = ( function (input) {
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX;
             let y = event.clientY;
-            
-            _turretManager.selectTurret(x, y);
+            console.log(x, y);
+            if(isNewTurretMode) {
+                _turretManager.chooseTurretLoc(x, y);
+            } else {
+                _turretManager.selectTurret(x, y);
+            }
         });
+
+        document.getElementById('id-new-turret-type1').addEventListener(
+            'click',
+            function () { 
+                chooseTurretType = 1;
+                isNewTurretMode = true;
+            }
+        );
+
+        
     }
+
+    that.run = function () { requestAnimationFrame(gameLoop); }
 
     function reset() {
         _graphics.clear();
@@ -99,5 +115,7 @@ Game.game = ( function (input) {
         _score.reset();
         playingGame = true;
     }
+
+    return that;
 
 }(Master.input)); 

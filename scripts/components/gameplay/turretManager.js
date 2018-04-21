@@ -248,6 +248,14 @@ Game.turretManager = function (graphics, missileManager) {
 			}
 		}
 	}
+
+	let chooseTurretX = 0;
+	let chooseTurretY = 0;
+
+	that.chooseTurretLoc = function(x, y) {
+		chooseTurretX = x;
+		chooseTurretY = y;
+	}
 	
 
 	that.reset = function () {
