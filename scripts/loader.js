@@ -23,13 +23,14 @@ Master.loader = (function () {
         {
             scripts: [
                 'scripts/components/gameplay/graphics.js',
+                'scripts/components/gameplay/grid.js',
+                'scripts/components/gameplay/menu.js',
                 'scripts/components/gameplay/animatedSprite.js',
                 'scripts/components/gameplay/particles.js',
                 'scripts/components/gameplay/missile.js',
                 'scripts/components/gameplay/missileManager.js',
                 'scripts/components/gameplay/spritemanager.js',
                 'scripts/components/gameplay/turretManager.js',
-                'scripts/components/gameplay/grid.js',
                 'scripts/components/gameplay/score.js',
                 'scripts/components/gameplay/game.js',
             ],

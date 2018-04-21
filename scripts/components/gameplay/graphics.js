@@ -1,12 +1,10 @@
 Game.graphics = (function () {
-    let canvas, context;
+    let canvas, context, that = {};
 
-
-    //initialize = function () {
-    canvas = document.getElementById('canvas-main');
-    context = canvas.getContext('2d');
-    //}
-
+    that.initialize = function () {
+        canvas = document.getElementById('canvas-main');
+        context = canvas.getContext('2d');
+    }
 
     CanvasRenderingContext2D.prototype.clear = function () {
         this.save();
@@ -15,7 +13,7 @@ Game.graphics = (function () {
         this.restore();
     };
 
-    function drawRectangleBorder(position, size, color) {
+    that.drawRectangleBorder = function(position, size, color) {
         context.save();
         context.beginPath();
         context.rect(position.x, position.y, size.width, size.height);
@@ -26,7 +24,7 @@ Game.graphics = (function () {
         context.restore();
     }
 
-    function drawRectangle(position, size, fill) {
+    that.drawRectangle = function(position, size, fill) {
         context.save();
         context.beginPath();
         context.fillStyle = fill;
@@ -36,7 +34,7 @@ Game.graphics = (function () {
         context.restore();
     }
 
-    function drawCircle(position, radius, angle, fill) {
+    that.drawCircle = function(position, radius, angle, fill) {
         context.save();
         context.beginPath();
         context.arc(position.x, position.y, radius, angle.start, angle.end);
@@ -46,7 +44,7 @@ Game.graphics = (function () {
         context.restore();
     }
 
-    function drawText(position, string, fill, font) {
+    that.drawText = function(position, string, fill, font) {
         context.save();
         context.beginPath();
         context.font = font;
@@ -56,19 +54,25 @@ Game.graphics = (function () {
         context.restore();
     }
 
-    function drawImage(spec) {
+    that.drawImage = function(spec) {
         context.save();
         context.drawImage(spec.image, spec.x, spec.y, spec.w, spec.h);
         context.restore();
     }
 
-    function clear() { context.clear(); }
-
-    function clearCountdown() {
-        context.clearRect(400, 400, 100, 100);
+    that.drawButton = function(spec) {
+        context.save();
+        context.beginPath();
+        that.drawRectangle({x: spec.x, y: spec.y}, {width: spec.width, height: spec.height}, spec.color);
+        that.drawText({x: spec.x, y: spec.y + (spec.height / 2)}, spec.text, spec.textColor, spec.font);
+        context.closePath();
+        context.restore();
     }
+    that.clear = function() { context.clear(); }
 
-    function drawImageSpriteSheet(spriteSheet, spriteSize, sprite, center, size) {
+    that.clearCountdown = function() { context.clearRect(400, 400, 100, 100); }
+
+    that.drawImageSpriteSheet = function(spriteSheet, spriteSize, sprite, center, size) {
         let localCenter = {
             x: center.x * canvas.width,
             y: center.y * canvas.width
@@ -92,7 +96,7 @@ Game.graphics = (function () {
     // Provides rendering support for a sprite animated from a sprite sheet.
     //
     //------------------------------------------------------------------
-    function SpriteSheet(spec) {
+    that.SpriteSheet = function(spec) {
         var that = {},
             image = new Image();
 
@@ -192,7 +196,7 @@ Game.graphics = (function () {
         return that;
     }
 
-    function TimedSpriteSheet(spec) {
+    that.TimedSpriteSheet = function(spec) {
         var image = new Image();
 
         //
@@ -290,18 +294,6 @@ Game.graphics = (function () {
         return that;
     }
 
-    return {
-        //initialize: initialize,
-        drawRectangle: drawRectangle,
-        drawRectangleBorder: drawRectangleBorder,
-        drawCircle: drawCircle,
-        drawText: drawText,
-        drawImage: drawImage,
-        clear: clear,
-        clearCountdown: clearCountdown,
-        drawImageSpriteSheet: drawImageSpriteSheet,
-        SpriteSheet: SpriteSheet,
-        TimedSpriteSheet:TimedSpriteSheet
-    };
+    return that;
 
 }());
