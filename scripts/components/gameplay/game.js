@@ -124,22 +124,22 @@ Game.game = (function (input) {
             playingGame = false;
             Menu.menu.showScreen('main-menu');
         });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_1, function(){ turret1(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_2, function(){ turret2(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_3, function(){ turret3(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_4, function(){ turret4(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function(){ _grid.invertRenderLines(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_C, function(){ _turretManager.toggleShowFireDistance(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_U, function(){ _turretManager.upgradeTurret(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_S, function(){ _turretManager.sellSelectedTurret(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_1, function () { turret1(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_2, function () { turret2(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_3, function () { turret3(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_4, function () { turret4(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () { _grid.invertRenderLines(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () { _turretManager.toggleShowFireDistance(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () { _turretManager.upgradeTurret(_score); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () { _turretManager.sellSelectedTurret(_score); });
 
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX,
                 y = event.clientY,
                 col = Math.floor((x - 40) / 40),
                 row = Math.floor((y - 20) / 40);
-                
-            
+
+
             if (isNewTurretMode) {
                 let isInvalid = validLocation(row, col);
                 _turretManager.setIsInvalidTurretLoc(isInvalid);
@@ -184,20 +184,32 @@ Game.game = (function (input) {
             }
         });
 
-        document.getElementById('id-new-turret-type1').addEventListener('click', turret1());
-        
-        document.getElementById('id-new-turret-type2').addEventListener('click', turret2());
+        document.getElementById('id-new-turret-type1').addEventListener('click',
+            function () {
+                turret1();
+            });
 
-        document.getElementById('id-new-turret-type3').addEventListener('click', turret3());
+        document.getElementById('id-new-turret-type2').addEventListener('click',
+            function () {
+                turret2();
+            });
 
-        document.getElementById('id-new-turret-type4').addEventListener('click', turret4());
+        document.getElementById('id-new-turret-type3').addEventListener('click',
+            function () {
+                turret3();
+            });
+
+        document.getElementById('id-new-turret-type4').addEventListener('click',
+            function () {
+                turret4();
+            });
 
         //make sure the button and 'u' are the same
         document.getElementById('id-upgrade-turret').addEventListener(
             'click',
-            function () { _turretManager.upgradeTurret(); }
+            function () { _turretManager.upgradeTurret(_score); }
         );
-       
+
         //make sure the button and 'u' are the same
         document.getElementById('id-sell-turret').addEventListener(
             'click',
