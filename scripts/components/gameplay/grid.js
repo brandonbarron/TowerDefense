@@ -239,7 +239,6 @@ Game.grid = (function (graphics) {
         y -= 20;
         let j = Math.floor(x / spotSize);
         let i = Math.floor(y / spotSize) + 1;
-        console.log(i, j, spots);
         spots[i].col[j].turret = true;
         let loc = {
             x: spots[i].col[j].x + (spotSize/2),

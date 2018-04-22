@@ -84,6 +84,42 @@ Master.loader = (function () {
                 source: 'assets/turret-1-3.png'
             },
             {
+                key: 'turret-2-1',
+                source: 'assets/turret-2-1.png'
+            },
+            {
+                key: 'turret-2-2',
+                source: 'assets/turret-2-2.png'
+            },
+            {
+                key: 'turret-2-3',
+                source: 'assets/turret-2-3.png'
+            },
+            {
+                key: 'turret-3-1',
+                source: 'assets/turret-3-1.png'
+            },
+            {
+                key: 'turret-3-2',
+                source: 'assets/turret-3-2.png'
+            },
+            {
+                key: 'turret-3-3',
+                source: 'assets/turret-3-3.png'
+            },
+            {
+                key: 'turret-4-1',
+                source: 'assets/turret-4-1.png'
+            },
+            {
+                key: 'turret-4-2',
+                source: 'assets/turret-4-2.png'
+            },
+            {
+                key: 'turret-4-3',
+                source: 'assets/turret-4-3.png'
+            },
+            {
                 key: 'turret-base',
                 source: 'assets/turret-base.png'
             },
