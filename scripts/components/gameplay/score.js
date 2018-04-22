@@ -96,5 +96,6 @@ Game.score = (function (graphics) {
                 '72px Arial'
             );
     };
+    
     return that;
 }(Game.graphics));

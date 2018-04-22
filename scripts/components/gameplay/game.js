@@ -102,7 +102,7 @@ Game.game = (function (input) {
                 y = event.clientY,
                 col = Math.floor((x - 40) / 40),
                 row = Math.floor((y - 20) / 40);
-            console.log(y + ', ' + x);
+                
             if (validLocation(row, col)) return;
             if (isNewTurretMode) {
                 let turLoc = _grid.findAndSetTurretLoc(row, col);
@@ -191,7 +191,6 @@ Game.game = (function (input) {
     }
 
     function validLocation(row, col) {
-        console.log(row + ', ' + col);
         return (
             (col < 0 || col > 29 || row < 0 || row > 16) ||
             (col === 0 && row > 6 && row < 10) ||

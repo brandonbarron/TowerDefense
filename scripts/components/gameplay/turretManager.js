@@ -88,7 +88,6 @@ Game.turretManager = function (graphics, missileManager, grid) {
 				//return;
 				spec.rotation = 0;
 			}
-			//console.log(spec.rotation);
 			baseSprite.update(elapsedTime);
 			sprite.update(elapsedTime);
 
@@ -195,7 +194,6 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 		that.upgradeTurret = function () {
 			upgradeLevel++;
-			console.log(upgradeLevel);
 		}
 
 		return that;
@@ -280,8 +278,8 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			// if (isNearOtherTurret(chooseTurretX, chooseTurretY)) {
 			// 	color = 'rgba(255, 0, 0, 0.5)'
 			// }
-			console.log(loc);
-
+			graphics.drawText({x: 1000, y: 100}, 'y: ' + loc.y, 'black', '72px Arial');
+            graphics.drawText({x: 1000, y: 200}, 'x: ' + loc.x, 'black', '72px Arial');
 			graphics.drawCircle(loc, turretRange, { start: 0, end: 2 * Math.PI }, color);
 		}
 
