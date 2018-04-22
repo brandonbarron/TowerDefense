@@ -1,4 +1,4 @@
-Game.turretManager = function (graphics, missileManager) {
+Game.turretManager = function (graphics, missileManager, grid) {
 	'use strict';
 
 	let that = {};
@@ -347,6 +347,7 @@ Game.turretManager = function (graphics, missileManager) {
 			//orientation: 0,				// Sprite orientation with respect to "forward"
 			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
 		}));
+		grid.turretPlaced(y, x);
 	}
 
 	that.chooseTurretTypes = function(theType) {
@@ -387,4 +388,4 @@ Game.turretManager = function (graphics, missileManager) {
 	};
 
 	return that;
-}(Game.graphics, Game.missileManager);
+}(Game.graphics, Game.missileManager, Game.grid);

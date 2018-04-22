@@ -22,6 +22,7 @@ Game.grid = (function (graphics) {
         cols = 30;
         rows = 17;
         generateGrid();
+        // for (let i = 2; i < 6; i++) findPath(i);
     }
 
     that.render = function () {
@@ -215,6 +216,20 @@ Game.grid = (function (graphics) {
         });
     }
 
+    function resetGrid() {
+        for (let i = 0; i < rows; i++) 
+            for (let j = 0; j < cols; j++) {
+                spots[i].col[j].path[2].visited = false;
+                spots[i].col[j].path[3].visited = false;
+                spots[i].col[j].path[4].visited = false;
+                spots[i].col[j].path[5].visited = false;
+                spots[i].col[j].path[2].value = false;
+                spots[i].col[j].path[3].value = false;
+                spots[i].col[j].path[4].value = false;
+                spots[i].col[j].path[5].value = false;
+            }
+    }
+
     that.invertRenderLines = function () { renderGridLines = !renderGridLines; }
     that.findAndSetTurretLoc = function(x, y) {
         if(y > 685) {
@@ -231,6 +246,18 @@ Game.grid = (function (graphics) {
             y: spots[i].col[j].y + (spotSize/2),
         };
         return loc;
+    }
+
+    that.turretPlaced = function(row, col) {
+        row = Math.floor((row - 20) / spotSize);
+        col = Math.floor((col - 40) / spotSize);
+        spots[row].col[col].path[0].value = true;
+        spots[row].col[col].path[1].value = false;
+        spots[row].col[col].path[2].value = false;
+        spots[row].col[col].path[3].value = false;
+        spots[row].col[col].path[4].value = false;
+        spots[row].col[col].path[5].value = false;
+        resetGrid();
     }
     
     that.invertRenderLines = function() {renderGridLines = !renderGridLines; }
