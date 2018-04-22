@@ -5,7 +5,7 @@ Menu.screens['main-menu'] = (function(menu) {
 
 		document.getElementById('id-new-game').addEventListener(
 			'click',
-			function() {menu.showScreen('new-game'); });
+			function() { menu.showScreen('new-game'); });
 		
 		document.getElementById('id-high-scores').addEventListener(
 			'click',
