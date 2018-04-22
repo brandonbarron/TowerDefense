@@ -85,6 +85,38 @@ Game.game = (function (input) {
         requestAnimationFrame(gameLoop);
     }
 
+    function turret1() {
+        chooseTurretType = 1;
+        _turretManager.chooseTurretTypes(chooseTurretType)
+        setTimeout(function () {
+            isNewTurretMode = true;
+        }, 100);
+    }
+
+    function turret2() {
+        chooseTurretType = 2;
+        _turretManager.chooseTurretTypes(chooseTurretType)
+        setTimeout(function () {
+            isNewTurretMode = true;
+        }, 100);
+    }
+
+    function turret3() {
+        chooseTurretType = 3;
+        _turretManager.chooseTurretTypes(chooseTurretType)
+        setTimeout(function () {
+            isNewTurretMode = true;
+        }, 100);
+    }
+
+    function turret4() {
+        chooseTurretType = 4;
+        _turretManager.chooseTurretTypes(chooseTurretType)
+        setTimeout(function () {
+            isNewTurretMode = true;
+        }, 100);
+    }
+
     function registerKeyCommands() {
         document.getElementById('id-upgrade-turret').disabled = true;
         document.getElementById('id-sell-turret').disabled = true;
@@ -92,12 +124,15 @@ Game.game = (function (input) {
             playingGame = false;
             Menu.menu.showScreen('main-menu');
         });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () {
-            _grid.invertRenderLines();
-        });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () {
-            _turretManager.toggleShowFireDistance();
-        });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_1, function(){ turret1(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_2, function(){ turret2(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_3, function(){ turret3(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_4, function(){ turret4(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function(){ _grid.invertRenderLines(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_C, function(){ _turretManager.toggleShowFireDistance(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_U, function(){ _turretManager.upgradeTurret(); });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_S, function(){ _turretManager.sellSelectedTurret(); });
+
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX,
                 y = event.clientY,
@@ -136,58 +171,21 @@ Game.game = (function (input) {
                 _turretManager.chooseTurretLoc(x, y);
             }
         });
-        document.getElementById('id-new-turret-type1').addEventListener(
-            'click',
-            function () {
-                chooseTurretType = 1;
-                _turretManager.chooseTurretTypes(chooseTurretType)
-                setTimeout(function () {
-                    isNewTurretMode = true;
-                }, 100);
-            }
-        );
-        document.getElementById('id-new-turret-type2').addEventListener(
-            'click',
-            function () {
-                chooseTurretType = 2;
-                _turretManager.chooseTurretTypes(chooseTurretType)
-                setTimeout(function () {
-                    isNewTurretMode = true;
-                }, 100);
-            }
-        );
-        document.getElementById('id-new-turret-type3').addEventListener(
-            'click',
-            function () {
-                chooseTurretType = 3;
-                _turretManager.chooseTurretTypes(chooseTurretType)
-                setTimeout(function () {
-                    isNewTurretMode = true;
-                }, 100);
-            }
-        );
-        document.getElementById('id-new-turret-type4').addEventListener(
-            'click',
-            function () {
-                chooseTurretType = 4;
-                _turretManager.chooseTurretTypes(chooseTurretType)
-                setTimeout(function () {
-                    isNewTurretMode = true;
-                }, 100);
-            }
-        );
+
+        document.getElementById('id-new-turret-type1').addEventListener('click', turret1());
+        
+        document.getElementById('id-new-turret-type2').addEventListener('click', turret2());
+
+        document.getElementById('id-new-turret-type3').addEventListener('click', turret3());
+
+        document.getElementById('id-new-turret-type4').addEventListener('click', turret4());
 
         //make sure the button and 'u' are the same
         document.getElementById('id-upgrade-turret').addEventListener(
             'click',
-            function () {
-                _turretManager.upgradeTurret();
-            }
+            function () { _turretManager.upgradeTurret(); }
         );
-        _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () {
-            _turretManager.upgradeTurret();
-        });
-
+       
         //make sure the button and 'u' are the same
         document.getElementById('id-sell-turret').addEventListener(
             'click',
@@ -196,9 +194,6 @@ Game.game = (function (input) {
                 aTurretChanged = true;
             }
         );
-        _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () {
-            _turretManager.sellSelectedTurret();
-        });
     }
 
     function validLocation(row, col) {
