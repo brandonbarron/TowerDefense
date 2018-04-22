@@ -37,6 +37,7 @@ Game.game = (function (input) {
 
         _graphics.initialize();
         _spriteManager.initialize();
+        //_spriteManager.addTestSprite()
         _turretManager.initialize();
         _missileManager.initialize();
         _grid.initialize();
@@ -58,7 +59,7 @@ Game.game = (function (input) {
             _grid.update();
             aTurretChanged = false;
         }
-        _spriteManager.update(elapsedTime, gameRunning);
+        _spriteManager.update(elapsedTime, gameRunning, _grid);
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
         _missileManager.update(elapsedTime, gameRunning);
     }

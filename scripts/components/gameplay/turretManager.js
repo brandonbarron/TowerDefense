@@ -126,7 +126,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 						x: spec.center.x,
 						y: spec.center.y
 					},
-					timeRemaining: timeRemaining
+					timeRemaining: spec.shootRange / speed
 				});
 				fireTime += 750;
 			}

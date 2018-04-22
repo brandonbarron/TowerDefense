@@ -200,7 +200,7 @@ Game.grid = (function (graphics) {
     }
 
     function resetGrid() {
-        for (let i = 0; i < rows; i++) 
+        for (let i = 0; i < rows; i++)
             for (let j = 0; j < cols; j++) {
                 spots[i].col[j].path[2].visited = false;
                 spots[i].col[j].path[3].visited = false;
@@ -214,16 +214,16 @@ Game.grid = (function (graphics) {
     }
 
     that.invertRenderLines = function () { renderGridLines = !renderGridLines; }
-    
-    that.findAndSetTurretLoc = function(row, col) {
+
+    that.findAndSetTurretLoc = function (row, col) {
         spots[row].col[col].path[0].value = true;
         return loc = {
-            x: spots[row].col[col].x + (spotSize/2),
-            y: spots[row].col[col].y + (spotSize/2),
+            x: spots[row].col[col].x + (spotSize / 2),
+            y: spots[row].col[col].y + (spotSize / 2),
         };
     }
 
-    that.turretPlaced = function(row, col) {
+    that.turretPlaced = function (row, col) {
         spots[row].col[col].path[0].value = true;
         spots[row].col[col].path[1].value = false;
         spots[row].col[col].path[2].value = false;
@@ -233,7 +233,7 @@ Game.grid = (function (graphics) {
         resetGrid();
     }
 
-    that.turretRemoved = function(row, col) {
+    that.turretRemoved = function (row, col) {
         spots[row].col[col].path[0].value = false;
         spots[row].col[col].path[1].value = true;
         spots[row].col[col].path[2].value = true;
@@ -242,14 +242,12 @@ Game.grid = (function (graphics) {
         spots[row].col[col].path[5].value = true;
         resetGrid();
     }
-    
-    that.isTurret = function(row, col) { return spots[row].col[col].path[0].value; }
+
+    that.isTurret = function (row, col) { return spots[row].col[col].path[0].value; }
 
     function isPath(pathNum) {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
-                let x = spots[i].col[j].x;
-                let y = spots[i].col[j].y;
                 if (spots[i].col[j].path[pathNum].value) {
                     return true;
                 }
@@ -258,7 +256,7 @@ Game.grid = (function (graphics) {
         return false;
     }
 
-    that.testForBlocking = function(row, col) {
+    that.testForBlocking = function (row, col) {
         that.turretPlaced(row, col);
 
         for (let i = 2; i < 6; i++) findPath(i);//manually do this, normally update function does it
@@ -266,7 +264,7 @@ Game.grid = (function (graphics) {
         let allHasPath = true;
 
         for (let i = 2; i < 6; i++) {
-            if(!isPath(i)) {
+            if (!isPath(i)) {
                 allHasPath = false;
             }
         }
@@ -275,6 +273,110 @@ Game.grid = (function (graphics) {
         for (let i = 2; i < 6; i++) findPath(i);//manually do this, normally update function does it
 
         return !allHasPath;
+    }
+
+    that.getStartforPath = function(direction) {
+        switch (direction) {
+            case 2:
+                //pathing(7, 0, direction, 8, 29);
+                return { x: spots[7].col[0].x, y: spots[7].col[0].y };
+                break;
+            case 3:
+                //pathing(0, 13, direction, 16, 14);
+                return { x: spots[0].col[13].x, y: spots[0].col[13].y };
+                break;
+            case 4:
+                //pathing(9, 29, direction, 8, 0);
+                return { x: spots[9].col[29].x, y: spots[9].col[29].y };
+                break;
+            case 5:
+                //pathing(16, 16, direction, 0, 15);
+                return { x: spots[16].col[16].x, y: spots[16].col[16].y };
+                break;
+        }
+        return null;
+    }
+
+    function getDistToEnd(direction, row, col) {
+        switch (direction) {
+            case 2:
+                //pathing(7, 0, direction, 8, 29);
+                return Math.sqrt(Math.pow(29 - col, 2) + Math.pow(8 - row, 2))
+                break;
+            case 3:
+                //pathing(0, 13, direction, 16, 14);
+                return Math.sqrt(Math.pow(14 - col, 2) + Math.pow(16 - row, 2))
+                break;
+            case 4:
+                //pathing(9, 29, direction, 8, 0);
+                return Math.sqrt(Math.pow(0 - col, 2) + Math.pow(8 - row, 2))
+                break;
+            case 5:
+                //pathing(16, 16, direction, 0, 15);
+                return Math.sqrt(Math.pow(15 - col, 2) + Math.pow(0 - row, 2))
+                break;
+        }
+        return 1000000000;
+    }
+
+
+    that.getNearestPath = function (x, y, pathNum) {
+        let bestDist = 10000000000;
+        let bestSpot = {};
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                if (spots[i].col[j].path[pathNum].value) {
+                    let pathX = spots[i].col[j].x + (spotSize / 2);
+                    let pathY = spots[i].col[j].y + (spotSize / 2);
+                    let dist = Math.sqrt(Math.pow(x - pathX, 2) + Math.pow(y - pathY, 2))
+                    if (bestDist > dist) {
+                        bestSpot = { i: i, j: j };
+                        bestDist = dist;
+                    }
+                }
+            }
+        }
+
+        if (bestSpot.i) {
+            let pathX = spots[bestSpot.i].col[bestSpot.j].x + (spotSize / 2);
+            let pathY = spots[bestSpot.i].col[bestSpot.j].y + (spotSize / 2);
+            let dist = Math.sqrt(Math.pow(x - pathX, 2) + Math.pow(y - pathY, 2))
+
+            if (dist < 30) {
+                let startI = Math.max(bestSpot.i - 1, 0);
+                let startJ = Math.max(bestSpot.j - 1, 0);
+                let endI = Math.min(bestSpot.i + 1, 16);
+                let endJ = Math.min(bestSpot.j + 1, 29);
+
+                let nextSpot = {};
+                bestDist = 10000000000;
+                for (let i = startI; i <= endI; i++) {
+                    for (let j = startJ; j <= endJ; j++) {
+                        if (!(i === bestSpot.i && j === bestSpot.j)) {//wtf, javascript..
+                            if (spots[i].col[j].path[pathNum].value === true) {
+                                let dist = getDistToEnd(pathNum, i, j);
+                                if (bestDist > dist) {
+                                    nextSpot = { i: i, j: j };
+                                    bestDist = dist;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (nextSpot.i) {
+                    return {
+                        x: spots[nextSpot.i].col[nextSpot.j].x + (spotSize / 2),
+                        y: spots[nextSpot.i].col[nextSpot.j].y + (spotSize / 2),
+                    }
+                }
+            }
+            return {
+                x: spots[bestSpot.i].col[bestSpot.j].x + (spotSize / 2),
+                y: spots[bestSpot.i].col[bestSpot.j].y + (spotSize / 2),
+            }
+        }
+        return null;
     }
 
 
