@@ -85,6 +85,8 @@ Game.game = (function (input) {
     let addedNewTurret = false;
 
     function registerKeyCommands() {
+        document.getElementById('id-upgrade-turret').disabled = true;
+        document.getElementById('id-sell-turret').disabled = true;
         _keyboard.registerCommand(KeyEvent.DOM_VK_ESCAPE, function () {
             playingGame = false;
             Menu.menu.showScreen('main-menu');
@@ -95,17 +97,17 @@ Game.game = (function (input) {
         _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () {
             _turretManager.toggleShowFireDistance();
         });
-
-        document.getElementById('id-upgrade-turret').disabled = true;
-        document.getElementById('id-sell-turret').disabled = true;
-
         _mouse.registerCommand('mouseup', function (event) {
-            let x = event.clientX;
-            let y = event.clientY;
+            let x = event.clientX,
+                y = event.clientY,
+                col = Math.floor((x - 40) / 40),
+                row = Math.floor((y - 20) / 40);
+                console.log(y + ', ' + x);
+            if (validLocation(row, col)) return;
             if (isNewTurretMode) {
-                let turLoc = _grid.findAndSetTurretLoc(x, y);
+                let turLoc = _grid.findAndSetTurretLoc(row, col);
                 if (turLoc) {
-                    _turretManager.placeNewTurret(turLoc.x, turLoc.y);
+                    _turretManager.placeNewTurret(row, col);
                     isNewTurretMode = false;
                     addedNewTurret = true;
                 }
@@ -119,7 +121,6 @@ Game.game = (function (input) {
                 document.getElementById('id-sell-turret').disabled = !oneSelected;
             }
         });
-
         _mouse.registerCommand('mousemove', function (event) {
             let x = event.clientX;
             let y = event.clientY;
@@ -127,7 +128,6 @@ Game.game = (function (input) {
                 _turretManager.chooseTurretLoc(x, y);
             }
         });
-
         document.getElementById('id-new-turret-type1').addEventListener(
             'click',
             function () {
@@ -169,7 +169,6 @@ Game.game = (function (input) {
             }
         );
 
-
         //make sure the button and 'u' are the same
         document.getElementById('id-upgrade-turret').addEventListener(
             'click',
@@ -191,9 +190,15 @@ Game.game = (function (input) {
         _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () {
             _turretManager.sellSelectedTurret();
         });
+    }
 
-
-
+    function validLocation(row, col) {
+        console.log(row + ', ' + col);
+        return ( 
+            (col < 0 || col > 29 || row < 0 || row > 16) ||
+            (col < 1 && col < 80 && row > 6 && row < 10) ||
+            _grid.isTurret(row, col)
+        );
     }
 
     that.run = function () { requestAnimationFrame(gameLoop); }

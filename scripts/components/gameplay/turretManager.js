@@ -274,23 +274,6 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 	};
 
-	/*that.addTurret = function (spec) {
-		allTurrets.push(AnimatedModel(spec));
-	};*/
-
-	/*that.addTestTurret = function () {
-		allTurrets.push(AnimatedModel({
-			spriteSheet: 'assets/turret-1-1.png',
-			sprite: 0,
-			spriteCount: 1,
-			spriteTime: [1000],	// milliseconds per sprite animation frame
-			center: { x: 300, y: 300 },
-			rotation: 0,
-			//orientation: 0,				// Sprite orientation with respect to "forward"
-			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
-		}));
-	};*/
-
 	function isBetween(a, b, x) {
 		return x >= a && x <= b;
 	}
@@ -332,9 +315,9 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		chooseTurretY = y;
 	}
 
-	that.placeNewTurret = function (x, y) {
-		chooseTurretX = x;
-		chooseTurretY = y;
+	that.placeNewTurret = function (row, col) {
+		// chooseTurretX = x;
+		// chooseTurretY = y;
 		isChoosingTurretLoc = false;
 
 		let turPic = '';
@@ -364,13 +347,13 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			sprite: 0,
 			spriteCount: 1,
 			spriteTime: [1000],	// milliseconds per sprite animation frame
-			center: { x: x, y: y },
+			center: { x: (col * 40) + 60, y: (row * 40) + 40 },
 			rotation: 0,
 			//orientation: 0,				// Sprite orientation with respect to "forward"
 			rotateRate: (3.14159 / 1000) * 6,		// Radians per millisecond
 			shootRange: shootRange
 		}));
-		grid.turretPlaced(y, x);
+		grid.turretPlaced(row, col);
 	}
 
 	that.chooseTurretTypes = function (theType) {
