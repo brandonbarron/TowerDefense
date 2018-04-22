@@ -1,9 +1,15 @@
 Game.missileManager = function (graphics) {
 	'use strict';
-    let that = {};
-    let missiles = {};
-    let explosions = {};
-    let nextExplosionId = 1;
+    let that = {},
+        missiles = {},
+        explosions = {},
+        nextExplosionId;
+
+    that.initialize = function() {
+        missiles = {};
+        explosions = {};
+        nextExplosionId = 1;
+    }
 
     function collided(obj1, obj2) {
         let distance = Math.sqrt(Math.pow(obj1.position.x - obj2.position.x, 2) + Math.pow(obj1.position.y - obj2.position.y, 2));

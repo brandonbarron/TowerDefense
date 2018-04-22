@@ -1,7 +1,10 @@
 Game.grid = (function (graphics) {
-    let that = {}, spots, spotSize, cols, rows, renderGridLines;
-    let canvas, context;
-
+    let that = {},
+        spots,
+        spotSize,
+        cols,
+        rows,
+        renderGridLines;
 
     /*
         path 0 == turret / wall / blocked
@@ -11,34 +14,19 @@ Game.grid = (function (graphics) {
         path 4 == right to left
         path 5 == bottom to top
     */
-
-
     that.initialize = function () {
-        canvas = document.getElementById('canvas-main');
-        context = canvas.getContext('2d');
         renderGridLines = false;
         spots = [];
         spotSize = 40;
         cols = 30;
         rows = 17;
         generateGrid();
-        // for (let i = 2; i < 6; i++) findPath(i);
+        for (let i = 2; i < 6; i++) findPath(i);
     }
 
-    that.render = function () {
-        if (renderGridLines) drawLines();
-    }
+    that.render = function () { if (renderGridLines) drawLines(); }
 
-    function drawRectangleBorder(position, size, color) {
-        context.save();
-        context.beginPath();
-        context.rect(position.x, position.y, size.width, size.height);
-        context.lineWdith = .75;
-        context.strokeStyle = color;
-        context.stroke();
-        context.closePath();
-        context.restore();
-    }
+    that.update = function () { for (let i = 2; i < 6; i++) findPath(i); }
 
     function drawLines() {
         for (let i = 0; i < rows; i++)
@@ -49,7 +37,7 @@ Game.grid = (function (graphics) {
                 if (spots[i].col[j].path[3].value) graphics.drawRectangle({ x: x, y: y }, { width: spotSize, height: spotSize }, 'black');
                 if (spots[i].col[j].path[4].value) graphics.drawRectangle({ x: x, y: y }, { width: spotSize, height: spotSize }, 'black');
                 if (spots[i].col[j].path[5].value) graphics.drawRectangle({ x: x, y: y }, { width: spotSize, height: spotSize }, 'black');
-                drawRectangleBorder({ x: x, y: y }, { width: spotSize, height: spotSize }, 'lightgrey');
+                graphics.drawRectangleBorder({ x: x, y: y }, { width: spotSize, height: spotSize }, 'lightgrey');
             }
     }
 
@@ -70,10 +58,6 @@ Game.grid = (function (graphics) {
                 };
             }
         }
-    }
-
-    that.update = function () {
-        for (let i = 2; i < 6; i++) findPath(i);
     }
 
     function findPath(direction) {

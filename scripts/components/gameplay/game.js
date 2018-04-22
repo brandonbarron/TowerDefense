@@ -4,9 +4,10 @@ Game.game = (function (input) {
     let that = {},
         playingGame,
         image,
-        lastTimeStamp = performance.now();
-
-
+        lastTimeStamp = performance.now(),
+        chooseTurretType,
+        addedNewTurret,
+        isNewTurretMode;
     //game components
     let _graphics,
         _spriteManager,
@@ -18,7 +19,36 @@ Game.game = (function (input) {
         _keyboard,
         _mouse;
 
-    let isNewTurretMode = false;
+    that.initialize = function () {
+        _graphics = Game.graphics;
+        _spriteManager = Game.spriteManager;
+        _turretManager = Game.turretManager;
+        _missileManager = Game.missileManager;
+        _score = Game.score;
+        _grid = Game.grid;
+        _menu = Game.menu;
+        _keyboard = Master.input.Keyboard();
+        _mouse = Master.input.Mouse();
+        playingGame = true;
+        showGrid = false;
+        chooseTurretType = 0;
+        addedNewTurret = false;
+        isNewTurretMode = false;
+
+        _graphics.initialize();
+        _spriteManager.initialize();
+        _turretManager.initialize();
+        _missileManager.initialize();
+        _grid.initialize();
+        _menu.initialize();
+        _score.initialize();
+
+        registerKeyCommands();
+
+        image = new Image();
+        image.onload = function () { ready = true; };
+        image.src = "assets/grassBackground.jpg";
+    }
 
     function update(elapsedTime) {
         let gameRunning = _score.update(elapsedTime);
@@ -54,42 +84,6 @@ Game.game = (function (input) {
         requestAnimationFrame(gameLoop);
     }
 
-    that.initialize = function () {
-
-        _graphics = Game.graphics;
-        _spriteManager = Game.spriteManager;
-        _turretManager = Game.turretManager;
-        _missileManager = Game.missileManager;
-        _score = Game.score;
-        _grid = Game.grid;
-        _menu = Game.menu;
-        _keyboard = Master.input.Keyboard();
-        _mouse = Master.input.Mouse();
-        playingGame = true;
-        showGrid = false;
-
-        _graphics.initialize();
-        _spriteManager.initialize();
-        // _spriteManager.addTestSprite();
-
-        _turretManager.initialize();        
-        _missileManager = Game.missileManager;
-
-        _grid.initialize();
-        _menu.initialize();
-
-        _score = Game.score
-        registerKeyCommands();
-        image = new Image();
-        image.onload = function () { ready = true; };
-        image.src = "assets/grassBackground.jpg";
-
-
-    }
-
-    let chooseTurretType = 0;
-    let addedNewTurret = false;
-
     function registerKeyCommands() {
         document.getElementById('id-upgrade-turret').disabled = true;
         document.getElementById('id-sell-turret').disabled = true;
@@ -108,7 +102,7 @@ Game.game = (function (input) {
                 y = event.clientY,
                 col = Math.floor((x - 40) / 40),
                 row = Math.floor((y - 20) / 40);
-                console.log(y + ', ' + x);
+            console.log(y + ', ' + x);
             if (validLocation(row, col)) return;
             if (isNewTurretMode) {
                 let turLoc = _grid.findAndSetTurretLoc(row, col);
@@ -198,12 +192,12 @@ Game.game = (function (input) {
 
     function validLocation(row, col) {
         console.log(row + ', ' + col);
-        return ( 
+        return (
             (col < 0 || col > 29 || row < 0 || row > 16) ||
             (col === 0 && row > 6 && row < 10) ||
             (col === 29 && row > 6 && row < 10) ||
-            (row === 0 && col > 12 && col < 17 ) ||
-            (row === 16 && col > 12 && col < 17 ) ||
+            (row === 0 && col > 12 && col < 17) ||
+            (row === 16 && col > 12 && col < 17) ||
             _grid.isTurret(row, col)
         );
     }

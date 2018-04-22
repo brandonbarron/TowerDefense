@@ -1,16 +1,26 @@
 Game.score = (function (graphics) {
-    let that = {};
-    let curScore;
-    let remainingLives;
-    var canvas = document.getElementById('canvas-main');
-	var context = canvas.getContext('2d');
-    let gameOver = false;
-    let countDown = 3;
-    let startCountdownTime = 0;
-    let timeSoFar = 0;
-    let scoreRecorded = false;
-    let gameRunning = false;
-    let score = 0;
+    let that = {},
+        curScore,
+        remainingLives,
+        gameOver,
+        countDown,
+        startCountdownTime ,
+        timeSoFar,
+        scoreRecorded,
+        gameRunning,
+        score;
+
+    that.initialize = function() {
+        curScore = null;
+        remainingLives;
+        gameOver = false;
+        countDown = 3;
+        startCountdownTime = 0;
+        timeSoFar = 0;
+        scoreRecorded = false;
+        gameRunning = false;
+        score = 0;
+    }
 
     that.reset = function () {
         startCountdownTime = 0;
@@ -63,24 +73,28 @@ Game.score = (function (graphics) {
     }
 
     that.render = function () {
-        //score
-        context.font = "16px Arial";
-        context.fillStyle = "#CCCCCC";
-        context.fillText("Score: " + score, canvas.width - 90, canvas.height - 5);
+        graphics.drawText(
+                {x: 1190, y: 915},
+                'Score: ' + score,
+                '#CCCCCC',
+                '16px Arial'
+            );
 
-        if (countDown > 0 && !gameOver) {
-            context.font = "72px Arial";
-            context.fillStyle = "#CCCCCC";
-            context.fillText(countDown, 475, 400);
-        }
+        if (countDown > 0 && !gameOver)
+            graphics.drawText(
+                {x: 475, y: 400},
+                countDown,
+                '#CCCCCC',
+                '72px Arial'
+            );
 
-        if (gameOver) {
-            context.font = "72px Arial";
-            context.fillStyle = "white";
-            context.fillText("Game Over", 300, 400);
-        }
+        if (gameOver)
+            graphics.drawText(
+                {x: 300, y: 400},
+                'Game Over',
+                'white',
+                '72px Arial'
+            );
     };
-
-
     return that;
 }(Game.graphics));
