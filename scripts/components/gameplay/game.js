@@ -62,8 +62,8 @@ Game.game = (function (input) {
         _spriteManager.addTestSprite();
         
         _turretManager = Game.turretManager;
-        _turretManager.addTestTurret();
-        
+        //_turretManager.addTestTurret();
+
         _missileManager = Game.missileManager;
         
         _grid.initialize();
