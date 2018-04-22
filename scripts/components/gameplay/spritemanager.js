@@ -224,16 +224,6 @@ Game.spriteManager = function (graphics) {
 			sprite.moveForward(elapsedTime);
 		}
 
-
-		/*if (loc.x < 200) {
-			sprite.moveForward(elapsedTime);
-		} else if (loc.rotation < 1.57) {
-			//sprite.moveForward();
-			sprite.rotateRight(elapsedTime);
-			sprite.rotateRight(elapsedTime + 50);
-		} else if (loc.y < 200) {
-			sprite.moveForward(elapsedTime);
-		}*/
 	};
 
 
