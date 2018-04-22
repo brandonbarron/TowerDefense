@@ -4,15 +4,16 @@ Game.score = (function (graphics) {
         remainingLives,
         gameOver,
         countDown,
-        startCountdownTime ,
+        startCountdownTime,
         timeSoFar,
         scoreRecorded,
         gameRunning,
-        score;
+        score,
+        money;
 
-    that.initialize = function() {
+    that.initialize = function () {
         curScore = null;
-        remainingLives;
+        remainingLives = 5;
         gameOver = false;
         countDown = 3;
         startCountdownTime = 0;
@@ -20,6 +21,7 @@ Game.score = (function (graphics) {
         scoreRecorded = false;
         gameRunning = false;
         score = 0;
+        money = 1000;
     }
 
     that.reset = function () {
@@ -29,6 +31,31 @@ Game.score = (function (graphics) {
         countDown = 3;
         gameRunning = false;
         scoreRecorded = false;
+    }
+
+    that.killedSprite = function() {
+        money += 100;
+        score++;
+    }
+
+    that.spriteEscaped = function() {
+        remainingLives--;
+    }
+
+    that.purchaseIfAble = function(amount) {
+        if(money => amount){
+            money -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    that.sellItem = function(amount) {
+        money += amount;
+    }
+
+    that.getMoney = function() {
+        return money;
     }
 
     that.update = function (timeElapsed) {
@@ -69,20 +96,41 @@ Game.score = (function (graphics) {
             }
             localStorage['MyGame.highScores'] = JSON.stringify(newScores);
         }
+
+        document.getElementById('id-new-turret-type1').disabled = money < 400;
+        document.getElementById('id-new-turret-type2').disabled = money < 600;
+        document.getElementById('id-new-turret-type3').disabled = money < 800;
+        document.getElementById('id-new-turret-type4').disabled = money < 1000;
+
+
         return gameRunning;
     }
 
     that.render = function () {
         graphics.drawText(
-                {x: 1190, y: 915},
-                'Score: ' + score,
-                '#CCCCCC',
-                '16px Arial'
-            );
+            { x: 1185, y: 915 },
+            'Score: ' + score,
+            '#CCCCCC',
+            '16px Arial'
+        );
+
+        graphics.drawText(
+            { x: 1185, y: 895 },
+            'Money: ' + money,
+            '#CCCCCC',
+            '16px Arial'
+        );
+
+        graphics.drawText(
+            { x: 1185, y: 875 },
+            'Lives: ' + remainingLives,
+            '#CCCCCC',
+            '16px Arial'
+        );
 
         if (countDown > 0 && !gameOver)
             graphics.drawText(
-                {x: 475, y: 400},
+                { x: 475, y: 400 },
                 countDown,
                 '#CCCCCC',
                 '72px Arial'
@@ -90,12 +138,12 @@ Game.score = (function (graphics) {
 
         if (gameOver)
             graphics.drawText(
-                {x: 300, y: 400},
+                { x: 300, y: 400 },
                 'Game Over',
                 'white',
                 '72px Arial'
             );
     };
-    
+
     return that;
 }(Game.graphics));

@@ -59,7 +59,7 @@ Game.game = (function (input) {
             _grid.update();
             aTurretChanged = false;
         }
-        _spriteManager.update(elapsedTime, gameRunning, _grid);
+        _spriteManager.update(elapsedTime, gameRunning, _grid, _score);
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
         _missileManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
     }
@@ -147,7 +147,7 @@ Game.game = (function (input) {
 
                 let turLoc = _grid.findAndSetTurretLoc(row, col);
                 if (turLoc) {
-                    _turretManager.placeNewTurret(row, col);
+                    _turretManager.placeNewTurret(row, col, _score);
                     isNewTurretMode = false;
                     aTurretChanged = true;
                 }
@@ -156,7 +156,19 @@ Game.game = (function (input) {
                 let canUpgrade = false;
                 if (oneSelected) {
                     canUpgrade = _turretManager.canUpgrade();
+                    let upgradeCost = _turretManager.getSelectedUpgradeCost();
+
+                    canUpgrade = _score.getMoney() >= upgradeCost;
+
+                    document.getElementById('id-tower-level').innerHTML = 'Level: ' + _turretManager.getSelectedLevel();
+                    document.getElementById('id-tower-upgrade-cost').innerHTML = 'Upgrade cost: ' + upgradeCost;
+                    document.getElementById('id-tower-sell-amount').innerHTML = 'Sell price: ' + _turretManager.getSelectedSellPrice();
+                } else {
+                    document.getElementById('id-tower-level').innerHTML = '';
+                    document.getElementById('id-tower-upgrade-cost').innerHTML = '';
+                    document.getElementById('id-tower-sell-amount').innerHTML = '';
                 }
+
                 document.getElementById('id-upgrade-turret').disabled = !canUpgrade;
                 document.getElementById('id-sell-turret').disabled = !oneSelected;
             }
@@ -190,7 +202,7 @@ Game.game = (function (input) {
         document.getElementById('id-sell-turret').addEventListener(
             'click',
             function () {
-                _turretManager.sellSelectedTurret();
+                _turretManager.sellSelectedTurret(_score);
                 aTurretChanged = true;
             }
         );

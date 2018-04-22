@@ -200,6 +200,21 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			return upgradeLevel < 3 && upgradeTime <=0;
 		}
 
+		that.getUpgradeCost = function() {
+			if(that.canUpgrade()) {
+				return spec.upgradeCost * upgradeLevel;
+			} 
+			return 0;
+		}
+
+		that.getSellPrice = function() {
+			return (spec.upgradeCost * upgradeLevel) * 0.5;
+		}
+
+		that.getLevel = function() {
+			return upgradeLevel;
+		}
+
 		that.upgradeTurret = function () {
 			if(!that.canUpgrade()) {
 				return;
@@ -345,6 +360,21 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		return null;
 	}
 
+	that.getSelectedLevel = function() {
+		let tur = getSelected();
+		return tur.getLevel();
+	}
+
+	that.getSelectedUpgradeCost = function() {
+		let tur = getSelected();
+		return tur.getUpgradeCost();
+	}
+
+	that.getSelectedSellPrice = function() {
+		let tur = getSelected();
+		return tur.getSellPrice();
+	}
+
 	that.chooseTurretLoc = function (x, y) {
 		chooseTurretX = x;
 		chooseTurretY = y;
@@ -436,7 +466,39 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		return 0;
 	}
 
-	that.placeNewTurret = function (row, col) {
+	function getTurretUpgradeCost(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return 100;
+			case 2:
+				return 200;
+			case 3:
+				return 300;
+			case 4:
+				return 400;
+		}
+		return 0;
+	}
+
+	function getTurretCost(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return 400;
+			case 2:
+				return 600;
+			case 3:
+				return 800;
+			case 4:
+				return 1000;
+		}
+		return 0;
+	}
+
+	that.placeNewTurret = function (row, col, score) {
+		if(!score.purchaseIfAble(getTurretCost(chooseTurretType))) {
+			return;
+		}
+
 		isChoosingTurretLoc = false;
 
 		let turPic = getTurretPic(chooseTurretType);
@@ -444,6 +506,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		let shootFreq = getTurretShootFreq(chooseTurretType);
 		let rotateRate = getTurretRotateRate(chooseTurretType);
 		let shootDamage = getTurretShootDamage(chooseTurretType);
+		let upgradeCost = getTurretUpgradeCost(chooseTurretType);
 
 		allTurrets.push(AnimatedModel({
 			spriteSheet: turPic,
@@ -456,7 +519,8 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			rotateRate: rotateRate,		// Radians per millisecond
 			shootRange: shootRange,
 			shootFreq: shootFreq,
-			shootDamage: shootDamage
+			shootDamage: shootDamage,
+			upgradeCost: upgradeCost
 		}));
 		grid.turretPlaced(row, col);
 	}
@@ -466,14 +530,16 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		chooseTurretType = theType;
 	}
 
-	that.upgradeTurret = function () {
+	that.upgradeTurret = function (score) {
 		let selected = getSelected();
 		if (selected) {
-			selected.upgradeTurret();
+			if(score.purchaseIfAble(selected.getUpgradeCost())) {
+				selected.upgradeTurret();
+			}
 		}
 	}
 
-	that.sellSelectedTurret = function () {
+	that.sellSelectedTurret = function (score) {
 		for (let i = 0; i < allTurrets.length; i++) {
 			if (allTurrets[i].isItSelected()) {
 				let loc = allTurrets[i].getLoc();
@@ -481,6 +547,9 @@ Game.turretManager = function (graphics, missileManager, grid) {
 				let col = Math.floor((loc.x - 40) / 40);
 				let row = Math.floor((loc.y - 20) / 40);
 				grid.turretRemoved(row, col);
+
+				let sellAmount = allTurrets[i].getSellPrice();
+				score.sellItem(sellAmount);
 
 				allTurrets.splice(i, 1);
 				return;

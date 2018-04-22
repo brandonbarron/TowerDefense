@@ -282,7 +282,7 @@ Game.spriteManager = function (graphics) {
 	}
 
 
-	that.update = function (elapsedTime, gameRunning, theGrid) {
+	that.update = function (elapsedTime, gameRunning, theGrid, score) {
 		if (!gameRunning) {
 			//return;
 		}
@@ -307,15 +307,11 @@ Game.spriteManager = function (graphics) {
 		for (let i = allSprites.length - 1; i >= 0; i--) {
 			if (allSprites[i].getHealth() <= 0) {
 				allSprites.splice(i, 1);
+				score.killedSprite();
 				i--;
 			}
 		}
-/*		let  i = allSprites.length;
-		while (i--) {
-			if (allSprites[i].getHealth() <= 0) {
-				allSprites.splice(i, 1);
-			}
-		}*/
+
 	};
 
 	that.render = function () {
