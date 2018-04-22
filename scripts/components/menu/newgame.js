@@ -3,7 +3,7 @@ Menu.screens['new-game'] = (function (menu, input) {
     let _game = Game.game;
 
     function initialize() { 
-        _game.initialize(input);
+        // _game.initialize(input);
      }
 
     function run() {

@@ -68,6 +68,7 @@ Game.graphics = (function () {
         context.closePath();
         context.restore();
     }
+    
     that.clear = function() { context.clear(); }
 
     that.clearCountdown = function() { context.clearRect(400, 400, 100, 100); }

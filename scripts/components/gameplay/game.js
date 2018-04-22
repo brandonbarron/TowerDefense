@@ -24,6 +24,7 @@ Game.game = (function (input) {
         let gameRunning = _score.update(elapsedTime);
         _keyboard.update(elapsedTime);
         _mouse.update(elapsedTime);
+        _grid.update();
         _spriteManager.update(elapsedTime, gameRunning);
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
         _missileManager.update(elapsedTime, gameRunning);
@@ -84,17 +85,11 @@ Game.game = (function (input) {
             playingGame = false;
             Menu.menu.showScreen('main-menu');
         });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () {
-            showGrid ? showGrid = false : showGrid = true;
-        });
 
-        _keyboard.registerCommand(KeyEvent.DOM_VK_LEFT, function () {
-            // _paddle.move('left');
-        });
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX;
             let y = event.clientY;
-            console.log(x, y);
+            // console.log(x, y);
             if(isNewTurretMode) {
                 _turretManager.chooseTurretLoc(x, y);
             } else {
@@ -125,9 +120,11 @@ Game.game = (function (input) {
 
     function drawBackAndBorder() {
         _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
-        _graphics.drawRectangle({x: 0, y: 0}, {width: 1280, height: 20}, 'grey');
+        _graphics.drawRectangle({x: 0, y: 0}, {width: 560, height: 20}, 'grey');
+        _graphics.drawRectangle({x: 720, y: 0}, {width: 560, height: 20}, 'grey');
         _graphics.drawRectangle({x: 0, y: 0}, {width: 40, height: 300}, 'grey');
-        _graphics.drawRectangle({x: 0, y: 705}, {width: 1280, height: 20}, 'grey');
+        _graphics.drawRectangle({x: 0, y: 700}, {width: 560, height: 20}, 'grey');
+        _graphics.drawRectangle({x: 720, y: 700}, {width: 560, height: 20}, 'grey');
         _graphics.drawRectangle({x: 0, y: 420}, {width: 40, height: 300}, 'grey');
         _graphics.drawRectangle({x: 1240, y: 0}, {width: 40, height: 300}, 'grey');
         _graphics.drawRectangle({x: 1240, y: 420}, {width: 40, height: 300}, 'grey');

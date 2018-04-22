@@ -111,7 +111,7 @@ Game.turretManager = function (graphics, missileManager) {
 			}
 			totalTime += elapsedTime;
 			if(totalTime > fireTime && shouldFire) {
-				console.log('shooting');
+				// console.log('shooting');
 				missileNew({
 					id: nextMissileId++,
             		radius: radius,
