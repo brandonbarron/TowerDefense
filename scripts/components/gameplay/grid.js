@@ -1,5 +1,6 @@
 Game.grid = (function (graphics) {
     let that = {}, spots, spotSize, cols, rows, renderGridLines;
+    let canvas, context;
 
 
     /*
@@ -13,6 +14,8 @@ Game.grid = (function (graphics) {
 
 
     that.initialize = function () {
+        canvas = document.getElementById('canvas-main');
+        context = canvas.getContext('2d');
         renderGridLines = false;
         spots = [];
         spotSize = 40;
@@ -21,12 +24,25 @@ Game.grid = (function (graphics) {
         generateGrid();
     }
 
+<<<<<<< HEAD
     that.render = function () {
         if (renderGridLines) drawLines();
+=======
+    function drawRectangleBorder(position, size, color) {
+        context.save();
+        context.beginPath();
+        context.rect(position.x, position.y, size.width, size.height);
+        context.lineWdith = .75;
+        context.strokeStyle = color;
+        context.stroke();
+        context.closePath();
+        context.restore();
+>>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
     }
 
     function drawLines() {
         for (let i = 0; i < rows; i++)
+<<<<<<< HEAD
             for (let j = 0; j < cols; j++) {
                 let x = spots[i].col[j].x;
                 let y = spots[i].col[j].y;
@@ -38,6 +54,19 @@ Game.grid = (function (graphics) {
             }
     }
 
+=======
+        for (let j = 0; j < cols; j++) {
+            let x = spots[i].col[j].x;
+            let y = spots[i].col[j].y;
+            drawRectangleBorder({x: x, y: y}, {width: spotSize, height: spotSize}, 'lightgrey')
+        }
+    }
+
+    that.render = function() {
+        if (renderGridLines) drawLines();
+    }
+
+>>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
     function generateGrid() {
         for (let i = 0; i < rows; i++) {
             spots[i] = { col: [] };
@@ -147,6 +176,7 @@ Game.grid = (function (graphics) {
         }
     }
 
+<<<<<<< HEAD
     function pathDown(r, c, path) {
         let queue = [], temp = [];
         queue.push([{ row: r, col: c, nDir: null }]);
@@ -202,6 +232,26 @@ Game.grid = (function (graphics) {
     }
 
     that.invertRenderLines = function () { renderGridLines = !renderGridLines; }
+=======
+    that.findAndSetTurretLoc = function(x, y) {
+        if(y > 685) {
+			return null; //short curcuit!!!!!!!!!!!!!
+		}
+        x -= 40;
+        y -= 20;
+        let j = Math.floor(x / spotSize);
+        let i = Math.floor(y / spotSize) + 1;
+        console.log(i, j, spots);
+        spots[i].col[j].turret = true;
+        let loc = {
+            x: spots[i].col[j].x + (spotSize/2),
+            y: spots[i].col[j].y + (spotSize/2),
+        };
+        return loc;
+    }
+    
+    that.invertRenderLines = function() {renderGridLines = !renderGridLines; }
+>>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
 
     return that;
 

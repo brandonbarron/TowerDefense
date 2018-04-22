@@ -53,6 +53,41 @@ body {
   	position: absolute;
 	width: 100%;
 }
+ul.game-menu {
+	text-align: left;
+	padding: 0;
+	margin: 10px;
+	list-style: none;
+}
+
+ul.game-menu li {
+	margin-bottom: 0.1em;
+}
+
+ul.game-menu li button {
+	font-family: Arial, sans-serif;
+    font-size: 0.6em;
+	color: white;
+	width: 10em;
+    height: 1.5em;
+    background: transparent;
+	border: 0.1em solid lightgrey;
+}
+
+ul.game-menu li button:hover {
+    background: black;
+    color: white;
+}
+
+ul.game-menu li button:active {
+	color: #CECEF6;
+	background: rgb(0, 0, 0);
+}
+
+ul.game-menu li button:disabled  {
+	pointer-events:none; 
+    opacity: 0.6; 
+}
 
 ul.menu {
 	text-align: center;

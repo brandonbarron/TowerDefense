@@ -31,8 +31,9 @@ Game.turretManager = function (graphics, missileManager) {
 		let target = { x: 0, y : 0 };
 		let fireTime = 1000;
 		let totalTime = 0;
-		let shootDist = 350;
+		let shootRange = 350;
 		let isSelected = false;
+		let upgradeLevel = 1;
 		//from sample code
 		function crossProduct2d(v1, v2) {
 			return (v1.x * v2.y) - (v1.y * v2.x);
@@ -105,13 +106,17 @@ Game.turretManager = function (graphics, missileManager) {
 				}
 			} else {
 				let dist = Math.sqrt(Math.pow(target.x - spec.center.x, 2) + Math.pow(target.y - spec.center.y, 2))
-				if(dist > shootDist) {
+				if(dist > shootRange) {
 					shouldFire = false;
 				}
 			}
 			totalTime += elapsedTime;
 			if(totalTime > fireTime && shouldFire) {
+<<<<<<< HEAD
 				// console.log('shooting');
+=======
+				//console.log('shooting');
+>>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
 				missileNew({
 					id: nextMissileId++,
             		radius: radius,
@@ -168,14 +173,38 @@ Game.turretManager = function (graphics, missileManager) {
 			isSelected = false;
 		}
 
+		that.isItSelected = function() {
+			return isSelected;
+		}
+
+		that.setShootRange = function(newRange) {
+			shootRange = newRange;
+		}
+
+		that.getShootRange = function() {
+			return shootRange;
+		}
 
 		function missileNew(data) {
 			missileManager.addMissile(data);
 		}
 		
+		that.canUpgrade = function() {
+			return upgradeLevel < 3;
+		}
+
+		that.upgradeTurret = function() {
+			upgradeLevel++;
+			console.log(upgradeLevel);
+		}
 
 		return that;
 	}
+	let chooseTurretX = 0;
+	let chooseTurretY = 0;
+	let chooseTurretType = 0;
+	let isChoosingTurretLoc = false;
+	let isShowFireDistance = false;
 
 	function findClosestSprite(turret, allSprites) {
 		let bestI = 0;
@@ -192,6 +221,22 @@ Game.turretManager = function (graphics, missileManager) {
 		return bestI;
 	}
 
+	function isNearOtherTurret(x, y) {
+		for (let i = 0; i < allTurrets.length; i++) {
+			let loc = allTurrets[i].getLoc();
+			let turSize = 20;
+			let left = loc.x - turSize;
+			let right = loc.x + turSize;
+			let top = loc.y - turSize;
+			let bot = loc.y + turSize;
+
+			if(isBetween(left, right, x) && isBetween(top, bot, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	that.update = function (elapsedTime, gameRunning, allSprites) {
 		for (let i = 0; i < allTurrets.length; i++) {
@@ -206,7 +251,33 @@ Game.turretManager = function (graphics, missileManager) {
 	that.render = function () {
 		for (let i = 0; i < allTurrets.length; i++) {
 			allTurrets[i].render();
+			if(isShowFireDistance) {
+				let range = allTurrets[i].getShootRange();
+				graphics.drawCircle(allTurrets[i].getLoc(), range, { start: 0, end: 2 * Math.PI }, 'rgba(100, 100, 100, 0.1)');
+			}
 		}
+
+		if(isChoosingTurretLoc) {
+			console.log('choosing turret');
+			let turretRange = 75;
+			switch(chooseTurretType){
+				case 1:
+					turretRange = 75;
+					break;
+			}
+			let loc = {
+				x: chooseTurretX,
+				y: chooseTurretY
+			}
+
+			let color = 'rgba(0, 0, 255, 0.5)'
+			if(isNearOtherTurret(chooseTurretX, chooseTurretY)) {
+				color = 'rgba(255, 0, 0, 0.5)'
+			}
+
+			graphics.drawCircle(loc, turretRange, { start: 0, end: 2 * Math.PI }, color);
+		}
+
 	};
 
 	that.addTurret = function (spec) {
@@ -227,11 +298,14 @@ Game.turretManager = function (graphics, missileManager) {
 	};
 
 	function isBetween(a, b, x) {
-		return x > a && x < b;
+		return x >= a && x <= b;
 	}
 
 	that.selectTurret = function(x, y) {
 		let selectOne = false;
+		if(y > 685) {
+			return; //short curcuit!!!!!!!!!!!!!
+		}
 		for (let i = 0; i < allTurrets.length; i++) {
 			let loc = allTurrets[i].getLoc();
 			let turSize = 20;
@@ -247,16 +321,71 @@ Game.turretManager = function (graphics, missileManager) {
 				allTurrets[i].unselect();
 			}
 		}
+		return selectOne;
 	}
 
-	let chooseTurretX = 0;
-	let chooseTurretY = 0;
+	function getSelected(){
+		for (let i = 0; i < allTurrets.length; i++) {
+			if(allTurrets[i].isItSelected()) {
+				return allTurrets[i];
+			}
+		}
+		return null;
+	}
 
 	that.chooseTurretLoc = function(x, y) {
 		chooseTurretX = x;
 		chooseTurretY = y;
 	}
-	
+
+	that.placeNewTurret = function(x, y) {
+		chooseTurretX = x;
+		chooseTurretY = y;
+		isChoosingTurretLoc = false;
+		allTurrets.push(AnimatedModel({
+			spriteSheet: 'assets/turret-1-1.png',
+			sprite: 0,
+			spriteCount: 1,
+			spriteTime: [1000],	// milliseconds per sprite animation frame
+			center: { x: x, y: y },
+			rotation: 0,
+			//orientation: 0,				// Sprite orientation with respect to "forward"
+			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
+		}));
+	}
+
+	that.chooseTurretTypes = function(theType) {
+		isChoosingTurretLoc = true;
+		chooseTurretType = theType;
+	}
+
+	that.upgradeTurret = function() {
+		let selected = getSelected();
+		if(selected) {
+			selected.upgradeTurret();
+		}
+	}
+
+	that.sellSelectedTurret = function() {
+		for (let i = 0; i < allTurrets.length; i++) {
+			if(allTurrets[i].isItSelected()){
+				allTurrets.splice(i, 1);
+				return;
+			}
+		}
+	}
+
+	that.toggleShowFireDistance = function() {
+		isShowFireDistance = !isShowFireDistance;
+	}
+
+	that.canUpgrade = function() {
+		let selected = getSelected();
+		if(selected) {
+			return selected.canUpgrade();
+		}
+		return false;
+	}
 
 	that.reset = function () {
 		allTurrets.length = 0;

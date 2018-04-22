@@ -85,27 +85,88 @@ Game.game = (function (input) {
             playingGame = false;
             Menu.menu.showScreen('main-menu');
         });
+<<<<<<< HEAD
+=======
+        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () {
+            _grid.invertRenderLines();
+        });
+        _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () {
+            _turretManager.toggleShowFireDistance();
+        });
+
+        document.getElementById('id-upgrade-turret').disabled = true;
+        document.getElementById('id-sell-turret').disabled = true;
+>>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
 
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX;
             let y = event.clientY;
+<<<<<<< HEAD
             // console.log(x, y);
             if(isNewTurretMode) {
                 _turretManager.chooseTurretLoc(x, y);
+=======
+            if (isNewTurretMode) {
+                let turLoc = _grid.findAndSetTurretLoc(x, y);
+                if (turLoc) {
+                    _turretManager.placeNewTurret(turLoc.x, turLoc.y);
+                    isNewTurretMode = false;
+                }
+>>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
             } else {
-                _turretManager.selectTurret(x, y);
+                let oneSelected = _turretManager.selectTurret(x, y);
+                let canUpgrade = false;
+                if (oneSelected) {
+                    canUpgrade = _turretManager.canUpgrade();
+                }
+                document.getElementById('id-upgrade-turret').disabled = !canUpgrade;
+                document.getElementById('id-sell-turret').disabled = !oneSelected;
+            }
+        });
+
+        _mouse.registerCommand('mousemove', function (event) {
+            let x = event.clientX;
+            let y = event.clientY;
+            if (isNewTurretMode) {
+                _turretManager.chooseTurretLoc(x, y);
             }
         });
 
         document.getElementById('id-new-turret-type1').addEventListener(
             'click',
-            function () { 
+            function () {
                 chooseTurretType = 1;
-                isNewTurretMode = true;
+                _turretManager.chooseTurretTypes(chooseTurretType)
+                setTimeout(function () {
+                    isNewTurretMode = true;
+                }, 100);
             }
         );
 
-        
+        //make sure the button and 'u' are the same
+        document.getElementById('id-upgrade-turret').addEventListener(
+            'click',
+            function () {
+                _turretManager.upgradeTurret();
+            }
+        );
+        _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () {
+            _turretManager.upgradeTurret();
+        });
+
+        //make sure the button and 'u' are the same
+        document.getElementById('id-sell-turret').addEventListener(
+            'click',
+            function () {
+                _turretManager.sellSelectedTurret();
+            }
+        );
+        _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () {
+            _turretManager.sellSelectedTurret();
+        });
+
+
+
     }
 
     that.run = function () { requestAnimationFrame(gameLoop); }
@@ -120,6 +181,7 @@ Game.game = (function (input) {
 
     function drawBackAndBorder() {
         _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
+<<<<<<< HEAD
         _graphics.drawRectangle({x: 0, y: 0}, {width: 560, height: 20}, 'grey');
         _graphics.drawRectangle({x: 720, y: 0}, {width: 560, height: 20}, 'grey');
         _graphics.drawRectangle({x: 0, y: 0}, {width: 40, height: 300}, 'grey');
@@ -128,6 +190,14 @@ Game.game = (function (input) {
         _graphics.drawRectangle({x: 0, y: 420}, {width: 40, height: 300}, 'grey');
         _graphics.drawRectangle({x: 1240, y: 0}, {width: 40, height: 300}, 'grey');
         _graphics.drawRectangle({x: 1240, y: 420}, {width: 40, height: 300}, 'grey');
+=======
+        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 1280, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 705 }, { width: 1280, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 420 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 1240, y: 0 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 1240, y: 420 }, { width: 40, height: 300 }, 'grey');
+>>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
     }
 
     return that;
