@@ -6,7 +6,7 @@ Game.game = (function (input) {
         image,
         lastTimeStamp = performance.now(),
         chooseTurretType,
-        addedNewTurret,
+        aTurretChanged,
         isNewTurretMode;
     //game components
     let _graphics,
@@ -32,7 +32,7 @@ Game.game = (function (input) {
         playingGame = true;
         showGrid = false;
         chooseTurretType = 0;
-        addedNewTurret = false;
+        aTurretChanged = false;
         isNewTurretMode = false;
 
         _graphics.initialize();
@@ -54,9 +54,9 @@ Game.game = (function (input) {
         let gameRunning = _score.update(elapsedTime);
         _keyboard.update(elapsedTime);
         _mouse.update(elapsedTime);
-        if (addedNewTurret) {
+        if (aTurretChanged) {
             _grid.update();
-            addedNewTurret = false;
+            aTurretChanged = false;
         }
         _spriteManager.update(elapsedTime, gameRunning);
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
@@ -103,13 +103,17 @@ Game.game = (function (input) {
                 col = Math.floor((x - 40) / 40),
                 row = Math.floor((y - 20) / 40);
                 
-            if (validLocation(row, col)) return;
+            
             if (isNewTurretMode) {
+                let isInvalid = validLocation(row, col);
+                _turretManager.setIsInvalidTurretLoc(isInvalid);
+                if (isInvalid) return; //short curcuit
+
                 let turLoc = _grid.findAndSetTurretLoc(row, col);
                 if (turLoc) {
                     _turretManager.placeNewTurret(row, col);
                     isNewTurretMode = false;
-                    addedNewTurret = true;
+                    aTurretChanged = true;
                 }
             } else {
                 let oneSelected = _turretManager.selectTurret(x, y);
@@ -123,7 +127,12 @@ Game.game = (function (input) {
         });
         _mouse.registerCommand('mousemove', function (event) {
             if (isNewTurretMode) {
-                _turretManager.chooseTurretLoc(event.clientX, event.clientY);
+                let x = event.clientX,
+                    y = event.clientY,
+                    col = Math.floor((x - 40) / 40),
+                    row = Math.floor((y - 20) / 40);
+                _turretManager.setIsInvalidTurretLoc(validLocation(row, col));
+                _turretManager.chooseTurretLoc(x, y);
             }
         });
         document.getElementById('id-new-turret-type1').addEventListener(
@@ -183,6 +192,7 @@ Game.game = (function (input) {
             'click',
             function () {
                 _turretManager.sellSelectedTurret();
+                aTurretChanged = true;
             }
         );
         _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () {
@@ -197,7 +207,8 @@ Game.game = (function (input) {
             (col === 29 && row > 6 && row < 10) ||
             (row === 0 && col > 12 && col < 17) ||
             (row === 16 && col > 12 && col < 17) ||
-            _grid.isTurret(row, col)
+            _grid.isTurret(row, col) ||
+            _grid.testForBlocking(row, col)
         );
     }
 

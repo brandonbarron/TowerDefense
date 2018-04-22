@@ -232,8 +232,51 @@ Game.grid = (function (graphics) {
         spots[row].col[col].path[5].value = false;
         resetGrid();
     }
+
+    that.turretRemoved = function(row, col) {
+        spots[row].col[col].path[0].value = false;
+        spots[row].col[col].path[1].value = true;
+        spots[row].col[col].path[2].value = true;
+        spots[row].col[col].path[3].value = true;
+        spots[row].col[col].path[4].value = true;
+        spots[row].col[col].path[5].value = true;
+        resetGrid();
+    }
     
     that.isTurret = function(row, col) { return spots[row].col[col].path[0].value; }
+
+    function isPath(pathNum) {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                let x = spots[i].col[j].x;
+                let y = spots[i].col[j].y;
+                if (spots[i].col[j].path[pathNum].value) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    that.testForBlocking = function(row, col) {
+        that.turretPlaced(row, col);
+
+        for (let i = 2; i < 6; i++) findPath(i);//manually do this, normally update function does it
+
+        let allHasPath = true;
+
+        for (let i = 2; i < 6; i++) {
+            if(!isPath(i)) {
+                allHasPath = false;
+            }
+        }
+
+        that.turretRemoved(row, col);
+        for (let i = 2; i < 6; i++) findPath(i);//manually do this, normally update function does it
+
+        return !allHasPath;
+    }
+
 
     return that;
 

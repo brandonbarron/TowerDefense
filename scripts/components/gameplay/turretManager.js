@@ -8,7 +8,8 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		chooseTurretY,
 		chooseTurretType,
 		isChoosingTurretLoc,
-		isShowFireDistance;
+		isShowFireDistance, 
+		isInvalidTurretLoc;
 	
 	function AnimatedModel(spec) {
 		var that = {};
@@ -238,6 +239,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		chooseTurretType = 0;
 		isChoosingTurretLoc = false;
 		isShowFireDistance = false;
+		isInvalidTurretLoc = false;
 	}
 
 	that.update = function (elapsedTime, gameRunning, allSprites) {
@@ -275,9 +277,9 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			}
 
 			let color = 'rgba(0, 0, 255, 0.5)'
-			// if (isNearOtherTurret(chooseTurretX, chooseTurretY)) {
-			// 	color = 'rgba(255, 0, 0, 0.5)'
-			// }
+			if (isInvalidTurretLoc) {
+			 	color = 'rgba(255, 0, 0, 0.5)'
+			}
 			graphics.drawText({x: 1000, y: 100}, 'y: ' + loc.y, 'black', '72px Arial');
             graphics.drawText({x: 1000, y: 200}, 'x: ' + loc.x, 'black', '72px Arial');
 			graphics.drawCircle(loc, turretRange, { start: 0, end: 2 * Math.PI }, color);
@@ -378,6 +380,12 @@ Game.turretManager = function (graphics, missileManager, grid) {
 	that.sellSelectedTurret = function () {
 		for (let i = 0; i < allTurrets.length; i++) {
 			if (allTurrets[i].isItSelected()) {
+				let loc = allTurrets[i].getLoc();
+
+				let col = Math.floor((loc.x - 40) / 40);
+                let row = Math.floor((loc.y - 20) / 40);
+				grid.turretRemoved(row, col);
+
 				allTurrets.splice(i, 1);
 				return;
 			}
@@ -394,6 +402,10 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			return selected.canUpgrade();
 		}
 		return false;
+	}
+
+	that.setIsInvalidTurretLoc = function(isInvalid) {
+		isInvalidTurretLoc = isInvalid;
 	}
 
 	that.reset = function () {
