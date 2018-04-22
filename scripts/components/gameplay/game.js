@@ -67,7 +67,7 @@ Game.game = (function (input) {
         _missileManager = Game.missileManager;
         
         _grid.initialize();
-        _menu.initialize(_grid.renderGridLines);
+        _menu.initialize();
 
         _score = Game.score
         registerKeyCommands();
@@ -85,8 +85,6 @@ Game.game = (function (input) {
             playingGame = false;
             Menu.menu.showScreen('main-menu');
         });
-<<<<<<< HEAD
-=======
         _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () {
             _grid.invertRenderLines();
         });
@@ -96,23 +94,16 @@ Game.game = (function (input) {
 
         document.getElementById('id-upgrade-turret').disabled = true;
         document.getElementById('id-sell-turret').disabled = true;
->>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
 
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX;
             let y = event.clientY;
-<<<<<<< HEAD
-            // console.log(x, y);
-            if(isNewTurretMode) {
-                _turretManager.chooseTurretLoc(x, y);
-=======
             if (isNewTurretMode) {
                 let turLoc = _grid.findAndSetTurretLoc(x, y);
                 if (turLoc) {
                     _turretManager.placeNewTurret(turLoc.x, turLoc.y);
                     isNewTurretMode = false;
                 }
->>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
             } else {
                 let oneSelected = _turretManager.selectTurret(x, y);
                 let canUpgrade = false;
@@ -181,7 +172,6 @@ Game.game = (function (input) {
 
     function drawBackAndBorder() {
         _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
-<<<<<<< HEAD
         _graphics.drawRectangle({x: 0, y: 0}, {width: 560, height: 20}, 'grey');
         _graphics.drawRectangle({x: 720, y: 0}, {width: 560, height: 20}, 'grey');
         _graphics.drawRectangle({x: 0, y: 0}, {width: 40, height: 300}, 'grey');
@@ -190,14 +180,6 @@ Game.game = (function (input) {
         _graphics.drawRectangle({x: 0, y: 420}, {width: 40, height: 300}, 'grey');
         _graphics.drawRectangle({x: 1240, y: 0}, {width: 40, height: 300}, 'grey');
         _graphics.drawRectangle({x: 1240, y: 420}, {width: 40, height: 300}, 'grey');
-=======
-        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 1280, height: 20 }, 'grey');
-        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 40, height: 300 }, 'grey');
-        _graphics.drawRectangle({ x: 0, y: 705 }, { width: 1280, height: 20 }, 'grey');
-        _graphics.drawRectangle({ x: 0, y: 420 }, { width: 40, height: 300 }, 'grey');
-        _graphics.drawRectangle({ x: 1240, y: 0 }, { width: 40, height: 300 }, 'grey');
-        _graphics.drawRectangle({ x: 1240, y: 420 }, { width: 40, height: 300 }, 'grey');
->>>>>>> 0779ab6e9457ca218b6eb21c676ac87ee0519c81
     }
 
     return that;
