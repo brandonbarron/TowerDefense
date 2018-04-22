@@ -312,6 +312,18 @@ Game.spriteManager = function (graphics) {
 			}
 		}
 
+		//remove escaped sprites
+		for (let i = allSprites.length - 1; i >= 0; i--) {
+			let pathNum = allSprites[i].getFollowPath();
+			let loc = allSprites[i].getLoc();
+			let dist =theGrid.getDistFromFinish(loc.x, loc.y, pathNum);
+			if (dist <= 0.01) {
+				allSprites.splice(i, 1);
+				score.spriteEscaped();
+				i--;
+			}
+		}
+
 	};
 
 	that.render = function () {

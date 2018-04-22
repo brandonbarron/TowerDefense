@@ -364,13 +364,14 @@ Game.grid = (function (graphics) {
                     }
                 }
 
-                if (nextSpot.i) {
+                if (nextSpot.i != null) {
                     return {
                         x: spots[nextSpot.i].col[nextSpot.j].x + (spotSize / 2),
                         y: spots[nextSpot.i].col[nextSpot.j].y + (spotSize / 2),
                     }
                 }
             }
+            
             return {
                 x: spots[bestSpot.i].col[bestSpot.j].x + (spotSize / 2),
                 y: spots[bestSpot.i].col[bestSpot.j].y + (spotSize / 2),
@@ -379,6 +380,11 @@ Game.grid = (function (graphics) {
         return null;
     }
 
+    that.getDistFromFinish = function(x, y, pathNum) {
+        let col = Math.floor((x - 40) / 40),
+            row = Math.floor((y - 20) / 40);
+        return getDistToEnd(pathNum, row, col);
+    }
 
     return that;
 
