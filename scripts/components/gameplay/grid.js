@@ -235,14 +235,14 @@ Game.grid = (function (graphics) {
         if(y > 685) {
 			return null; //short curcuit!!!!!!!!!!!!!
 		}
-        x -= 40;
-        y -= 20;
-        let j = Math.floor(x / spotSize);
-        let i = Math.floor(y / spotSize) + 1;
-        spots[i].col[j].turret = true;
+        //x -= 40;
+        //y -= 20;
+        let row = Math.floor((y - 20) / spotSize) + 1;
+        let col = Math.floor((x - 40) / spotSize);
+        //spots[i].col[j].turret = true;
         let loc = {
-            x: spots[i].col[j].x + (spotSize/2),
-            y: spots[i].col[j].y + (spotSize/2),
+            x: spots[row].col[col].x + (spotSize/2),
+            y: spots[row].col[col].y + (spotSize/2),
         };
         return loc;
     }
