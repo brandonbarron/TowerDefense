@@ -20,7 +20,7 @@ Game.missileManager = function (graphics) {
 
     that.update = function(elapsedTime, gameRunning, allSprites) {
         if(!gameRunning) {
-            //return;
+            return;
         }
         let removeMissiles = [];
         for (let missile in missiles) {

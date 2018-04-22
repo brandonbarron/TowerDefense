@@ -88,8 +88,8 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 		that.update = function (elapsedTime, gameRunning) {
 			if (!gameRunning) {
-				//return;
-				spec.rotation = 0;
+				return;
+				//spec.rotation = 0;
 			}
 			if(upgradeTime > 0) {
 				upgradeTime -= elapsedTime;

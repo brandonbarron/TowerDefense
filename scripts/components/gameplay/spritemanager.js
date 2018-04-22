@@ -284,7 +284,7 @@ Game.spriteManager = function (graphics) {
 
 	that.update = function (elapsedTime, gameRunning, theGrid, score) {
 		if (!gameRunning) {
-			//return;
+			return;
 		}
 
 		curTime += elapsedTime;

@@ -15,7 +15,7 @@ Game.score = (function (graphics) {
         curScore = null;
         remainingLives = 5;
         gameOver = false;
-        countDown = 3;
+        countDown = 0;
         startCountdownTime = 0;
         timeSoFar = 0;
         scoreRecorded = false;
@@ -28,33 +28,33 @@ Game.score = (function (graphics) {
         startCountdownTime = 0;
         timeSoFar = 0;
         gameOver = false;
-        countDown = 3;
+        countDown = 0;
         gameRunning = false;
         scoreRecorded = false;
     }
 
-    that.killedSprite = function() {
+    that.killedSprite = function () {
         money += 100;
         score++;
     }
 
-    that.spriteEscaped = function() {
+    that.spriteEscaped = function () {
         remainingLives--;
     }
 
-    that.purchaseIfAble = function(amount) {
-        if(money => amount){
+    that.purchaseIfAble = function (amount) {
+        if (money => amount) {
             money -= amount;
             return true;
         }
         return false;
     }
 
-    that.sellItem = function(amount) {
+    that.sellItem = function (amount) {
         money += amount;
     }
 
-    that.getMoney = function() {
+    that.getMoney = function () {
         return money;
     }
 
@@ -102,9 +102,16 @@ Game.score = (function (graphics) {
         document.getElementById('id-new-turret-type3').disabled = money < 800;
         document.getElementById('id-new-turret-type4').disabled = money < 1000;
 
+        document.getElementById('id-start-level').disabled = gameRunning;
+
 
         return gameRunning;
     }
+
+    document.getElementById('id-start-level').addEventListener('click',
+        function () {
+            countDown = 3;
+        });
 
     that.render = function () {
         graphics.drawText(
@@ -130,7 +137,7 @@ Game.score = (function (graphics) {
 
         if (countDown > 0 && !gameOver)
             graphics.drawText(
-                { x: 475, y: 400 },
+                { x: 575, y: 400 },
                 countDown,
                 '#CCCCCC',
                 '72px Arial'
