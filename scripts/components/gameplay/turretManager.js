@@ -105,7 +105,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			let theRotation = sprite.getRot();
 			//TODO: I have no idea why its always 90 degrees off
 			var result = computeAngle(theRotation - 1.570796, spec.center, target);
-			if (testTolerance(result.angle, 0, 0.1) === false) {
+			if (testTolerance(result.angle, 0, 0.05) === false) {
 				shouldFire = false;
 				if (result.crossProduct > 0) {
 					sprite.rotateRight(spec.rotateRate);
@@ -132,7 +132,8 @@ Game.turretManager = function (graphics, missileManager, grid) {
 						x: spec.center.x,
 						y: spec.center.y
 					},
-					timeRemaining: spec.shootRange / missileSpeed
+					timeRemaining: spec.shootRange / missileSpeed,
+					shootDamage: spec.shootDamage
 				});
 				fireTime = totalTime + spec.shootFreq;
 			}
@@ -421,6 +422,20 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		return 0;
 	}
 
+	function getTurretShootDamage(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return 100;
+			case 2:
+				return 200;
+			case 3:
+				return 300;
+			case 4:
+				return 400;
+		}
+		return 0;
+	}
+
 	that.placeNewTurret = function (row, col) {
 		isChoosingTurretLoc = false;
 
@@ -428,6 +443,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		let shootRange = getTurretRange(chooseTurretType);
 		let shootFreq = getTurretShootFreq(chooseTurretType);
 		let rotateRate = getTurretRotateRate(chooseTurretType);
+		let shootDamage = getTurretShootDamage(chooseTurretType);
 
 		allTurrets.push(AnimatedModel({
 			spriteSheet: turPic,
@@ -439,7 +455,8 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			//orientation: 0,				// Sprite orientation with respect to "forward"
 			rotateRate: rotateRate,		// Radians per millisecond
 			shootRange: shootRange,
-			shootFreq: shootFreq
+			shootFreq: shootFreq,
+			shootDamage: shootDamage
 		}));
 		grid.turretPlaced(row, col);
 	}

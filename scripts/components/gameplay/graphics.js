@@ -230,6 +230,10 @@ Game.graphics = (function () {
             //
             // Our clever trick, replace the draw function once the image is loaded...no if statements!
             that.draw = function () {
+                if(spec.center.y > 700) { //TODO: verify y
+                    return;
+                }
+
                 context.save();
 
                 context.translate(spec.center.x, spec.center.y);

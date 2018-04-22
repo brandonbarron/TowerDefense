@@ -20,7 +20,7 @@ Game.spriteManager = function (graphics) {
 	let curTime = 0;
 	let nextSpriteTime = 0;
 	let curLevel = 1;
-	let remainingSprites = 20;
+	let remainingSprites = 10;
 
 	that.initialize = function () {
 		allSprites = [];
@@ -28,7 +28,7 @@ Game.spriteManager = function (graphics) {
 		curTime = 0;
 		nextSpriteTime = 0;
 		curLevel = 1;
-		remainingSprites = 20;
+		remainingSprites = 10;
 	}
 
 	//------------------------------------------------------------------
@@ -40,6 +40,8 @@ Game.spriteManager = function (graphics) {
 	function AnimatedModel(spec) {
 		var that = {};
 		let sprite = graphics.SpriteSheet(spec);	// We contain a SpriteSheet, not inherited from, big difference
+
+		let health = 1000;
 
 		that.update = function (elapsedTime) {
 			sprite.update(elapsedTime);
@@ -100,6 +102,14 @@ Game.spriteManager = function (graphics) {
 
 		that.getFollowPath = function () {
 			return spec.followPath;
+		}
+
+		that.reduceHealth = function (damage) {
+			health -= damage;
+		}
+
+		that.getHealth = function () {
+			return health;
 		}
 
 		return that;
@@ -231,14 +241,14 @@ Game.spriteManager = function (graphics) {
 	that.startNextLevel = function () {
 		curLevel++;
 		nextSpriteTime = 0;
-		remainingSprites = 20;
+		remainingSprites = 10;
 	}
 
 	that.addNewSprite = function (theGrid) {
 		remainingSprites--;
 		let spritePic = '';
 		let speed = 0;
-		let followPath = Math.floor(Math.random()*(4)+2);
+		let followPath = Math.floor(Math.random() * (4) + 2);
 
 		let theCenter = theGrid.getStartforPath(followPath);
 
@@ -287,6 +297,25 @@ Game.spriteManager = function (graphics) {
 			updateLoc(allSprites[i], elapsedTime, theGrid);
 			allSprites[i].update(elapsedTime);
 		}
+
+		for (let i = 0; i < allSprites.length; i++) {
+			updateLoc(allSprites[i], elapsedTime, theGrid);
+			allSprites[i].update(elapsedTime);
+		}
+
+		//remove dead sprites
+		for (let i = allSprites.length - 1; i >= 0; i--) {
+			if (allSprites[i].getHealth() <= 0) {
+				allSprites.splice(i, 1);
+				i--;
+			}
+		}
+/*		let  i = allSprites.length;
+		while (i--) {
+			if (allSprites[i].getHealth() <= 0) {
+				allSprites.splice(i, 1);
+			}
+		}*/
 	};
 
 	that.render = function () {
