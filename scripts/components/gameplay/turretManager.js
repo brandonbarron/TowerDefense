@@ -8,7 +8,7 @@ Game.turretManager = function (graphics, missileManager) {
 	function AnimatedModel(spec) {
 		var that = {};
 		var sprite = graphics.SpriteSheet({
-			spriteSheet: 'assets/turret-1-1.png',
+			spriteSheet: spec.spriteSheet,
 			sprite: 0,
 			spriteCount: 1,
 			spriteTime: [1000],	// milliseconds per sprite animation frame
@@ -31,7 +31,7 @@ Game.turretManager = function (graphics, missileManager) {
 		let target = { x: 0, y: 0 };
 		let fireTime = 1000;
 		let totalTime = 0;
-		let shootRange = 350;
+		//let shootRange = 350;
 		let isSelected = false;
 		let upgradeLevel = 1;
 		//from sample code
@@ -106,7 +106,7 @@ Game.turretManager = function (graphics, missileManager) {
 				}
 			} else {
 				let dist = Math.sqrt(Math.pow(target.x - spec.center.x, 2) + Math.pow(target.y - spec.center.y, 2))
-				if (dist > shootRange) {
+				if (dist > spec.shootRange) {
 					shouldFire = false;
 				}
 			}
@@ -173,11 +173,11 @@ Game.turretManager = function (graphics, missileManager) {
 		}
 
 		that.setShootRange = function (newRange) {
-			shootRange = newRange;
+			spec.shootRange = newRange;
 		}
 
 		that.getShootRange = function () {
-			return shootRange;
+			return spec.shootRange;
 		}
 
 		function missileNew(data) {
@@ -253,7 +253,6 @@ Game.turretManager = function (graphics, missileManager) {
 		}
 
 		if (isChoosingTurretLoc) {
-			console.log('choosing turret');
 			let turretRange = 75;
 			switch (chooseTurretType) {
 				case 1:
@@ -275,9 +274,9 @@ Game.turretManager = function (graphics, missileManager) {
 
 	};
 
-	that.addTurret = function (spec) {
+	/*that.addTurret = function (spec) {
 		allTurrets.push(AnimatedModel(spec));
-	};
+	};*/
 
 	/*that.addTestTurret = function () {
 		allTurrets.push(AnimatedModel({
@@ -339,22 +338,26 @@ Game.turretManager = function (graphics, missileManager) {
 		isChoosingTurretLoc = false;
 
 		let turPic = '';
+		let shootRange = 0;
 
 		switch (chooseTurretType) {
 			case 1:
 				turPic = 'assets/turret-1-1.png';
+				shootRange = 100;
 				break;
 			case 2:
-				turPic = 'assets/turret-1-1.png';
+				turPic = 'assets/turret-2-1.png';
+				shootRange = 200;
 				break;
 			case 3:
-				turPic = 'assets/turret-1-1.png';
+				turPic = 'assets/turret-3-1.png';
+				shootRange = 300;
 				break;
 			case 4:
-				turPic = 'assets/turret-1-1.png';
+				turPic = 'assets/turret-4-1.png';
+				shootRange = 400;
 				break;
 		}
-
 
 		allTurrets.push(AnimatedModel({
 			spriteSheet: turPic,
@@ -364,7 +367,8 @@ Game.turretManager = function (graphics, missileManager) {
 			center: { x: x, y: y },
 			rotation: 0,
 			//orientation: 0,				// Sprite orientation with respect to "forward"
-			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
+			rotateRate: (3.14159 / 1000) * 6,		// Radians per millisecond
+			shootRange: shootRange
 		}));
 	}
 

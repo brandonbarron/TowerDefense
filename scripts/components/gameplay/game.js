@@ -24,7 +24,10 @@ Game.game = (function (input) {
         let gameRunning = _score.update(elapsedTime);
         _keyboard.update(elapsedTime);
         _mouse.update(elapsedTime);
-        _grid.update();
+        if (addedNewTurret) {
+            _grid.update();
+            addedNewTurret = false;
+        }
         _spriteManager.update(elapsedTime, gameRunning);
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
         _missileManager.update(elapsedTime, gameRunning);
@@ -60,12 +63,12 @@ Game.game = (function (input) {
         _graphics.initialize();
         _spriteManager = Game.spriteManager;//TODO: why is it always undefined unless I assign it here?
         _spriteManager.addTestSprite();
-        
+
         _turretManager = Game.turretManager;
         //_turretManager.addTestTurret();
 
         _missileManager = Game.missileManager;
-        
+
         _grid.initialize();
         _menu.initialize();
 
@@ -79,6 +82,7 @@ Game.game = (function (input) {
     }
 
     let chooseTurretType = 0;
+    let addedNewTurret = false;
 
     function registerKeyCommands() {
         _keyboard.registerCommand(KeyEvent.DOM_VK_ESCAPE, function () {
@@ -103,6 +107,7 @@ Game.game = (function (input) {
                 if (turLoc) {
                     _turretManager.placeNewTurret(turLoc.x, turLoc.y);
                     isNewTurretMode = false;
+                    addedNewTurret = true;
                 }
             } else {
                 let oneSelected = _turretManager.selectTurret(x, y);
@@ -133,6 +138,37 @@ Game.game = (function (input) {
                 }, 100);
             }
         );
+        document.getElementById('id-new-turret-type2').addEventListener(
+            'click',
+            function () {
+                chooseTurretType = 2;
+                _turretManager.chooseTurretTypes(chooseTurretType)
+                setTimeout(function () {
+                    isNewTurretMode = true;
+                }, 100);
+            }
+        );
+        document.getElementById('id-new-turret-type3').addEventListener(
+            'click',
+            function () {
+                chooseTurretType = 3;
+                _turretManager.chooseTurretTypes(chooseTurretType)
+                setTimeout(function () {
+                    isNewTurretMode = true;
+                }, 100);
+            }
+        );
+        document.getElementById('id-new-turret-type4').addEventListener(
+            'click',
+            function () {
+                chooseTurretType = 4;
+                _turretManager.chooseTurretTypes(chooseTurretType)
+                setTimeout(function () {
+                    isNewTurretMode = true;
+                }, 100);
+            }
+        );
+
 
         //make sure the button and 'u' are the same
         document.getElementById('id-upgrade-turret').addEventListener(
@@ -172,14 +208,14 @@ Game.game = (function (input) {
 
     function drawBackAndBorder() {
         _graphics.drawImage({ image: image, x: 0, y: 0, w: 1280, h: 720 });
-        _graphics.drawRectangle({x: 0, y: 0}, {width: 560, height: 20}, 'grey');
-        _graphics.drawRectangle({x: 720, y: 0}, {width: 560, height: 20}, 'grey');
-        _graphics.drawRectangle({x: 0, y: 0}, {width: 40, height: 300}, 'grey');
-        _graphics.drawRectangle({x: 0, y: 700}, {width: 560, height: 20}, 'grey');
-        _graphics.drawRectangle({x: 720, y: 700}, {width: 560, height: 20}, 'grey');
-        _graphics.drawRectangle({x: 0, y: 420}, {width: 40, height: 300}, 'grey');
-        _graphics.drawRectangle({x: 1240, y: 0}, {width: 40, height: 300}, 'grey');
-        _graphics.drawRectangle({x: 1240, y: 420}, {width: 40, height: 300}, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 560, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 720, y: 0 }, { width: 560, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 0 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 700 }, { width: 560, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 720, y: 700 }, { width: 560, height: 20 }, 'grey');
+        _graphics.drawRectangle({ x: 0, y: 420 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 1240, y: 0 }, { width: 40, height: 300 }, 'grey');
+        _graphics.drawRectangle({ x: 1240, y: 420 }, { width: 40, height: 300 }, 'grey');
     }
 
     return that;
