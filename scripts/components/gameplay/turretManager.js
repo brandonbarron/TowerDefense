@@ -8,22 +8,23 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		chooseTurretY,
 		chooseTurretType,
 		isChoosingTurretLoc,
-		isShowFireDistance, 
+		isShowFireDistance,
 		isInvalidTurretLoc;
-	
+
 	function AnimatedModel(spec) {
 		var that = {};
-		var sprite = graphics.SpriteSheet({
-			spriteSheet: spec.spriteSheet,
+		let upgradeLevel = 1;
+		let sprite = graphics.SpriteSheet({
+			spriteSheet: spec.spriteSheet[upgradeLevel - 1],
 			sprite: 0,
 			spriteCount: 1,
 			spriteTime: [1000],	// milliseconds per sprite animation frame
 			center: { x: spec.center.x, y: spec.center.y },
 			rotation: 0,//spec.rotation,
 			//orientation: 0,				// Sprite orientation with respect to "forward"
-			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
-		}
-		);
+			rotateRate: spec.rotateRate		// Radians per millisecond
+		});
+
 		var baseSprite = graphics.SpriteSheet({
 			spriteSheet: 'assets/turret-base.png',
 			spriteCount: 1,
@@ -32,14 +33,15 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			rotation: 0,
 			orientation: 0,				// Sprite orientation with respect to "forward"
 			rotateRate: 0		// Radians per millisecond
-		}
-		);	// We contain a SpriteSheet, not inherited from, big difference
+		});	// We contain a SpriteSheet, not inherited from, big difference
 		let target = { x: 0, y: 0 };
 		let fireTime = 1000;
 		let totalTime = 0;
+		let missileSpeed = 0.25;
 		//let shootRange = 350;
 		let isSelected = false;
-		let upgradeLevel = 1;
+		let upgradeTime = 1000;
+
 		//from sample code
 		function crossProduct2d(v1, v2) {
 			return (v1.x * v2.y) - (v1.y * v2.x);
@@ -89,18 +91,21 @@ Game.turretManager = function (graphics, missileManager, grid) {
 				//return;
 				spec.rotation = 0;
 			}
+			if(upgradeTime > 0) {
+				upgradeTime -= elapsedTime;
+			}
 			baseSprite.update(elapsedTime);
 			sprite.update(elapsedTime);
 
 			let radius = 4.0;
-			let speed = 0.1;
+
 			let timeRemaining = 1500;
 
 			let shouldFire = true;
 			let theRotation = sprite.getRot();
 			//TODO: I have no idea why its always 90 degrees off
 			var result = computeAngle(theRotation - 1.570796, spec.center, target);
-			if (testTolerance(result.angle, 0, 0.01) === false) {
+			if (testTolerance(result.angle, 0, 0.05) === false) {
 				shouldFire = false;
 				if (result.crossProduct > 0) {
 					sprite.rotateRight(spec.rotateRate);
@@ -115,20 +120,22 @@ Game.turretManager = function (graphics, missileManager, grid) {
 					shouldFire = false;
 				}
 			}
+
 			totalTime += elapsedTime;
-			if(totalTime > fireTime && shouldFire) {
+			if (totalTime > fireTime && shouldFire) {
 				missileNew({
 					id: nextMissileId++,
 					radius: radius,
-					speed: speed,
+					speed: missileSpeed,
 					direction: theRotation - 1.570796,
 					position: {
 						x: spec.center.x,
 						y: spec.center.y
 					},
-					timeRemaining: spec.shootRange / speed
+					timeRemaining: spec.shootRange / missileSpeed,
+					shootDamage: spec.shootDamage
 				});
-				fireTime += 750;
+				fireTime = totalTime + spec.shootFreq;
 			}
 		};
 
@@ -190,11 +197,29 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		}
 
 		that.canUpgrade = function () {
-			return upgradeLevel < 3;
+			return upgradeLevel < 3 && upgradeTime <=0;
 		}
 
 		that.upgradeTurret = function () {
+			if(!that.canUpgrade()) {
+				return;
+			}
 			upgradeLevel++;
+			upgradeTime = 1000;
+			missileSpeed *= 1.5;
+			spec.shootRange *= 1.5;
+			spec.rotateRate *= 1.5;
+			spec.shootFreq *= 0.5;
+			sprite = graphics.SpriteSheet({
+				spriteSheet: spec.spriteSheet[upgradeLevel - 1],
+				sprite: 0,
+				spriteCount: 1,
+				spriteTime: [1000],	// milliseconds per sprite animation frame
+				center: { x: spec.center.x, y: spec.center.y },
+				rotation: 0,//spec.rotation,
+				//orientation: 0,				// Sprite orientation with respect to "forward"
+				rotateRate: spec.rotateRate		// Radians per millisecond
+			});
 		}
 
 		return that;
@@ -203,14 +228,18 @@ Game.turretManager = function (graphics, missileManager, grid) {
 	function findClosestSprite(turret, allSprites) {
 		let bestI = 0;
 		let bestDist = 1000000000;
+		let turretLoc = turret.getLoc();
 		for (let i = 0; i < allSprites.length; i++) {
 			let spriteLoc = allSprites[i].getLoc();
-			let turretLoc = turret.getLoc();
-			let dist = Math.sqrt(Math.pow(spriteLoc.x - turretLoc.x, 2) + Math.pow(spriteLoc.y - turretLoc.y, 2))
+
+			let dist = Math.sqrt(Math.pow(spriteLoc.x - turretLoc.x, 2) + Math.pow(spriteLoc.y - turretLoc.y, 2));
 			if (bestDist > dist) {
-				bestI = 0;
+				bestI = i;
 				bestDist = dist;
 			}
+		}
+		if (bestI === 0) {
+			//console.log('no best found');
 		}
 		return bestI;
 	}
@@ -249,7 +278,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			if (allSprites.length > 0) {
 				spriteI = findClosestSprite(allTurrets[i], allSprites);
 				spriteLoc = allSprites[spriteI].getLoc();
-				allTurrets[i].setTarget(spriteLoc.x, spriteLoc.y)
+				allTurrets[i].setTarget(spriteLoc.x, spriteLoc.y);
 				allTurrets[i].update(elapsedTime, gameRunning);
 			}
 		}
@@ -260,17 +289,12 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			allTurrets[i].render();
 			if (isShowFireDistance) {
 				let range = allTurrets[i].getShootRange();
-				graphics.drawCircle(allTurrets[i].getLoc(), range, { start: 0, end: 2 * Math.PI }, 'rgba(100, 100, 100, 0.1)');
+				graphics.drawCircle(allTurrets[i].getLoc(), range, { start: 0, end: 2 * Math.PI }, 'rgba(100, 100, 100, 0.25)');
 			}
 		}
 
 		if (isChoosingTurretLoc) {
-			let turretRange = 75;
-			switch (chooseTurretType) {
-				case 1:
-					turretRange = 75;
-					break;
-			}
+			let turretRange = getTurretRange(chooseTurretType);
 			let loc = {
 				x: chooseTurretX,
 				y: chooseTurretY
@@ -278,10 +302,10 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 			let color = 'rgba(0, 0, 255, 0.5)'
 			if (isInvalidTurretLoc) {
-			 	color = 'rgba(255, 0, 0, 0.5)'
+				color = 'rgba(255, 0, 0, 0.5)'
 			}
-			graphics.drawText({x: 1000, y: 100}, 'y: ' + loc.y, 'black', '72px Arial');
-            graphics.drawText({x: 1000, y: 200}, 'x: ' + loc.x, 'black', '72px Arial');
+			graphics.drawText({ x: 1000, y: 100 }, 'y: ' + loc.y, 'black', '72px Arial');
+			graphics.drawText({ x: 1000, y: 200 }, 'x: ' + loc.x, 'black', '72px Arial');
 			graphics.drawCircle(loc, turretRange, { start: 0, end: 2 * Math.PI }, color);
 		}
 
@@ -326,30 +350,100 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		chooseTurretY = y;
 	}
 
+	function getTurretPic(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return [
+					'assets/turret-1-1.png',
+					'assets/turret-1-2.png',
+					'assets/turret-1-3.png'
+				];
+			case 2:
+				return [
+					'assets/turret-2-1.png',
+					'assets/turret-2-2.png',
+					'assets/turret-2-3.png'
+				];
+			case 3:
+				return [
+					'assets/turret-3-1.png',
+					'assets/turret-3-2.png',
+					'assets/turret-3-3.png'
+				];
+			case 4:
+				return [
+					'assets/turret-4-1.png',
+					'assets/turret-4-2.png',
+					'assets/turret-4-3.png'
+				];
+		}
+		return '';
+	}
+
+	function getTurretRange(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return 100;
+			case 2:
+				return 200;
+			case 3:
+				return 300;
+			case 4:
+				return 400;
+		}
+		return 0;
+	}
+
+	function getTurretShootFreq(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return 1000;
+			case 2:
+				return 800;
+			case 3:
+				return 600;
+			case 4:
+				return 400;
+		}
+		return 0;
+	}
+
+	function getTurretRotateRate(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return (3.14159 / 1000) * 6;
+			case 2:
+				return (3.14159 / 1000) * 8;
+			case 3:
+				return (3.14159 / 1000) * 10;
+			case 4:
+				return (3.14159 / 1000) * 15;
+		}
+		return 0;
+	}
+
+	function getTurretShootDamage(typeNum) {
+		switch (typeNum) {
+			case 1:
+				return 100;
+			case 2:
+				return 200;
+			case 3:
+				return 300;
+			case 4:
+				return 400;
+		}
+		return 0;
+	}
+
 	that.placeNewTurret = function (row, col) {
 		isChoosingTurretLoc = false;
 
-		let turPic = '';
-		let shootRange = 0;
-
-		switch (chooseTurretType) {
-			case 1:
-				turPic = 'assets/turret-1-1.png';
-				shootRange = 100;
-				break;
-			case 2:
-				turPic = 'assets/turret-2-1.png';
-				shootRange = 200;
-				break;
-			case 3:
-				turPic = 'assets/turret-3-1.png';
-				shootRange = 300;
-				break;
-			case 4:
-				turPic = 'assets/turret-4-1.png';
-				shootRange = 400;
-				break;
-		}
+		let turPic = getTurretPic(chooseTurretType);
+		let shootRange = getTurretRange(chooseTurretType);
+		let shootFreq = getTurretShootFreq(chooseTurretType);
+		let rotateRate = getTurretRotateRate(chooseTurretType);
+		let shootDamage = getTurretShootDamage(chooseTurretType);
 
 		allTurrets.push(AnimatedModel({
 			spriteSheet: turPic,
@@ -359,8 +453,10 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			center: { x: (col * 40) + 60, y: (row * 40) + 40 },
 			rotation: 0,
 			//orientation: 0,				// Sprite orientation with respect to "forward"
-			rotateRate: (3.14159 / 1000) * 6,		// Radians per millisecond
-			shootRange: shootRange
+			rotateRate: rotateRate,		// Radians per millisecond
+			shootRange: shootRange,
+			shootFreq: shootFreq,
+			shootDamage: shootDamage
 		}));
 		grid.turretPlaced(row, col);
 	}
@@ -383,7 +479,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 				let loc = allTurrets[i].getLoc();
 
 				let col = Math.floor((loc.x - 40) / 40);
-                let row = Math.floor((loc.y - 20) / 40);
+				let row = Math.floor((loc.y - 20) / 40);
 				grid.turretRemoved(row, col);
 
 				allTurrets.splice(i, 1);
@@ -404,7 +500,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		return false;
 	}
 
-	that.setIsInvalidTurretLoc = function(isInvalid) {
+	that.setIsInvalidTurretLoc = function (isInvalid) {
 		isInvalidTurretLoc = isInvalid;
 	}
 

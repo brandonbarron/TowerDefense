@@ -376,7 +376,6 @@ Game.grid = (function (graphics) {
                 y: spots[bestSpot.i].col[bestSpot.j].y + (spotSize / 2),
             }
         }
-        console.log('nothing found for ', x, y);
         return null;
     }
 

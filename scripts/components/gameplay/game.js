@@ -61,7 +61,7 @@ Game.game = (function (input) {
         }
         _spriteManager.update(elapsedTime, gameRunning, _grid);
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
-        _missileManager.update(elapsedTime, gameRunning);
+        _missileManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
     }
 
     function render() {

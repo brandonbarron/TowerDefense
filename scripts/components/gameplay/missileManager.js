@@ -18,13 +18,13 @@ Game.missileManager = function (graphics) {
         return distance <= radii;
     }
 
-    that.update = function(elapsedTime, gameRunning) {
+    that.update = function(elapsedTime, gameRunning, allSprites) {
         if(!gameRunning) {
             //return;
         }
         let removeMissiles = [];
         for (let missile in missiles) {
-            if (!missiles[missile].update(elapsedTime)) {
+            if (!missiles[missile].update(elapsedTime, allSprites)) {
                 removeMissiles.push(missiles[missile]);
             }
         }
@@ -82,7 +82,8 @@ Game.missileManager = function (graphics) {
                 x: data.position.x,
                 y: data.position.y
             },
-            timeRemaining: data.timeRemaining
+            timeRemaining: data.timeRemaining,
+            shootDamage: data.shootDamage
         }, graphics);
     }
 
