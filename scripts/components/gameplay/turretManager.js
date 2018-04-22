@@ -199,7 +199,7 @@ Game.turretManager = function (graphics, missileManager) {
 	let chooseTurretX = 0;
 	let chooseTurretY = 0;
 	let chooseTurretType = 0;
-	let isChoosingTurretLoc = true;
+	let isChoosingTurretLoc = false;
 	let isShowFireDistance = false;
 
 	function findClosestSprite(turret, allSprites) {
@@ -249,12 +249,13 @@ Game.turretManager = function (graphics, missileManager) {
 			allTurrets[i].render();
 			if(isShowFireDistance) {
 				let range = allTurrets[i].getShootRange();
-				graphics.drawCircle(allTurrets[i].getLoc(), range, { start: 0, end: 2 * Math.PI }, 'rgba(100, 100, 100, 0.5)');
+				graphics.drawCircle(allTurrets[i].getLoc(), range, { start: 0, end: 2 * Math.PI }, 'rgba(100, 100, 100, 0.1)');
 			}
 		}
 
 		if(isChoosingTurretLoc) {
-			let turretRange = 0;
+			console.log('choosing turret');
+			let turretRange = 75;
 			switch(chooseTurretType){
 				case 1:
 					turretRange = 75;
@@ -333,7 +334,24 @@ Game.turretManager = function (graphics, missileManager) {
 		chooseTurretY = y;
 	}
 
+	that.placeNewTurret = function(x, y) {
+		chooseTurretX = x;
+		chooseTurretY = y;
+		isChoosingTurretLoc = false;
+		allTurrets.push(AnimatedModel({
+			spriteSheet: 'assets/turret-1-1.png',
+			sprite: 0,
+			spriteCount: 1,
+			spriteTime: [1000],	// milliseconds per sprite animation frame
+			center: { x: x, y: y },
+			rotation: 0,
+			//orientation: 0,				// Sprite orientation with respect to "forward"
+			rotateRate: (3.14159 / 1000) * 6		// Radians per millisecond
+		}));
+	}
+
 	that.chooseTurretTypes = function(theType) {
+		isChoosingTurretLoc = true;
 		chooseTurretType = theType;
 	}
 

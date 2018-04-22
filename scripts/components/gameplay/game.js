@@ -59,12 +59,12 @@ Game.game = (function (input) {
         _graphics.initialize();
         _spriteManager = Game.spriteManager;//TODO: why is it always undefined unless I assign it here?
         _spriteManager.addTestSprite();
-        
+
         _turretManager = Game.turretManager;
         _turretManager.addTestTurret();
-        
+
         _missileManager = Game.missileManager;
-        
+
         _grid.initialize();
         _menu.initialize(_grid.renderGridLines);
 
@@ -85,8 +85,7 @@ Game.game = (function (input) {
             Menu.menu.showScreen('main-menu');
         });
         _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () {
-            showGrid ? showGrid = false : showGrid = true;
-            //hey Chris... showGrid = !showGrid; ;)
+            _grid.invertRenderLines();
         });
         _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () {
             _turretManager.toggleShowFireDistance();
@@ -99,7 +98,11 @@ Game.game = (function (input) {
             let x = event.clientX;
             let y = event.clientY;
             if (isNewTurretMode) {
-                _turretManager.chooseTurretLoc(x, y);
+                let turLoc = _grid.findAndSetTurretLoc(x, y);
+                if (turLoc) {
+                    _turretManager.placeNewTurret(turLoc.x, turLoc.y);
+                    isNewTurretMode = false;
+                }
             } else {
                 let oneSelected = _turretManager.selectTurret(x, y);
                 let canUpgrade = false;
@@ -124,10 +127,12 @@ Game.game = (function (input) {
             function () {
                 chooseTurretType = 1;
                 _turretManager.chooseTurretTypes(chooseTurretType)
-                isNewTurretMode = true;
+                setTimeout(function () {
+                    isNewTurretMode = true;
+                }, 100);
             }
         );
-        
+
         //make sure the button and 'u' are the same
         document.getElementById('id-upgrade-turret').addEventListener(
             'click',
