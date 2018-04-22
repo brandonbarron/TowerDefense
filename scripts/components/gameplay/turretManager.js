@@ -265,9 +265,10 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			}
 
 			let color = 'rgba(0, 0, 255, 0.5)'
-			if (isNearOtherTurret(chooseTurretX, chooseTurretY)) {
-				color = 'rgba(255, 0, 0, 0.5)'
-			}
+			// if (isNearOtherTurret(chooseTurretX, chooseTurretY)) {
+			// 	color = 'rgba(255, 0, 0, 0.5)'
+			// }
+			console.log(loc);
 
 			graphics.drawCircle(loc, turretRange, { start: 0, end: 2 * Math.PI }, color);
 		}
@@ -280,9 +281,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 	that.selectTurret = function (x, y) {
 		let selectOne = false;
-		if (y > 685) {
-			return; //short curcuit!!!!!!!!!!!!!
-		}
+
 		for (let i = 0; i < allTurrets.length; i++) {
 			let loc = allTurrets[i].getLoc();
 			let turSize = 20;
@@ -316,8 +315,6 @@ Game.turretManager = function (graphics, missileManager, grid) {
 	}
 
 	that.placeNewTurret = function (row, col) {
-		// chooseTurretX = x;
-		// chooseTurretY = y;
 		isChoosingTurretLoc = false;
 
 		let turPic = '';

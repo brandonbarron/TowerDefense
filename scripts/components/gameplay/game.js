@@ -122,10 +122,8 @@ Game.game = (function (input) {
             }
         });
         _mouse.registerCommand('mousemove', function (event) {
-            let x = event.clientX;
-            let y = event.clientY;
             if (isNewTurretMode) {
-                _turretManager.chooseTurretLoc(x, y);
+                _turretManager.chooseTurretLoc(event.clientX, event.clientY);
             }
         });
         document.getElementById('id-new-turret-type1').addEventListener(
@@ -196,7 +194,10 @@ Game.game = (function (input) {
         console.log(row + ', ' + col);
         return ( 
             (col < 0 || col > 29 || row < 0 || row > 16) ||
-            (col < 1 && col < 80 && row > 6 && row < 10) ||
+            (col === 0 && row > 6 && row < 10) ||
+            (col === 29 && row > 6 && row < 10) ||
+            (row === 0 && col > 12 && col < 17 ) ||
+            (row === 16 && col > 12 && col < 17 ) ||
             _grid.isTurret(row, col)
         );
     }

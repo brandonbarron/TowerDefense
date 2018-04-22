@@ -68,7 +68,6 @@ Game.grid = (function (graphics) {
                     x: (j * spotSize) + 40,
                     y: (i * spotSize) + 20
                 };
-                if (i == 8 && j == 1) spots[i].col[j].path[0].value = true;
             }
         }
     }
@@ -231,19 +230,16 @@ Game.grid = (function (graphics) {
     }
 
     that.invertRenderLines = function () { renderGridLines = !renderGridLines; }
+    
     that.findAndSetTurretLoc = function(row, col) {
-
         spots[row].col[col].path[0].value = true;
-        let loc = {
+        return loc = {
             x: spots[row].col[col].x + (spotSize/2),
             y: spots[row].col[col].y + (spotSize/2),
         };
-        return loc;
     }
 
     that.turretPlaced = function(row, col) {
-        // row = Math.floor((row - 20) / spotSize);
-        // col = Math.floor((col - 40) / spotSize);
         spots[row].col[col].path[0].value = true;
         spots[row].col[col].path[1].value = false;
         spots[row].col[col].path[2].value = false;
@@ -254,8 +250,6 @@ Game.grid = (function (graphics) {
     }
     
     that.isTurret = function(row, col) { return spots[row].col[col].path[0].value; }
-
-    that.invertRenderLines = function() {renderGridLines = !renderGridLines; }
 
     return that;
 
