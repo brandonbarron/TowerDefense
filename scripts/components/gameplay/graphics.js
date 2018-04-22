@@ -17,7 +17,7 @@ Game.graphics = (function () {
         context.save();
         context.beginPath();
         context.rect(position.x, position.y, size.width, size.height);
-        context.lineWdith = .75;
+        context.lineWdith = 1;
         context.strokeStyle = color;
         context.stroke();
         context.closePath();

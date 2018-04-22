@@ -8,13 +8,13 @@ Game.game = (function (input) {
 
 
     //game components
-    let _graphics = Game.graphics,
-        _spriteManager = Game.spriteManager,
-        _turretManager = Game.turretManager,
-        _missileManager = Game.missileManager,
-        _score = Game.score,
-        _grid = Game.grid,
-        _menu = Game.menu,
+    let _graphics,
+        _spriteManager,
+        _turretManager,
+        _missileManager,
+        _score,
+        _grid,
+        _menu,
         _keyboard,
         _mouse;
 
@@ -55,18 +55,24 @@ Game.game = (function (input) {
     }
 
     that.initialize = function () {
-        playingGame = true;
-        showGrid = false;
+
+        _graphics = Game.graphics;
+        _spriteManager = Game.spriteManager;
+        _turretManager = Game.turretManager;
+        _missileManager = Game.missileManager;
+        _score = Game.score;
+        _grid = Game.grid;
+        _menu = Game.menu;
         _keyboard = Master.input.Keyboard();
         _mouse = Master.input.Mouse();
+        playingGame = true;
+        showGrid = false;
 
         _graphics.initialize();
-        _spriteManager = Game.spriteManager;//TODO: why is it always undefined unless I assign it here?
-        _spriteManager.addTestSprite();
+        _spriteManager.initialize();
+        // _spriteManager.addTestSprite();
 
-        _turretManager = Game.turretManager;
-        // _turretManager.addTestTurret();
-        
+        _turretManager.initialize();        
         _missileManager = Game.missileManager;
 
         _grid.initialize();

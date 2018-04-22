@@ -13,8 +13,12 @@
 Game.spriteManager = function (graphics) {
     'use strict';
 
-    let that = {};
-    let allSprites = [];
+	let that = {},
+		allSprites;
+
+	that.initialize = function() {
+		allSprites = [];
+	}
 
     //------------------------------------------------------------------
 	//

@@ -1,10 +1,15 @@
 Game.turretManager = function (graphics, missileManager, grid) {
 	'use strict';
 
-	let that = {};
-	let allTurrets = [];
-	let nextMissileId = 1;
-
+	let that = {},
+		allTurrets,
+		nextMissileId,
+		chooseTurretX,
+		chooseTurretY,
+		chooseTurretType,
+		isChoosingTurretLoc,
+		isShowFireDistance;
+	
 	function AnimatedModel(spec) {
 		var that = {};
 		var sprite = graphics.SpriteSheet({
@@ -195,11 +200,6 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 		return that;
 	}
-	let chooseTurretX = 0;
-	let chooseTurretY = 0;
-	let chooseTurretType = 0;
-	let isChoosingTurretLoc = false;
-	let isShowFireDistance = false;
 
 	function findClosestSprite(turret, allSprites) {
 		let bestI = 0;
@@ -232,14 +232,26 @@ Game.turretManager = function (graphics, missileManager, grid) {
 		return false;
 	}
 
+	that.initialize = function () {
+		allTurrets = [];
+		nextMissileId = 1;
+		chooseTurretX = 0;
+		chooseTurretY = 0;
+		chooseTurretType = 0;
+		isChoosingTurretLoc = false;
+		isShowFireDistance = false;
+	}
 
 	that.update = function (elapsedTime, gameRunning, allSprites) {
 		for (let i = 0; i < allTurrets.length; i++) {
 			//allTurrets[i].rotateRight(elapsedTime);
-			let spriteI = findClosestSprite(allTurrets[i], allSprites);
-			let spriteLoc = allSprites[spriteI].getLoc();
-			allTurrets[i].setTarget(spriteLoc.x, spriteLoc.y)
-			allTurrets[i].update(elapsedTime, gameRunning);
+			let spriteI, spriteLoc;
+			if (allSprites.length > 0) {
+				spriteI = findClosestSprite(allTurrets[i], allSprites);
+				spriteLoc = allSprites[spriteI].getLoc();
+				allTurrets[i].setTarget(spriteLoc.x, spriteLoc.y)
+				allTurrets[i].update(elapsedTime, gameRunning);
+			}
 		}
 	};
 
