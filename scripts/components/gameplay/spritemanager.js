@@ -246,12 +246,9 @@ Game.spriteManager = function (graphics) {
 
 	that.addNewSprite = function (theGrid) {
 		remainingSprites--;
-		//console.log(allSprites);
-		//that.addTestSprite();
-		//return;
 		let spritePic = '';
 		let speed = 0;
-		let followPath = 2;
+		let followPath = Math.floor(Math.random()*(4)+2);
 
 		let theCenter = theGrid.getStartforPath(followPath);
 
@@ -291,7 +288,7 @@ Game.spriteManager = function (graphics) {
 		}
 
 		curTime += elapsedTime;
-		if (nextSpriteTime < curTime) {
+		if (nextSpriteTime < curTime && remainingSprites > 0) {
 			nextSpriteTime = curTime + newSpriteFreq;
 			that.addNewSprite(theGrid);
 		}

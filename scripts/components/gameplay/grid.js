@@ -328,7 +328,7 @@ Game.grid = (function (graphics) {
                 if (spots[i].col[j].path[pathNum].value) {
                     let pathX = spots[i].col[j].x + (spotSize / 2);
                     let pathY = spots[i].col[j].y + (spotSize / 2);
-                    let dist = Math.sqrt(Math.pow(x - pathX, 2) + Math.pow(y - pathY, 2))
+                    let dist = Math.sqrt(Math.pow(x - pathX, 2) + Math.pow(y - pathY, 2));
                     if (bestDist > dist) {
                         bestSpot = { i: i, j: j };
                         bestDist = dist;
@@ -337,7 +337,7 @@ Game.grid = (function (graphics) {
             }
         }
 
-        if (bestSpot.i) {
+        if (bestSpot.i != null) {
             let pathX = spots[bestSpot.i].col[bestSpot.j].x + (spotSize / 2);
             let pathY = spots[bestSpot.i].col[bestSpot.j].y + (spotSize / 2);
             let dist = Math.sqrt(Math.pow(x - pathX, 2) + Math.pow(y - pathY, 2))
@@ -376,6 +376,7 @@ Game.grid = (function (graphics) {
                 y: spots[bestSpot.i].col[bestSpot.j].y + (spotSize / 2),
             }
         }
+        console.log('nothing found for ', x, y);
         return null;
     }
 
