@@ -41,7 +41,8 @@ Game.spriteManager = function (graphics) {
 		var that = {};
 		let sprite = graphics.SpriteSheet(spec);	// We contain a SpriteSheet, not inherited from, big difference
 
-		let health = 1000;
+		//let health = 1000;
+		let startHealth = spec.health;
 
 		that.update = function (elapsedTime) {
 			sprite.update(elapsedTime);
@@ -49,6 +50,41 @@ Game.spriteManager = function (graphics) {
 
 		that.render = function () {
 			sprite.draw();
+
+			let startX = spec.center.x - 20;
+			let startY = spec.center.y - 15;
+
+			let healthFrac = spec.health / startHealth;
+			let healthRemFrac = 1.0 - healthFrac;
+
+			let totalWidth = 40;
+
+			let greenLen = totalWidth * healthFrac;
+			let redLen = totalWidth * healthRemFrac;
+
+			let greenLoc = {
+				x: startX,
+				y: startY
+			};
+
+			let greenSize = {
+				width: greenLen,
+				height: 3
+			};
+
+			graphics.drawRectangle(greenLoc, greenSize, '#00FF00');
+
+			let redLoc = {
+				x: startX + greenLen,
+				y: startY
+			};
+
+			let redSize = {
+				width: redLen,
+				height: 3
+			};
+
+			graphics.drawRectangle(redLoc, redSize, '#FF0000');
 		};
 
 		that.rotateRight = function (elapsedTime) {
@@ -105,11 +141,11 @@ Game.spriteManager = function (graphics) {
 		}
 
 		that.reduceHealth = function (damage) {
-			health -= damage;
+			spec.health -= damage;
 		}
 
 		that.getHealth = function () {
-			return health;
+			return spec.health;
 		}
 
 		return that;
@@ -277,7 +313,8 @@ Game.spriteManager = function (graphics) {
 			orientation: 0,				// Sprite orientation with respect to "forward"
 			moveRate: speed,			// pixels per millisecond
 			rotateRate: 3.14159 / 1000,		// Radians per millisecond
-			followPath: followPath
+			followPath: followPath,
+			health: 1000
 		}));
 	}
 
