@@ -41,7 +41,8 @@ Game.spriteManager = function (graphics) {
 		var that = {};
 		let sprite = graphics.SpriteSheet(spec);	// We contain a SpriteSheet, not inherited from, big difference
 
-		let health = 1000;
+		//let health = 1000;
+		let startHealth = spec.health;
 
 		that.update = function (elapsedTime) {
 			sprite.update(elapsedTime);
@@ -49,6 +50,41 @@ Game.spriteManager = function (graphics) {
 
 		that.render = function () {
 			sprite.draw();
+
+			let startX = spec.center.x - 20;
+			let startY = spec.center.y - 15;
+
+			let healthFrac = spec.health / startHealth;
+			let healthRemFrac = 1.0 - healthFrac;
+
+			let totalWidth = 40;
+
+			let greenLen = totalWidth * healthFrac;
+			let redLen = totalWidth * healthRemFrac;
+
+			let greenLoc = {
+				x: startX,
+				y: startY
+			};
+
+			let greenSize = {
+				width: greenLen,
+				height: 3
+			};
+
+			graphics.drawRectangle(greenLoc, greenSize, '#00FF00');
+
+			let redLoc = {
+				x: startX + greenLen,
+				y: startY
+			};
+
+			let redSize = {
+				width: redLen,
+				height: 3
+			};
+
+			graphics.drawRectangle(redLoc, redSize, '#FF0000');
 		};
 
 		that.rotateRight = function (elapsedTime) {
@@ -105,11 +141,11 @@ Game.spriteManager = function (graphics) {
 		}
 
 		that.reduceHealth = function (damage) {
-			health -= damage;
+			spec.health -= damage;
 		}
 
 		that.getHealth = function () {
-			return health;
+			return spec.health;
 		}
 
 		return that;
@@ -244,40 +280,76 @@ Game.spriteManager = function (graphics) {
 		remainingSprites = 10;
 	}
 
+	function getRandomCreepPic() {
+		let num = Math.floor(Math.random() * (2) + 1);
+		let spritePic = [];
+		switch (num) {
+			case 1:
+				spritePic = [
+					'assets/creep1-blue.png',
+					'assets/creep1-yellow.png',
+					'assets/creep1-red.png',
+				];
+				spritePic = [
+					{ pic:'assets/creep1-blue.png', count: 6, time: [1000, 200, 100, 1000, 100, 200] },
+					{ pic:'assets/creep1-yellow.png', count: 6, time: [1000, 200, 100, 1000, 100, 200] },
+					{ pic:'assets/creep1-red.png', count: 6, time: [1000, 200, 100, 1000, 100, 200] },
+				];
+				break;
+			case 2:
+				spritePic = [
+					{ pic:'assets/creep2-blue.png', count: 4, time: [200, 1000, 200, 600 ] },
+					{ pic:'assets/creep2-yellow.png', count: 4, time: [200, 1000, 200, 600 ] },
+					{ pic:'assets/creep2-red.png', count: 4, time: [200, 1000, 200, 600 ] },
+				];
+				break;
+			case 3:
+				spritePic = [
+					{ pic:'assets/creep3-blue.png', count: 4, time: [1000, 200, 200, 200 ] },
+					{ pic:'assets/creep3-yellow.png', count: 4, time: [1000, 200, 200, 200 ] },
+					{ pic:'assets/creep3-red.png', count: 4, time: [1000, 200, 200, 200 ] },
+				];
+				break;
+		}
+		return spritePic[curLevel - 1];
+	}
+
 	that.addNewSprite = function (theGrid) {
 		remainingSprites--;
-		let spritePic = '';
+		let spritePic = getRandomCreepPic();
 		let speed = 0;
+		let health = 0;
 		let followPath = Math.floor(Math.random() * (4) + 2);
 
 		let theCenter = theGrid.getStartforPath(followPath);
 
 		switch (curLevel) {
 			case 1:
-				spritePic = 'assets/creep1-blue.png';
 				speed = 200 / 10000;
+				health = 1000;
 				break;
 			case 2:
-				spritePic = 'assets/creep1-blue.png';
-				speed = 200 / 10000;
+				speed = 400 / 10000;
+				health = 2000;
 				break;
 			case 3:
-				spritePic = 'assets/creep1-blue.png';
-				speed = 200 / 10000;
+				speed = 800 / 10000;
+				health = 4000;
 				break;
 		}
 
 		allSprites.push(AnimatedModel({
-			spriteSheet: spritePic,
-			spriteCount: 6,
+			spriteSheet: spritePic.pic,
+			spriteCount: spritePic.count,
 			sprite: 0,
-			spriteTime: [1000, 200, 100, 1000, 100, 200],	// milliseconds per sprite animation frame
+			spriteTime: spritePic.time,	// milliseconds per sprite animation frame
 			center: theCenter,
 			rotation: 0,
 			orientation: 0,				// Sprite orientation with respect to "forward"
 			moveRate: speed,			// pixels per millisecond
 			rotateRate: 3.14159 / 1000,		// Radians per millisecond
-			followPath: followPath
+			followPath: followPath,
+			health: health
 		}));
 	}
 
@@ -316,7 +388,7 @@ Game.spriteManager = function (graphics) {
 		for (let i = allSprites.length - 1; i >= 0; i--) {
 			let pathNum = allSprites[i].getFollowPath();
 			let loc = allSprites[i].getLoc();
-			let dist =theGrid.getDistFromFinish(loc.x, loc.y, pathNum);
+			let dist = theGrid.getDistFromFinish(loc.x, loc.y, pathNum);
 			if (dist <= 0.01) {
 				allSprites.splice(i, 1);
 				score.spriteEscaped();
@@ -325,7 +397,7 @@ Game.spriteManager = function (graphics) {
 		}
 
 		let noMore = allSprites.length === 0 && remainingSprites === 0;
-		if(noMore) {
+		if (noMore) {
 			nextSpriteTime = curTime;
 			curLevel++;
 			remainingSprites = 10 * curLevel;

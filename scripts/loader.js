@@ -60,12 +60,40 @@ Master.loader = (function () {
                 source: 'assets/grassBackground.jpg'
             },
             {
-                key: 'menu_background',
-                source: 'scripts/styles/menu_background.png'
+                key: 'creep1-blue',
+                source: 'assets/creep1-blue.png'
             },
             {
-                key: 'creep1',
+                key: 'creep1-yellow',
+                source: 'assets/creep1-yellow.png'
+            },
+            {
+                key: 'creep1-red',
+                source: 'assets/creep1-red.png'
+            },
+            {
+                key: 'creep2-blue',
                 source: 'assets/creep1-blue.png'
+            },
+            {
+                key: 'creep2-yellow',
+                source: 'assets/creep1-yellow.png'
+            },
+            {
+                key: 'creep2-red',
+                source: 'assets/creep1-red.png'
+            },
+            {
+                key: 'creep3-blue',
+                source: 'assets/creep1-blue.png'
+            },
+            {
+                key: 'creep3-yellow',
+                source: 'assets/creep1-yellow.png'
+            },
+            {
+                key: 'creep3-red',
+                source: 'assets/creep1-red.png'
             },
             {
                 key: 'turret-1-1',
