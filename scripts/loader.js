@@ -15,7 +15,6 @@ Master.loader = (function () {
             scripts: [
                 'scripts/components/utility/input.js',
                 'scripts/components/utility/objects.js',
-                'scripts/components/utility/graphics.js',
             ],
             message: 'utility components loaded',
             onComplete: null,
@@ -42,6 +41,7 @@ Master.loader = (function () {
                 'scripts/components/menu/menu.js',
                 'scripts/components/menu/main.js',
                 'scripts/components/menu/about.js',
+                'scripts/components/menu/controls.js',
                 'scripts/components/menu/screens.js',
                 'scripts/components/menu/highscores.js',
                 'scripts/components/menu/newgame.js',
@@ -52,20 +52,16 @@ Master.loader = (function () {
     ],
         assetOrder = [
             {
-                key: 'player-self',
-                source: 'assets/playerShip1_blue.png'
-            },
-            {
-                key: 'player-other',
-                source: 'assets/playerShip1_red.png'
-            },
-            {
                 key: 'explosion',
                 source: 'assets/explosion.png'
             },
             {
                 key: 'background',
                 source: 'assets/grassBackground.jpg'
+            },
+            {
+                key: 'menu_background',
+                source: 'scripts/styles/menu_background.png'
             },
             {
                 key: 'creep1',

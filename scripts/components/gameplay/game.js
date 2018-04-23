@@ -7,7 +7,8 @@ Game.game = (function (input) {
         lastTimeStamp = performance.now(),
         chooseTurretType,
         aTurretChanged,
-        isNewTurretMode;
+        isNewTurretMode,
+        _upgradeKey, _sellKey, _nextKey, _gridKey, _distanceKey;
     //game components
     let _graphics,
         _spriteManager,
@@ -75,6 +76,7 @@ Game.game = (function (input) {
         _turretManager.render();
         _missileManager.render();
         _score.render();
+        _menu.render( _upgradeKey, _sellKey, _nextKey, _gridKey, _distanceKey);
     }
 
     function gameLoop(curTime) {
@@ -131,10 +133,17 @@ Game.game = (function (input) {
         _keyboard.registerCommand(KeyEvent.DOM_VK_2, function () { turret2(); });
         _keyboard.registerCommand(KeyEvent.DOM_VK_3, function () { turret3(); });
         _keyboard.registerCommand(KeyEvent.DOM_VK_4, function () { turret4(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () { _grid.invertRenderLines(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () { _turretManager.toggleShowFireDistance(); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () { _turretManager.upgradeTurret(_score); });
-        _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () { _turretManager.sellSelectedTurret(_score); });
+        _upgradeKey = localStorage.getItem('TD.upgradeKey');
+        _sellKey = localStorage.getItem('TD.sellKey');
+        _nextKey = localStorage.getItem('TD.nextKey');
+        _gridKey = localStorage.getItem('TD.gridKey');
+        _distanceKey = localStorage.getItem('TD.distanceKey');
+
+        registerKeyboardStuff(_gridKey, _grid.invertRenderLines);
+        registerKeyboardStuff(_distanceKey, _turretManager.toggleShowFireDistance);
+        registerKeyboardStuff(_upgradeKey, _turretManager.upgradeTurret, _score);
+        registerKeyboardStuff(_sellKey, _turretManager.sellSelectedTurret, _score);
+        registerKeyboardStuff(_nextKey, _score.startNextRound);
 
         _mouse.registerCommand('mouseup', function (event) {
             let x = event.clientX,
@@ -255,6 +264,40 @@ Game.game = (function (input) {
         _graphics.drawRectangle({ x: 0, y: 420 }, { width: 40, height: 300 }, 'grey');
         _graphics.drawRectangle({ x: 1240, y: 0 }, { width: 40, height: 300 }, 'grey');
         _graphics.drawRectangle({ x: 1240, y: 420 }, { width: 40, height: 300 }, 'grey');
+    }
+
+    function registerKeyboardStuff(key, passedFunction, parameter) {
+        switch(key) {
+            case 'a': _keyboard.registerCommand(KeyEvent.DOM_VK_A, function () { passedFunction(parameter); }); break;
+            case 'b': _keyboard.registerCommand(KeyEvent.DOM_VK_B, function () { passedFunction(parameter); }); break;
+            case 'c': _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () { passedFunction(parameter); }); break;
+            case 'd': _keyboard.registerCommand(KeyEvent.DOM_VK_D, function () { passedFunction(parameter); }); break;
+            case 'e': _keyboard.registerCommand(KeyEvent.DOM_VK_E, function () { passedFunction(parameter); }); break;
+            case 'f': _keyboard.registerCommand(KeyEvent.DOM_VK_F, function () { passedFunction(parameter); }); break;
+            case 'g': _keyboard.registerCommand(KeyEvent.DOM_VK_G, function () { passedFunction(parameter); }); break;
+            case 'h': _keyboard.registerCommand(KeyEvent.DOM_VK_H, function () { passedFunction(parameter); }); break;
+            case 'i': _keyboard.registerCommand(KeyEvent.DOM_VK_I, function () { passedFunction(parameter); }); break;
+            case 'j': _keyboard.registerCommand(KeyEvent.DOM_VK_J, function () { passedFunction(parameter); }); break;
+            case 'k': _keyboard.registerCommand(KeyEvent.DOM_VK_K, function () { passedFunction(parameter); }); break;
+            case 'l': _keyboard.registerCommand(KeyEvent.DOM_VK_L, function () { passedFunction(parameter); }); break;
+            case 'm': _keyboard.registerCommand(KeyEvent.DOM_VK_M, function () { passedFunction(parameter); }); break;
+            case 'n': _keyboard.registerCommand(KeyEvent.DOM_VK_N, function () { passedFunction(parameter); }); break;
+            case 'o': _keyboard.registerCommand(KeyEvent.DOM_VK_O, function () { passedFunction(parameter); }); break;
+            case 'p': _keyboard.registerCommand(KeyEvent.DOM_VK_P, function () { passedFunction(parameter); }); break;
+            case 'q': _keyboard.registerCommand(KeyEvent.DOM_VK_Q, function () { passedFunction(parameter); }); break;
+            case 'r': _keyboard.registerCommand(KeyEvent.DOM_VK_R, function () { passedFunction(parameter); }); break;
+            case 's': _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () { passedFunction(parameter); }); break;
+            case 't': _keyboard.registerCommand(KeyEvent.DOM_VK_T, function () { passedFunction(parameter); }); break;
+            case 'u': _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () { passedFunction(parameter); }); break;
+            case 'v': _keyboard.registerCommand(KeyEvent.DOM_VK_V, function () { passedFunction(parameter); }); break;
+            case 'w': _keyboard.registerCommand(KeyEvent.DOM_VK_W, function () { passedFunction(parameter); }); break;
+            case 'x': _keyboard.registerCommand(KeyEvent.DOM_VK_X, function () { passedFunction(parameter); }); break;
+            case 'y': _keyboard.registerCommand(KeyEvent.DOM_VK_Y, function () { passedFunction(parameter); }); break;
+            case 'z': _keyboard.registerCommand(KeyEvent.DOM_VK_Z, function () { passedFunction(parameter); }); break;
+        }
+        // _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () { _turretManager.toggleShowFireDistance(); });
+        // _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () { _turretManager.upgradeTurret(_score); });
+        // _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () { _turretManager.sellSelectedTurret(_score); });
     }
 
     return that;

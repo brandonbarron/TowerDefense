@@ -12,12 +12,16 @@
 <body>
     <div id="game">
         <div id="main-menu" class="screen">
+            <div>Game Title</div>
             <ul class="menu">
                 <li>
                     <button id="id-new-game">New&nbsp;Game</button>
                 </li>
                 <li>
                     <button id="id-high-scores">High&nbsp;Scores</button>
+                </li>
+                <li>
+                    <button id="id-controls">Controls</button>
                 </li>
                 <li>
                     <button id="id-about">About</button>
@@ -109,6 +113,22 @@
             <ul class="menu">
                 <li>
                     <button id="id-about-back">Back</button>
+                </li>
+            </ul>
+        </div>
+        <div id="controls" class="screen">
+            <h1>Controls</h1>
+            <p>
+                Choose a single letter to change the controls<br>
+                Toggle Grid:<input id="grid-key" type="text" name="grid" maxlength="1"><br>
+                Toggle Weapon Coverage:<input id="distance-key" type="text" name="distance" maxlength="1"><br>
+                Upgrade Turret:<input id="upgrade-key" type="text" name="upgrade" maxlength="1"><br>
+                Sell Turret:<input id="sell-key" type="text" name="sell" maxlength="1"><br>
+                Next Level:<input id="next-key" type="text" name="next" maxlength="1"><br>
+           </p>
+            <ul class="menu">
+                <li>
+                    <button id="id-controls-back" onclick="Menu.screens['controls'].run()">Submit / Back</button>
                 </li>
             </ul>
         </div>

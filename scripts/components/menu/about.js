@@ -1,16 +1,14 @@
 Menu.screens['about'] = (function(menu) {
-	'use strict';
 	
-	function initialize() {
+	let that = {};
+
+	that.initialize = function() {
 		document.getElementById('id-about-back').addEventListener(
 			'click',
 			function() { menu.showScreen('main-menu'); });
 	}
 	
-	function run() { }
+	that.run = function() { }
 	
-	return {
-		initialize : initialize,
-		run : run
-	};
+	return that;
 }(Menu.menu));

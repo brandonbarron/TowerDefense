@@ -1,20 +1,17 @@
 Menu.screens['new-game'] = (function (menu, input) {
 
-    let _game;
+    let that = {}, _game;
 
-    function initialize() { 
+    that.initialize = function() { 
         _game = Game.game;
         _game.initialize(input);
      }
 
-    function run() {
+    that.run = function() {
         _game.initialize(input);
         _game.run();
     }
 
-    return {
-        initialize: initialize,
-        run: run
-    };
+    return that;
 
 }(Menu.menu, Master.input));

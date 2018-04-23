@@ -1,11 +1,10 @@
 Menu.menu = (function() {
-	'use strict';
 
-	let _screens = Menu.screens;
+	let that = {}, _screens, screen, active;
 	
-	function showScreen(id) {
-		let screen = 0;
-        let active = null;
+	that.showScreen = function(id) {
+		screen = 0;
+        active = null;
 
 		active = document.getElementsByClassName('active');
 		for (screen = 0; screen < active.length; screen++)
@@ -15,17 +14,15 @@ Menu.menu = (function() {
 		document.getElementById(id).classList.add('active');
 	}
 
-	function initialize(socket) {
-        let screen = null;
+	that.initialize = function(socket) {
+		_screens = Menu.screens;
+        screen = null;
 		for (screen in _screens)
 			if (_screens.hasOwnProperty(screen))
 				_screens[screen].initialize();
 
-		showScreen('main-menu');
+		that.showScreen('main-menu');
 	}
 	
-	return {
-		initialize : initialize,
-		showScreen : showScreen
-	};
+	return that;
 }());

@@ -1,7 +1,8 @@
 Menu.screens['main-menu'] = (function(menu) {
-	'use strict';
-	
-	function initialize() {
+
+	let that = {};
+
+	that.initialize = function() {
 
 		document.getElementById('id-new-game').addEventListener(
 			'click',
@@ -16,10 +17,7 @@ Menu.screens['main-menu'] = (function(menu) {
 			function() { menu.showScreen('about'); });
 	}
 	
-	function run() { }
+	that.run = function() { }
 	
-	return {
-		initialize : initialize,
-		run : run
-	};
+	return that;
 }(Menu.menu));

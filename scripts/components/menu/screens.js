@@ -14,6 +14,10 @@ Menu.screens['main-menu'] = (function(menu) {
 		document.getElementById('id-about').addEventListener(
 			'click',
 			function() { menu.showScreen('about'); });
+
+		document.getElementById('id-controls').addEventListener(
+			'click',
+			function() { menu.showScreen('controls'); });
 	}
 	
 	function run() { }

@@ -139,6 +139,8 @@ Game.score = (function (graphics) {
             countDown = 3;
         });
 
+    that.startNextRound = function() { waitToStart = false; countDown = 3; }
+
     that.render = function () {
         graphics.drawText(
             { x: 1185, y: 915 },
