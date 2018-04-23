@@ -4,7 +4,6 @@ Menu.screens['new-game'] = (function (menu, input) {
 
     that.initialize = function() { 
         _game = Game.game;
-        _game.initialize(input);
      }
 
     that.run = function() {

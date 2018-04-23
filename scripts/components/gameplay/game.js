@@ -3,7 +3,7 @@ Game.game = (function (input) {
     //variables
     let that = {},
         playingGame,
-        image,
+        image, oneSelected, upgradeCost, selectedLevel, sellPrice,
         lastTimeStamp = performance.now(),
         chooseTurretType,
         aTurretChanged,
@@ -35,7 +35,7 @@ Game.game = (function (input) {
         chooseTurretType = 0;
         aTurretChanged = false;
         isNewTurretMode = false;
-
+        drawTurretInfo = false;
         _graphics.initialize();
         _spriteManager.initialize();
         //_spriteManager.addTestSprite()
@@ -49,7 +49,7 @@ Game.game = (function (input) {
 
         image = new Image();
         image.onload = function () { ready = true; };
-        image.src = "assets/grassBackground.jpg";
+        image.src = 'assets/grassBackground.jpg';
     }
 
     function update(elapsedTime) {
@@ -61,7 +61,7 @@ Game.game = (function (input) {
             aTurretChanged = false;
         }
         let roundFinished = _spriteManager.update(elapsedTime, gameRunning, _grid, _score);
-        if(roundFinished) {
+        if (roundFinished) {
             _score.roundFinished();
         }
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
@@ -75,8 +75,9 @@ Game.game = (function (input) {
         _spriteManager.render();
         _turretManager.render();
         _missileManager.render();
+        _menu.render(_upgradeKey, _sellKey, _nextKey, _gridKey, _distanceKey);
+        if (oneSelected) _menu.renderTurretInfo(selectedLevel, upgradeCost, sellPrice);
         _score.render();
-        _menu.render( _upgradeKey, _sellKey, _nextKey, _gridKey, _distanceKey);
     }
 
     function gameLoop(curTime) {
@@ -164,23 +165,15 @@ Game.game = (function (input) {
                     aTurretChanged = true;
                 }
             } else {
-                let oneSelected = _turretManager.selectTurret(x, y);
+                oneSelected = _turretManager.selectTurret(x, y);
                 let canUpgrade = false;
                 if (oneSelected) {
                     canUpgrade = _turretManager.canUpgrade();
-                    let upgradeCost = _turretManager.getSelectedUpgradeCost();
-
+                    upgradeCost = _turretManager.getSelectedUpgradeCost();
+                    selectedLevel = _turretManager.getSelectedLevel();
+                    sellPrice = _turretManager.getSelectedSellPrice();
                     canUpgrade = _score.getMoney() >= upgradeCost;
-
-                    document.getElementById('id-tower-level').innerHTML = 'Level: ' + _turretManager.getSelectedLevel();
-                    document.getElementById('id-tower-upgrade-cost').innerHTML = 'Upgrade cost: ' + upgradeCost;
-                    document.getElementById('id-tower-sell-amount').innerHTML = 'Sell price: ' + _turretManager.getSelectedSellPrice();
-                } else {
-                    document.getElementById('id-tower-level').innerHTML = '';
-                    document.getElementById('id-tower-upgrade-cost').innerHTML = '';
-                    document.getElementById('id-tower-sell-amount').innerHTML = '';
                 }
-
                 document.getElementById('id-upgrade-turret').disabled = !canUpgrade;
                 document.getElementById('id-sell-turret').disabled = !oneSelected;
             }
@@ -216,20 +209,26 @@ Game.game = (function (input) {
                 turret4();
             });
 
-        //make sure the button and 'u' are the same
-        document.getElementById('id-upgrade-turret').addEventListener(
-            'click',
-            function () { _turretManager.upgradeTurret(_score); }
-        );
+        document.getElementById('id-toggle-grid').addEventListener('click',
+            function () { 
+                _grid.invertRenderLines(); 
+            });
 
-        //make sure the button and 'u' are the same
-        document.getElementById('id-sell-turret').addEventListener(
-            'click',
+        document.getElementById('id-toggle-coverage').addEventListener('click',
+            function () { 
+                _turretManager.toggleShowFireDistance(); 
+            });
+
+        document.getElementById('id-upgrade-turret').addEventListener('click',
+            function () { 
+                _turretManager.upgradeTurret(_score);
+            });
+
+        document.getElementById('id-sell-turret').addEventListener('click',
             function () {
                 _turretManager.sellSelectedTurret(_score);
                 aTurretChanged = true;
-            }
-        );
+            });
     }
 
     function validLocation(row, col) {
@@ -267,7 +266,7 @@ Game.game = (function (input) {
     }
 
     function registerKeyboardStuff(key, passedFunction, parameter) {
-        switch(key) {
+        switch (key) {
             case 'a': _keyboard.registerCommand(KeyEvent.DOM_VK_A, function () { passedFunction(parameter); }); break;
             case 'b': _keyboard.registerCommand(KeyEvent.DOM_VK_B, function () { passedFunction(parameter); }); break;
             case 'c': _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () { passedFunction(parameter); }); break;
@@ -295,9 +294,6 @@ Game.game = (function (input) {
             case 'y': _keyboard.registerCommand(KeyEvent.DOM_VK_Y, function () { passedFunction(parameter); }); break;
             case 'z': _keyboard.registerCommand(KeyEvent.DOM_VK_Z, function () { passedFunction(parameter); }); break;
         }
-        // _keyboard.registerCommand(KeyEvent.DOM_VK_C, function () { _turretManager.toggleShowFireDistance(); });
-        // _keyboard.registerCommand(KeyEvent.DOM_VK_U, function () { _turretManager.upgradeTurret(_score); });
-        // _keyboard.registerCommand(KeyEvent.DOM_VK_S, function () { _turretManager.sellSelectedTurret(_score); });
     }
 
     return that;

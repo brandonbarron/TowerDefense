@@ -2,47 +2,41 @@
     padding: 0;
     margin: 0;
 }
-
 body {
 	margin: 0;
 	background-color: #000000;
 }
-
 #game {
-	background: blue;
+	background: url('../../assets/menu_background.png');
 	width: 1280px;
 	height: 920px;
     font-size: 40px;
 }
-
 #game .screen {
 	width: 100%;
 	height: 100%;
 	display: none;
 	z-index: 10;
 }
-
 #game .screen.active {
 	display: block;
 }
-
 #main-menu {
+	color: white;
+	text-align: center;
     padding-top: 5em;
 	cursor: pointer;
-	font-size: 0.75em;
+	font-size: 1em;
 }
-
 #new-game {
 	height: 920px;
 	position: relative;
 	width: 1280px;
 }
-
 #canvas-main {
 	height: 100%;
   	width: 100%;
 }
-
 #gamePlay-menu {
     padding-top: 0;
 	cursor: pointer;
@@ -58,48 +52,41 @@ ul.game-menu {
 	margin: 10px;
 	list-style: none;
 }
-
 ul.game-menu li {
 	margin-bottom: 0.1em;
 }
-
 ul.game-menu li button {
 	font-family: Arial, sans-serif;
     font-size: 0.6em;
 	color: white;
 	width: 10em;
-    height: 1.5em;
+	height: 1.5em;
+	border-radius: 10px;
     background: transparent;
 	border: 0.1em solid lightgrey;
 }
-
 ul.game-menu li button:hover {
 	border: none;
     background: black;
     color: white;
 }
-
 ul.game-menu li button:active {
 	color: #CECEF6;
 	background: rgb(0, 0, 0);
 }
-
 ul.game-menu li button:disabled  {
 	pointer-events:none; 
     opacity: 0.6; 
 }
-
 ul.menu {
 	text-align: center;
 	padding: 0;
 	margin: 0;
 	list-style: none;
 }
-
 ul.menu li {
 	margin-bottom: 0.8em;
 }
-
 ul.menu li button {
 	font-family: Arial, sans-serif;
     font-size: 0.6em;
@@ -108,40 +95,33 @@ ul.menu li button {
     height: 1.5em;
     background: transparent;
 	border: 0.1em solid lightgrey;
+	border-radius: 25px;
 }
-
 ul.menu li button:hover {
 	border: none;
-    background: black;
-    color: white;
+    background: white;
+    color: black;
 }
-
 ul.menu li button:active {
 	color: #CECEF6;
 	background: rgb(0, 0, 0);
 }
-
 #high-scores, #about, #controls {
 	color: white;
 	padding-top: 3em;
 }
-
 #game div h1 {
-	/* font-size: 1em; */
 	text-align: center;
 }
-
 #high-scores ol {
 	text-align: center;
 	padding: 0;
 	margin: 0;
 	list-style: none;
 }
-
 #game div p {
 	font-size: 0.5em;
 }
-
 #about p, #controls p {
 	text-align: center;
 }

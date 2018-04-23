@@ -33,11 +33,8 @@ Game.grid = (function (graphics) {
             for (let j = 0; j < cols; j++) {
                 let x = spots[i].col[j].x;
                 let y = spots[i].col[j].y;
-                if (spots[i].col[j].path[2].value) graphics.drawRectangle({ x: x, y: y }, { width: spotSize, height: spotSize }, 'black');
-                if (spots[i].col[j].path[3].value) graphics.drawRectangle({ x: x, y: y }, { width: spotSize, height: spotSize }, 'black');
-                if (spots[i].col[j].path[4].value) graphics.drawRectangle({ x: x, y: y }, { width: spotSize, height: spotSize }, 'black');
-                if (spots[i].col[j].path[5].value) graphics.drawRectangle({ x: x, y: y }, { width: spotSize, height: spotSize }, 'black');
-                graphics.drawRectangleBorder({ x: x, y: y }, { width: spotSize, height: spotSize }, 'lightgrey');
+                (i < 10 && i > 6 && j === 0) || (i < 10 && i > 6 && j === cols - 1) || (j > 12 && j < 17 && i === 0)|| (j > 12 && j < 17 && i === rows - 1) ? {} : 
+                    graphics.drawRectangleBorder({ x: x, y: y }, { width: spotSize, height: spotSize }, 'lightgrey');
             }
     }
 

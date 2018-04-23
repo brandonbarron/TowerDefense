@@ -319,8 +319,6 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			if (isInvalidTurretLoc) {
 				color = 'rgba(255, 0, 0, 0.5)'
 			}
-			graphics.drawText({ x: 1000, y: 100 }, 'y: ' + loc.y, 'black', '72px Arial');
-			graphics.drawText({ x: 1000, y: 200 }, 'x: ' + loc.x, 'black', '72px Arial');
 			graphics.drawCircle(loc, turretRange, { start: 0, end: 2 * Math.PI }, color);
 		}
 

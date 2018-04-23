@@ -143,31 +143,29 @@ Game.score = (function (graphics) {
 
     that.render = function () {
         graphics.drawText(
-            { x: 1185, y: 915 },
-            'Score: ' + score,
-            '#CCCCCC',
-            '16px Arial'
-        );
-
-        graphics.drawText(
-            { x: 1185, y: 895 },
-            'Money: ' + money,
-            '#CCCCCC',
-            '16px Arial'
-        );
-
-        graphics.drawText(
-            { x: 1185, y: 875 },
+            { x: 350, y: 780 },
             'Lives: ' + remainingLives,
-            '#CCCCCC',
-            '16px Arial'
+            'black',
+            '24px Arial'
+        );
+        graphics.drawText(
+            { x: 550, y: 780 },
+            'Score: ' + score,
+            'black',
+            '24px Arial'
+        );
+        graphics.drawText(
+            { x: 750, y: 780 },
+            'Money: $' + money,
+            'black',
+            '24px Arial'
         );
 
         if (countDown > 0 && !gameOver)
             graphics.drawText(
-                { x: 575, y: 400 },
+                { x: 620, y: 400 },
                 countDown,
-                '#CCCCCC',
+                'white',
                 '72px Arial'
             );
 
@@ -175,15 +173,15 @@ Game.score = (function (graphics) {
             graphics.drawText(
                 { x: 500, y: 400 },
                 'Game Over',
-                'white',
+                'red',
                 '72px Arial'
             );
 
         if (waitToStart)
             graphics.drawText(
-                { x: 500, y: 400 },
+                { x: 525, y: 400 },
                 'Ready?',
-                'white',
+                'black',
                 '72px Arial'
             );
     };

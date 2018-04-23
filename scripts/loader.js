@@ -60,6 +60,14 @@ Master.loader = (function () {
                 source: 'assets/grassBackground.jpg'
             },
             {
+                key: 'bottom_menu',
+                source: 'assets/bottom_menu.png'
+            },
+            {
+                key: 'menu_background',
+                source: 'assets/menu_background.png'
+            },
+            {
                 key: 'creep1-blue',
                 source: 'assets/creep1-blue.png'
             },
