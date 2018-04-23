@@ -33,7 +33,7 @@ Game.grid = (function (graphics) {
             for (let j = 0; j < cols; j++) {
                 let x = spots[i].col[j].x;
                 let y = spots[i].col[j].y;
-                (i < 10 && i > 6 && j === 0) || (i < 10 && i > 6 && j === cols - 1) || (j > 12 && j < 17 && i === 0)|| (j > 12 && j < 17 && i === rows - 1) ? {} : 
+                (i < 10 && i > 6 && j === 0) || (i < 10 && i > 6 && j === cols - 1) || (j > 12 && j < 17 && i === 0) || (j > 12 && j < 17 && i === rows - 1) ? {} :
                     graphics.drawRectangleBorder({ x: x, y: y }, { width: spotSize, height: spotSize }, 'lightgrey');
             }
     }
@@ -272,7 +272,7 @@ Game.grid = (function (graphics) {
         return !allHasPath;
     }
 
-    that.getStartforPath = function(direction) {
+    that.getStartforPath = function (direction) {
         switch (direction) {
             case 2:
                 //pathing(7, 0, direction, 8, 29);
@@ -316,8 +316,34 @@ Game.grid = (function (graphics) {
         return 1000000000;
     }
 
+    function getEndingCoord(direction) {
+        switch (direction) {
+            case 2:
+                //pathing(7, 0, direction, 8, 29);
+                return { x: spots[8].col[29].x + (spotSize / 2), y: spots[8].col[29].y + (spotSize / 2) };
+                break;
+            case 3:
+                //pathing(0, 13, direction, 16, 14);
+                return { x: spots[16].col[14].x + (spotSize / 2), y: spots[16].col[14].y + (spotSize / 2) };
+                break;
+            case 4:
+                //pathing(9, 29, direction, 8, 0);
+                return { x: spots[8].col[0].x + (spotSize / 2), y: spots[8].col[0].y + (spotSize / 2) };
+                break;
+            case 5:
+                //pathing(16, 16, direction, 0, 15);
+                return { x: spots[0].col[15].x + (spotSize / 2), y: spots[0].col[15].y + (spotSize / 2) };
+                break;
+        }
+        return null;
+    }
 
-    that.getNearestPath = function (x, y, pathNum) {
+
+    that.getNearestPath = function (x, y, pathNum, isFlying) {
+        if (isFlying) {
+            return getEndingCoord(pathNum);
+        }
+
         let bestDist = 10000000000;
         let bestSpot = {};
         for (let i = 0; i < rows; i++) {
@@ -368,7 +394,7 @@ Game.grid = (function (graphics) {
                     }
                 }
             }
-            
+
             return {
                 x: spots[bestSpot.i].col[bestSpot.j].x + (spotSize / 2),
                 y: spots[bestSpot.i].col[bestSpot.j].y + (spotSize / 2),
@@ -377,7 +403,7 @@ Game.grid = (function (graphics) {
         return null;
     }
 
-    that.getDistFromFinish = function(x, y, pathNum) {
+    that.getDistFromFinish = function (x, y, pathNum) {
         let col = Math.floor((x - 40) / 40),
             row = Math.floor((y - 20) / 40);
         return getDistToEnd(pathNum, row, col);

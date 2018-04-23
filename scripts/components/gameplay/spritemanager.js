@@ -148,6 +148,10 @@ Game.spriteManager = function (graphics) {
 			return spec.health;
 		}
 
+		that.isFlying = function() {
+			return spec.isFlying;
+		}
+
 		return that;
 	}
 
@@ -257,7 +261,7 @@ Game.spriteManager = function (graphics) {
 		let loc = sprite.getLoc();
 		let followPath = sprite.getFollowPath();
 
-		let pathLoc = theGrid.getNearestPath(loc.x, loc.y, followPath);
+		let pathLoc = theGrid.getNearestPath(loc.x, loc.y, followPath, sprite.isFlying());
 		//console.log(loc, pathLoc);
 		var angleResult = computeAngle(loc.rotation /*- 1.570796*/, loc, pathLoc);
 		if (testTolerance(angleResult.angle, 0, 0.1) === false) {
@@ -291,23 +295,23 @@ Game.spriteManager = function (graphics) {
 					'assets/creep1-red.png',
 				];
 				spritePic = [
-					{ pic:'assets/creep1-blue.png', count: 6, time: [1000, 200, 100, 1000, 100, 200] },
-					{ pic:'assets/creep1-yellow.png', count: 6, time: [1000, 200, 100, 1000, 100, 200] },
-					{ pic:'assets/creep1-red.png', count: 6, time: [1000, 200, 100, 1000, 100, 200] },
+					{ pic:'assets/creep1-blue.png', count: 6, time: [1000, 200, 100, 1000, 100, 200], isFlying: false },
+					{ pic:'assets/creep1-yellow.png', count: 6, time: [1000, 200, 100, 1000, 100, 200], isFlying: false },
+					{ pic:'assets/creep1-red.png', count: 6, time: [1000, 200, 100, 1000, 100, 200], isFlying: false },
 				];
 				break;
 			case 2:
 				spritePic = [
-					{ pic:'assets/creep2-blue.png', count: 4, time: [200, 1000, 200, 600 ] },
-					{ pic:'assets/creep2-yellow.png', count: 4, time: [200, 1000, 200, 600 ] },
-					{ pic:'assets/creep2-red.png', count: 4, time: [200, 1000, 200, 600 ] },
+					{ pic:'assets/creep2-blue.png', count: 4, time: [200, 1000, 200, 600 ], isFlying: false },
+					{ pic:'assets/creep2-yellow.png', count: 4, time: [200, 1000, 200, 600 ], isFlying: false },
+					{ pic:'assets/creep2-red.png', count: 4, time: [200, 1000, 200, 600 ], isFlying: true },
 				];
 				break;
 			case 3:
 				spritePic = [
-					{ pic:'assets/creep3-blue.png', count: 4, time: [1000, 200, 200, 200 ] },
-					{ pic:'assets/creep3-yellow.png', count: 4, time: [1000, 200, 200, 200 ] },
-					{ pic:'assets/creep3-red.png', count: 4, time: [1000, 200, 200, 200 ] },
+					{ pic:'assets/creep3-blue.png', count: 4, time: [1000, 200, 200, 200 ], isFlying: false },
+					{ pic:'assets/creep3-yellow.png', count: 4, time: [1000, 200, 200, 200 ], isFlying: true },
+					{ pic:'assets/creep3-red.png', count: 4, time: [1000, 200, 200, 200 ], isFlying: true },
 				];
 				break;
 		}
@@ -349,7 +353,8 @@ Game.spriteManager = function (graphics) {
 			moveRate: speed,			// pixels per millisecond
 			rotateRate: 3.14159 / 1000,		// Radians per millisecond
 			followPath: followPath,
-			health: health
+			health: health,
+			isFlying: spritePic.isFlying
 		}));
 	}
 
@@ -420,21 +425,6 @@ Game.spriteManager = function (graphics) {
 	that.addSprite = function (spec) {
 		allSprites.push(AnimatedModel(spec));
 	};
-
-	/*that.addTestSprite = function() {
-		allSprites.push(AnimatedModel({
-			spriteSheet : 'assets/creep1-blue.png',
-			spriteCount : 6,
-			sprite: 0,
-			spriteTime : [1000, 200, 100, 1000, 100, 200],	// milliseconds per sprite animation frame
-			center : { x : 40, y : 300 },
-			rotation : 0,
-			orientation : 0,				// Sprite orientation with respect to "forward"
-			moveRate : 200 / 10000,			// pixels per millisecond
-			rotateRate : 3.14159 / 1000,	// Radians per millisecond
-			followPath: 2
-		}));
-	};*/
 
 	that.getAllSprites = function () {
 		return allSprites;
