@@ -9,7 +9,9 @@ Game.score = (function (graphics) {
         scoreRecorded,
         gameRunning,
         score,
-        money;
+        money,
+        curRound,
+        waitToStart;
 
     that.initialize = function () {
         curScore = null;
@@ -22,6 +24,8 @@ Game.score = (function (graphics) {
         gameRunning = false;
         score = 0;
         money = 1000;
+        curRound = 1;
+        waitToStart = true;
     }
 
     that.reset = function () {
@@ -31,6 +35,8 @@ Game.score = (function (graphics) {
         countDown = 0;
         gameRunning = false;
         scoreRecorded = false;
+        curRound = 1;
+        waitToStart = true;
     }
 
     that.killedSprite = function () {
@@ -58,6 +64,17 @@ Game.score = (function (graphics) {
         return money;
     }
 
+    that.roundFinished = function () {
+        curRound++;
+        gameRunning = false;
+        
+        if (curRound > 3) {
+            gameOver = true;
+        } else {
+            waitToStart = true;
+        }
+    }
+
     that.update = function (timeElapsed) {
         let canGo = false;
         if (countDown > 0) {
@@ -72,6 +89,14 @@ Game.score = (function (graphics) {
                 timeSoFar = 0;
             }
         }
+
+
+
+        if (remainingLives < 1) {
+            gameOver = true;
+            gameRunning = false;
+        }
+
 
         if ((gameOver) && !scoreRecorded) {
             scoreRecorded = true;
@@ -102,7 +127,7 @@ Game.score = (function (graphics) {
         document.getElementById('id-new-turret-type3').disabled = money < 800;
         document.getElementById('id-new-turret-type4').disabled = money < 1000;
 
-        document.getElementById('id-start-level').disabled = gameRunning;
+        document.getElementById('id-start-level').disabled = gameRunning || gameOver;
 
 
         return gameRunning;
@@ -110,6 +135,7 @@ Game.score = (function (graphics) {
 
     document.getElementById('id-start-level').addEventListener('click',
         function () {
+            waitToStart = false;
             countDown = 3;
         });
 
@@ -145,8 +171,16 @@ Game.score = (function (graphics) {
 
         if (gameOver)
             graphics.drawText(
-                { x: 300, y: 400 },
+                { x: 500, y: 400 },
                 'Game Over',
+                'white',
+                '72px Arial'
+            );
+
+        if (waitToStart)
+            graphics.drawText(
+                { x: 500, y: 400 },
+                'Ready?',
                 'white',
                 '72px Arial'
             );

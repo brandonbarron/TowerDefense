@@ -59,7 +59,10 @@ Game.game = (function (input) {
             _grid.update();
             aTurretChanged = false;
         }
-        _spriteManager.update(elapsedTime, gameRunning, _grid, _score);
+        let roundFinished = _spriteManager.update(elapsedTime, gameRunning, _grid, _score);
+        if(roundFinished) {
+            _score.roundFinished();
+        }
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
         _missileManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
     }

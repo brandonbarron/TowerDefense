@@ -284,7 +284,7 @@ Game.spriteManager = function (graphics) {
 
 	that.update = function (elapsedTime, gameRunning, theGrid, score) {
 		if (!gameRunning) {
-			return;
+			return false;
 		}
 
 		curTime += elapsedTime;
@@ -324,6 +324,15 @@ Game.spriteManager = function (graphics) {
 			}
 		}
 
+		let noMore = allSprites.length === 0 && remainingSprites === 0;
+		if(noMore) {
+			nextSpriteTime = curTime;
+			curLevel++;
+			remainingSprites = 10 * curLevel;
+			newSpriteFreq *= 0.5;
+		}
+
+		return noMore;
 	};
 
 	that.render = function () {
