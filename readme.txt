@@ -10,4 +10,3 @@ Some of the changes since previous version:
     additional spending money
     fixed some upgrade turret related errors
     fixed sell turret error
-    *persisted high scores
