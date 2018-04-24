@@ -18,7 +18,8 @@ Game.game = (function (input) {
         _grid,
         _menu,
         _keyboard,
-        _mouse;
+        _mouse,
+        _particles;
 
     that.initialize = function () {
         _graphics = Game.graphics;
@@ -30,6 +31,7 @@ Game.game = (function (input) {
         _menu = Game.menu;
         _keyboard = Master.input.Keyboard();
         _mouse = Master.input.Mouse();
+        _particles = Game.particles;
         playingGame = true;
         showGrid = false;
         chooseTurretType = 0;
@@ -44,6 +46,10 @@ Game.game = (function (input) {
         _grid.initialize();
         _menu.initialize();
         _score.initialize();
+        _particles.initialize({
+			speed: { mean: 0.07, stdev: 0.025 },
+			lifetime: { mean: 500, stdev: 250 },
+		});
 
         registerKeyCommands();
 
@@ -56,6 +62,7 @@ Game.game = (function (input) {
         let gameRunning = _score.update(elapsedTime);
         _keyboard.update(elapsedTime);
         _mouse.update(elapsedTime);
+        _particles.update(elapsedTime);
         if (aTurretChanged) {
             _grid.update();
             aTurretChanged = false;
@@ -72,9 +79,11 @@ Game.game = (function (input) {
         _graphics.clear();
         drawBackAndBorder();
         _grid.render();
+        _particles.render();
         _spriteManager.render();
         _turretManager.render();
         _missileManager.render();
+        
         _menu.render(_upgradeKey, _sellKey, _nextKey, _gridKey, _distanceKey);
         if (oneSelected) _menu.renderTurretInfo(selectedLevel, upgradeCost, sellPrice);
         _score.render();

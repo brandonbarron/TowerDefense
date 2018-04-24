@@ -22,6 +22,7 @@ Master.loader = (function () {
         {
             scripts: [
                 'scripts/components/gameplay/graphics.js',
+                'scripts/components/gameplay/random.js',
                 'scripts/components/gameplay/grid.js',
                 'scripts/components/gameplay/menu.js',
                 'scripts/components/gameplay/animatedSprite.js',
