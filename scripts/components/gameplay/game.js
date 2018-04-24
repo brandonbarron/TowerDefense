@@ -97,7 +97,7 @@ Game.game = (function (input) {
             reset();
             return;
         }
-        update(curTime - lastTimeStamp, curTime);
+        update(curTime - lastTimeStamp);
         lastTimeStamp = curTime;
         render();
         requestAnimationFrame(gameLoop);

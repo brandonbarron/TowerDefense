@@ -75,6 +75,10 @@ Game.score = (function (graphics) {
         }
     }
 
+    that.isWaitToStart = function() {
+        return waitToStart;
+    }
+
     that.update = function (timeElapsed) {
         let canGo = false;
         if (countDown > 0) {
