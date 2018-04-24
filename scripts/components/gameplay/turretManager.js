@@ -1,4 +1,4 @@
-Game.turretManager = function (graphics, missileManager, grid) {
+Game.turretManager = function (graphics, missileManager, grid, sounds) {
 	'use strict';
 
 	let that = {},
@@ -123,6 +123,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 			totalTime += elapsedTime;
 			if (totalTime > fireTime && shouldFire) {
+				sounds.shoot();
 				missileNew({
 					id: nextMissileId++,
 					radius: radius,
@@ -497,6 +498,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 			return;
 		}
 
+		sounds.placeTurret();
 		isChoosingTurretLoc = false;
 
 		let turPic = getTurretPic(chooseTurretType);
@@ -530,6 +532,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 	that.upgradeTurret = function (score) {
 		let selected = getSelected();
+		sounds.upgradeTurret();
 		if (selected) {
 			if(score.purchaseIfAble(selected.getUpgradeCost())) {
 				selected.upgradeTurret();
@@ -548,7 +551,7 @@ Game.turretManager = function (graphics, missileManager, grid) {
 
 				let sellAmount = allTurrets[i].getSellPrice();
 				score.sellItem(sellAmount);
-
+				sounds.sellTurret();
 				allTurrets.splice(i, 1);
 				return;
 			}
@@ -576,4 +579,4 @@ Game.turretManager = function (graphics, missileManager, grid) {
 	};
 
 	return that;
-}(Game.graphics, Game.missileManager, Game.grid);
+}(Game.graphics, Game.missileManager, Game.grid, Game.sounds);

@@ -10,7 +10,7 @@
 // }
 //
 //------------------------------------------------------------------
-Game.spriteManager = function (graphics) {
+Game.spriteManager = function (graphics, sounds) {
 	'use strict';
 
 	let that = {},
@@ -383,6 +383,7 @@ Game.spriteManager = function (graphics) {
 		//remove dead sprites
 		for (let i = allSprites.length - 1; i >= 0; i--) {
 			if (allSprites[i].getHealth() <= 0) {
+				sounds.deathCreep();
 				allSprites.splice(i, 1);
 				score.killedSprite();
 				i--;
@@ -435,4 +436,4 @@ Game.spriteManager = function (graphics) {
 	};
 
 	return that;
-}(Game.graphics);
+}(Game.graphics, Game.sounds);

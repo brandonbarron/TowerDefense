@@ -7,6 +7,9 @@ Master.components.Missile = function (spec, graphics) {
     'use strict';
     let that = {};
 
+    let hitShot = new Audio('assets/sounds/hit_shot.mp3');
+
+
     Object.defineProperty(that, 'position', {
         get: () => spec.position
     });
@@ -53,6 +56,7 @@ Master.components.Missile = function (spec, graphics) {
         let closestSprite = findClosestSprite(spec.position.x, spec.position.y, allSprites)
 
         if(closestSprite.dist <= 20) {
+            hitShot.play();
             allSprites[closestSprite.i].reduceHealth(spec.shootDamage);
             return false;
         }

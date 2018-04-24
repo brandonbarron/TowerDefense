@@ -22,6 +22,7 @@ Master.loader = (function () {
         {
             scripts: [
                 'scripts/components/gameplay/graphics.js',
+                'scripts/components/gameplay/sounds.js',
                 'scripts/components/gameplay/grid.js',
                 'scripts/components/gameplay/menu.js',
                 'scripts/components/gameplay/animatedSprite.js',
@@ -51,110 +52,39 @@ Master.loader = (function () {
         },
     ],
         assetOrder = [
-            {
-                key: 'explosion',
-                source: 'assets/explosion.png'
-            },
-            {
-                key: 'background',
-                source: 'assets/grassBackground.jpg'
-            },
-            {
-                key: 'bottom_menu',
-                source: 'assets/bottom_menu.png'
-            },
-            {
-                key: 'menu_background',
-                source: 'assets/menu_background.png'
-            },
-            {
-                key: 'creep1-blue',
-                source: 'assets/creep1-blue.png'
-            },
-            {
-                key: 'creep1-yellow',
-                source: 'assets/creep1-yellow.png'
-            },
-            {
-                key: 'creep1-red',
-                source: 'assets/creep1-red.png'
-            },
-            {
-                key: 'creep2-blue',
-                source: 'assets/creep1-blue.png'
-            },
-            {
-                key: 'creep2-yellow',
-                source: 'assets/creep1-yellow.png'
-            },
-            {
-                key: 'creep2-red',
-                source: 'assets/creep1-red.png'
-            },
-            {
-                key: 'creep3-blue',
-                source: 'assets/creep1-blue.png'
-            },
-            {
-                key: 'creep3-yellow',
-                source: 'assets/creep1-yellow.png'
-            },
-            {
-                key: 'creep3-red',
-                source: 'assets/creep1-red.png'
-            },
-            {
-                key: 'turret-1-1',
-                source: 'assets/turret-1-1.png'
-            },
-            {
-                key: 'turret-1-2',
-                source: 'assets/turret-1-2.png'
-            },
-            {
-                key: 'turret-1-3',
-                source: 'assets/turret-1-3.png'
-            },
-            {
-                key: 'turret-2-1',
-                source: 'assets/turret-2-1.png'
-            },
-            {
-                key: 'turret-2-2',
-                source: 'assets/turret-2-2.png'
-            },
-            {
-                key: 'turret-2-3',
-                source: 'assets/turret-2-3.png'
-            },
-            {
-                key: 'turret-3-1',
-                source: 'assets/turret-3-1.png'
-            },
-            {
-                key: 'turret-3-2',
-                source: 'assets/turret-3-2.png'
-            },
-            {
-                key: 'turret-3-3',
-                source: 'assets/turret-3-3.png'
-            },
-            {
-                key: 'turret-4-1',
-                source: 'assets/turret-4-1.png'
-            },
-            {
-                key: 'turret-4-2',
-                source: 'assets/turret-4-2.png'
-            },
-            {
-                key: 'turret-4-3',
-                source: 'assets/turret-4-3.png'
-            },
-            {
-                key: 'turret-base',
-                source: 'assets/turret-base.png'
-            },
+            { key: 'explosion', source: 'assets/explosion.png' },
+            { key: 'background', source: 'assets/grassBackground.jpg' },
+            { key: 'bottom_menu', source: 'assets/bottom_menu.png' },
+            { key: 'menu_background', source: 'assets/menu_background.png' },
+            { key: 'creep1-blue', source: 'assets/creep1-blue.png' },
+            { key: 'creep1-yellow', source: 'assets/creep1-yellow.png' },
+            { key: 'creep1-red', source: 'assets/creep1-red.png' },
+            { key: 'creep2-blue', source: 'assets/creep1-blue.png' },
+            { key: 'creep2-yellow', source: 'assets/creep1-yellow.png' },
+            { key: 'creep2-red', source: 'assets/creep1-red.png' },
+            { key: 'creep3-blue', source: 'assets/creep1-blue.png' },
+            { key: 'creep3-yellow', source: 'assets/creep1-yellow.png' },
+            { key: 'creep3-red', source: 'assets/creep1-red.png' },
+            { key: 'turret-1-1', source: 'assets/turret-1-1.png' },
+            { key: 'turret-1-2', source: 'assets/turret-1-2.png' },
+            { key: 'turret-1-3', source: 'assets/turret-1-3.png' },
+            { key: 'turret-2-1', source: 'assets/turret-2-1.png' },
+            { key: 'turret-2-2', source: 'assets/turret-2-2.png' },
+            { key: 'turret-2-3', source: 'assets/turret-2-3.png' },
+            { key: 'turret-3-1', source: 'assets/turret-3-1.png' },
+            { key: 'turret-3-2', source: 'assets/turret-3-2.png' },
+            { key: 'turret-3-3', source: 'assets/turret-3-3.png' },
+            { key: 'turret-4-1', source: 'assets/turret-4-1.png' },
+            { key: 'turret-4-2', source: 'assets/turret-4-2.png' },
+            { key: 'turret-4-3', source: 'assets/turret-4-3.png' },
+            { key: 'turret-base', source: 'assets/turret-base.png' },
+            { key: 'shooting', source: 'assets/sounds/shooting.mp3' },
+            { key: 'placeTurret', source: 'assets/sounds/place_turret.mp3' },
+            { key: 'sellTurret', source: 'assets/sounds/sell_turret.mp3' },
+            { key: 'hitShot', source: 'assets/sounds/hit_shot.mp3' },
+            { key: 'upgradeTurret', source: 'assets/sounds/upgrade_turret.mp3' },
+            { key: 'deathCreep', source: 'assets/sounds/death_creep.mp3' },
+            
         ];
 
     function loadScripts(scripts, onComplete) {

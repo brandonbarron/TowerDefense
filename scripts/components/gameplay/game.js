@@ -16,6 +16,7 @@ Game.game = (function (input) {
         _missileManager,
         _score,
         _grid,
+        _sounds,
         _menu,
         _keyboard,
         _mouse;
@@ -28,6 +29,7 @@ Game.game = (function (input) {
         _score = Game.score;
         _grid = Game.grid;
         _menu = Game.menu;
+        _sounds = Game.sounds;
         _keyboard = Master.input.Keyboard();
         _mouse = Master.input.Mouse();
         playingGame = true;
@@ -44,6 +46,7 @@ Game.game = (function (input) {
         _grid.initialize();
         _menu.initialize();
         _score.initialize();
+        _sounds.initialize();
 
         registerKeyCommands();
 
