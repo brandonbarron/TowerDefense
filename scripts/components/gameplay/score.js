@@ -29,14 +29,7 @@ Game.score = (function (graphics) {
         curRound = 1;
         waitToStart = true;
         xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            console.log(JSON.parse(this.responseText));
-            // localScores = this.responseText;
-            // console.log(localScores.scores);
-          };
-        xhttp.open("GET", "https://api.jsonbin.io/b/5adeaf3e0917ce62fac6b2c6", true);
-        xhttp.send();
-
+        localScore = [];
     }
 
     that.reset = function () {
@@ -78,7 +71,7 @@ Game.score = (function (graphics) {
     that.roundFinished = function () {
         curRound++;
         gameRunning = false;
-        
+
         if (curRound > 3) {
             gameOver = true;
         } else {
@@ -86,7 +79,7 @@ Game.score = (function (graphics) {
         }
     }
 
-    that.isWaitToStart = function() {
+    that.isWaitToStart = function () {
         return waitToStart;
     }
 
@@ -115,26 +108,34 @@ Game.score = (function (graphics) {
 
         if ((gameOver) && !scoreRecorded) {
             scoreRecorded = true;
+            let result;
+            xhttp.onreadystatechange = function () {
+                result = this.responseText;
+                if (!result || 0 === result.length) {
+                    //nothing
+                } else {
+                    let result = JSON.parse(this.responseText);
+                    localScores = result.scores;
+                    localScores.push(score);
+                    console.log(localScores);
+        
+                    localScores.sort(function (a, b) { return b - a; })
+                    let newScores = [];
+                    let scoreLength = Math.min(5, localScores.length);
+                    for (let i = 0; i < scoreLength; i++) {
+                        newScores[i] = localScores[i];
+                    }
+                    
+                    xhttp.open("POST", "https://api.jsonbin.io/b/5adeaf3e0917ce62fac6b2c6", true);
+                    xhttp.send(JSON.stringify({"scores": newScores}));
+                }
+            };
+            xhttp.open("GET", "https://api.jsonbin.io/b/5adeaf3e0917ce62fac6b2c6", true);
+            xhttp.send();
 
-            let previousScores = localStorage.getItem('MyGame.highScores');
-            let highScores = {};
-            if (previousScores !== null) {
-                highScores = JSON.parse(previousScores);
-            }
 
-            let scoresArray = [];
-            for (let key in highScores) {
-                scoresArray.push(highScores[key]);
-            }
-            scoresArray.push(score);
 
-            scoresArray.sort(function (a, b) { return b - a; })
-            let newScores = {};
-            let scoreLength = Math.min(5, scoresArray.length);
-            for (let i = 0; i < scoreLength; i++) {
-                newScores[i] = scoresArray[i];
-            }
-            localStorage['MyGame.highScores'] = JSON.stringify(newScores);
+            // localStorage['MyGame.highScores'] = JSON.stringify(newScores);
         }
 
         document.getElementById('id-new-turret-type1').disabled = money < 400;
@@ -154,7 +155,7 @@ Game.score = (function (graphics) {
             countDown = 3;
         });
 
-    that.startNextRound = function() { waitToStart = false; countDown = 3; }
+    that.startNextRound = function () { waitToStart = false; countDown = 3; }
 
     that.render = function () {
         graphics.drawText(
