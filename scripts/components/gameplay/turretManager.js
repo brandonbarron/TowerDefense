@@ -40,7 +40,7 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 		let missileSpeed = 0.25;
 		//let shootRange = 350;
 		let isSelected = false;
-		let upgradeTime = 1000;
+		let upgradeTime = 100;
 
 		//from sample code
 		function crossProduct2d(v1, v2) {
@@ -87,13 +87,14 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 
 
 		that.update = function (elapsedTime, gameRunning) {
+			if (upgradeTime > 0) {
+				upgradeTime -= elapsedTime;
+			}
 			if (!gameRunning) {
 				return;
 				//spec.rotation = 0;
 			}
-			if(upgradeTime > 0) {
-				upgradeTime -= elapsedTime;
-			}
+			
 			baseSprite.update(elapsedTime);
 			sprite.update(elapsedTime);
 
@@ -197,34 +198,32 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 			missileManager.addMissile(data);
 		}
 
-		that.canUpgrade = function () {
-			return upgradeLevel < 3 && upgradeTime <=0;
+		that.canUpgrade = function (isPaused) {
+			if(isPaused) {
+				return upgradeLevel < 3;
+			}
+			return upgradeLevel < 3 && upgradeTime <= 0;
 		}
 
-		that.getUpgradeCost = function() {
-			if(that.canUpgrade()) {
-				return spec.upgradeCost * upgradeLevel;
-			} 
-			return 0;
+		that.getUpgradeCost = function () {
+			return spec.upgradeCost * upgradeLevel;
 		}
 
-		that.getSellPrice = function() {
+		that.getSellPrice = function () {
 			return (spec.upgradeCost * upgradeLevel) * 0.5;
 		}
 
-		that.getLevel = function() {
+		that.getLevel = function () {
 			return upgradeLevel;
 		}
 
-		that.upgradeTurret = function () {
-			if(!that.canUpgrade()) {
+		that.upgradeTurret = function (isPaused) {
+			if (!that.canUpgrade(isPaused)) {
 				return;
 			}
-			/*if(score.getMoney() < that.getUpgradeCost()) {
-				return;
-			}*/
+
 			upgradeLevel++;
-			upgradeTime = 1000;
+			upgradeTime = 100;
 			missileSpeed *= 1.5;
 			spec.shootRange *= 1.5;
 			spec.rotateRate *= 1.5;
@@ -362,17 +361,17 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 		return null;
 	}
 
-	that.getSelectedLevel = function() {
+	that.getSelectedLevel = function () {
 		let tur = getSelected();
 		return tur.getLevel();
 	}
 
-	that.getSelectedUpgradeCost = function() {
+	that.getSelectedUpgradeCost = function () {
 		let tur = getSelected();
 		return tur.getUpgradeCost();
 	}
 
-	that.getSelectedSellPrice = function() {
+	that.getSelectedSellPrice = function () {
 		let tur = getSelected();
 		return tur.getSellPrice();
 	}
@@ -497,7 +496,7 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 	}
 
 	that.placeNewTurret = function (row, col, score) {
-		if(!score.purchaseIfAble(getTurretCost(chooseTurretType))) {
+		if (!score.purchaseIfAble(getTurretCost(chooseTurretType))) {
 			return;
 		}
 
@@ -535,11 +534,19 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 
 	that.upgradeTurret = function (score) {
 		let selected = getSelected();
-		sounds.upgradeTurret();
-		if (selected) {
-			if(score.purchaseIfAble(selected.getUpgradeCost())) {
-				selected.upgradeTurret();
+		let isPaused = score.isWaitToStart();
+
+		if (selected != null) {
+			if(!selected.canUpgrade(isPaused)) {
+				return;
+			}
+			if (score.getMoney() < selected.getUpgradeCost()) {
+				return;
+			}
+			if (score.purchaseIfAble(selected.getUpgradeCost())) {
+				selected.upgradeTurret(isPaused);
 				theParticles.addParticle(selected.getLoc(), 'rgb(0, 0, 255)');
+				sounds.upgradeTurret();
 			}
 		}
 	}
