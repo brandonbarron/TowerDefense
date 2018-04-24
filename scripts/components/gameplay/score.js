@@ -11,7 +11,9 @@ Game.score = (function (graphics) {
         score,
         money,
         curRound,
-        waitToStart;
+        waitToStart,
+        xhttp,
+        localScores;
 
     that.initialize = function () {
         curScore = null;
@@ -26,6 +28,15 @@ Game.score = (function (graphics) {
         money = 1000;
         curRound = 1;
         waitToStart = true;
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            console.log(JSON.parse(this.responseText));
+            // localScores = this.responseText;
+            // console.log(localScores.scores);
+          };
+        xhttp.open("GET", "https://api.jsonbin.io/b/5adeaf3e0917ce62fac6b2c6", true);
+        xhttp.send();
+
     }
 
     that.reset = function () {
