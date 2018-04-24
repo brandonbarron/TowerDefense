@@ -76,6 +76,15 @@ Game.game = (function (input) {
         }
         _turretManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
         _missileManager.update(elapsedTime, gameRunning, _spriteManager.getAllSprites());
+        if (oneSelected) {
+            canUpgrade = _turretManager.canUpgrade();
+            upgradeCost = _turretManager.getSelectedUpgradeCost();
+            selectedLevel = _turretManager.getSelectedLevel();
+            sellPrice = _turretManager.getSelectedSellPrice();
+            canUpgrade = _score.getMoney() >= upgradeCost && canUpgrade;
+            document.getElementById('id-upgrade-turret').disabled = !canUpgrade;
+        }
+        
     }
 
     function render() {

@@ -94,7 +94,7 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 				return;
 				//spec.rotation = 0;
 			}
-			
+
 			baseSprite.update(elapsedTime);
 			sprite.update(elapsedTime);
 
@@ -199,7 +199,7 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 		}
 
 		that.canUpgrade = function (isPaused) {
-			if(isPaused) {
+			if (isPaused) {
 				return upgradeLevel < 3;
 			}
 			return upgradeLevel < 3 && upgradeTime <= 0;
@@ -363,17 +363,23 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 
 	that.getSelectedLevel = function () {
 		let tur = getSelected();
-		return tur.getLevel();
+		if (tur != null) {
+			return tur.getLevel();
+		}
 	}
 
 	that.getSelectedUpgradeCost = function () {
 		let tur = getSelected();
-		return tur.getUpgradeCost();
+		if (tur != null) {
+			return tur.getUpgradeCost();//is null?
+		}
 	}
 
 	that.getSelectedSellPrice = function () {
 		let tur = getSelected();
-		return tur.getSellPrice();
+		if (tur != null) {
+			return tur.getSellPrice();
+		}
 	}
 
 	that.chooseTurretLoc = function (x, y) {
@@ -537,7 +543,7 @@ Game.turretManager = function (graphics, missileManager, grid, theParticles, sou
 		let isPaused = score.isWaitToStart();
 
 		if (selected != null) {
-			if(!selected.canUpgrade(isPaused)) {
+			if (!selected.canUpgrade(isPaused)) {
 				return;
 			}
 			if (score.getMoney() < selected.getUpgradeCost()) {
