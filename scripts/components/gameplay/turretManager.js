@@ -1,4 +1,4 @@
-Game.turretManager = function (graphics, missileManager, grid, sounds) {
+Game.turretManager = function (graphics, missileManager, grid, theParticles, sounds) {
 	'use strict';
 
 	let that = {},
@@ -220,6 +220,9 @@ Game.turretManager = function (graphics, missileManager, grid, sounds) {
 			if(!that.canUpgrade()) {
 				return;
 			}
+			/*if(score.getMoney() < that.getUpgradeCost()) {
+				return;
+			}*/
 			upgradeLevel++;
 			upgradeTime = 1000;
 			missileSpeed *= 1.5;
@@ -536,6 +539,7 @@ Game.turretManager = function (graphics, missileManager, grid, sounds) {
 		if (selected) {
 			if(score.purchaseIfAble(selected.getUpgradeCost())) {
 				selected.upgradeTurret();
+				theParticles.addParticle(selected.getLoc(), 'rgb(0, 0, 255)');
 			}
 		}
 	}
@@ -553,6 +557,7 @@ Game.turretManager = function (graphics, missileManager, grid, sounds) {
 				score.sellItem(sellAmount);
 				sounds.sellTurret();
 				allTurrets.splice(i, 1);
+				theParticles.addParticle(loc, 'rgb(255, 0, 0)');
 				return;
 			}
 		}
@@ -579,4 +584,4 @@ Game.turretManager = function (graphics, missileManager, grid, sounds) {
 	};
 
 	return that;
-}(Game.graphics, Game.missileManager, Game.grid, Game.sounds);
+}(Game.graphics, Game.missileManager, Game.grid, Game.particles, Game.sounds);

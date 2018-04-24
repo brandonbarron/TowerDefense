@@ -3,7 +3,7 @@
 // //
 // // ------------------------------------------------------------------
 
-Game.particles = (function (spec) {
+Game.particles = (function () {
 	'use strict';
 
 	var canvas = document.getElementById('canvas-main'),
@@ -11,7 +11,11 @@ Game.particles = (function (spec) {
 	
     var that = {};
     let particles = [];
+    let spec = {};
 
+    that.initialize = function (specValues) {
+		spec = specValues;
+	}
 
     that.update = function (elapsedTime) {
         let keepMe = [];
@@ -44,7 +48,7 @@ Game.particles = (function (spec) {
         context.restore();
     }
 
-    that.draw = function () {
+    that.render = function () {
         for (let particle = 0; particle < particles.length; particle++) {
             if (particles[particle].alive >= 100) {
                 drawRectangle(
@@ -58,10 +62,12 @@ Game.particles = (function (spec) {
         }
     };
 
-    that.addParticle = function (theBlock) {
+    that.addParticle = function (theBlock, color) {
+        theBlock.x -= 20;
+        theBlock.y -= 20;
         let partSize = 1;
         for (let i = 0; i < 25; i++) {
-            for (let j = 0; j < 50; j++) {
+            for (let j = 0; j < 25; j++) {
                 let p = {
                     position: {
                         x: theBlock.x + (j * partSize),
@@ -73,7 +79,7 @@ Game.particles = (function (spec) {
                     lifetime: Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),	// milliseconds
                     alive: 0,
                     size: partSize,//Random.nextGaussian(spec.size.mean, spec.size.stdev),
-                    fill: theBlock.color,
+                    fill: color,
                     //stroke: 'rgb(0, 0, 0)'
                 };
                 particles.push(p);
