@@ -23,7 +23,7 @@ Game.score = (function (graphics) {
         scoreRecorded = false;
         gameRunning = false;
         score = 0;
-        money = 1000;
+        money = 2000;
         curRound = 1;
         waitToStart = true;
     }

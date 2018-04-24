@@ -10,7 +10,7 @@
 // }
 //
 //------------------------------------------------------------------
-Game.spriteManager = function (graphics, sounds) {
+Game.spriteManager = function (graphics, sounds, theParticles) {
 	'use strict';
 
 	let that = {},
@@ -264,7 +264,7 @@ Game.spriteManager = function (graphics, sounds) {
 		let pathLoc = theGrid.getNearestPath(loc.x, loc.y, followPath, sprite.isFlying());
 		//console.log(loc, pathLoc);
 		var angleResult = computeAngle(loc.rotation /*- 1.570796*/, loc, pathLoc);
-		if (testTolerance(angleResult.angle, 0, 0.1) === false) {
+		if (testTolerance(angleResult.angle, 0, 0.5) === false) {
 			if (angleResult.crossProduct > 0) {
 				sprite.rotateRight(elapsedTime);
 			} else {
@@ -384,6 +384,8 @@ Game.spriteManager = function (graphics, sounds) {
 		for (let i = allSprites.length - 1; i >= 0; i--) {
 			if (allSprites[i].getHealth() <= 0) {
 				sounds.deathCreep();
+				let loc = allSprites[i].getLoc();
+				theParticles.addText(loc, '+ 1');
 				allSprites.splice(i, 1);
 				score.killedSprite();
 				i--;
@@ -395,7 +397,7 @@ Game.spriteManager = function (graphics, sounds) {
 			let pathNum = allSprites[i].getFollowPath();
 			let loc = allSprites[i].getLoc();
 			let dist = theGrid.getDistFromFinish(loc.x, loc.y, pathNum);
-			if (dist <= 0.01) {
+			if (dist <= 0.1) {
 				allSprites.splice(i, 1);
 				score.spriteEscaped();
 				i--;
@@ -436,4 +438,4 @@ Game.spriteManager = function (graphics, sounds) {
 	};
 
 	return that;
-}(Game.graphics, Game.sounds);
+}(Game.graphics, Game.sounds, Game.particles);

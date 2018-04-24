@@ -4,18 +4,36 @@
 // // ------------------------------------------------------------------
 
 Game.particles = (function () {
-	'use strict';
+    'use strict';
 
-	var canvas = document.getElementById('canvas-main'),
-		context = canvas.getContext('2d');
-	
+    var canvas = document.getElementById('canvas-main'),
+        context = canvas.getContext('2d');
+
     var that = {};
     let particles = [];
     let spec = {};
+    let floatingTexts = [];
 
     that.initialize = function (specValues) {
-		spec = specValues;
-	}
+        spec = specValues;
+    }
+
+    function updateText(elapsedTime) {
+        let keepMe = [];
+
+        for (let particle = 0; particle < floatingTexts.length; particle++) {
+            floatingTexts[particle].alive += elapsedTime;
+            //floatingTexts[particle].position.x += (elapsedTime * floatingTexts[particle].speed * floatingTexts[particle].direction.x);
+            floatingTexts[particle].position.y -= (elapsedTime * floatingTexts[particle].speed);// * floatingTexts[particle].direction.y);
+            //floatingTexts[particle].rotation += floatingTexts[particle].speed / .5;
+
+            if (floatingTexts[particle].alive <= floatingTexts[particle].lifetime) {
+                keepMe.push(floatingTexts[particle]);
+            }
+        }
+
+        floatingTexts = keepMe;
+    }
 
     that.update = function (elapsedTime) {
         let keepMe = [];
@@ -32,6 +50,7 @@ Game.particles = (function () {
         }
 
         particles = keepMe;
+        updateText(elapsedTime);
     }
 
     function drawRectangle(position, size, rotation, fill, stroke) {
@@ -48,6 +67,16 @@ Game.particles = (function () {
         context.restore();
     }
 
+    function drawText(position, string, fill, font) {
+        context.save();
+        context.beginPath();
+        context.font = font;
+        context.fillStyle = fill;
+        context.fillText(string, position.x, position.y);
+        context.closePath();
+        context.restore();
+    }
+
     that.render = function () {
         for (let particle = 0; particle < particles.length; particle++) {
             if (particles[particle].alive >= 100) {
@@ -57,6 +86,17 @@ Game.particles = (function () {
                     particles[particle].rotation,
                     particles[particle].fill,
                     particles[particle].stroke);
+
+            }
+        }
+
+        for (let particle = 0; particle < floatingTexts.length; particle++) {
+            if (floatingTexts[particle].alive >= 100) {
+                drawText(
+                    floatingTexts[particle].position,
+                    floatingTexts[particle].string,
+                    floatingTexts[particle].fill,
+                    floatingTexts[particle].font);
 
             }
         }
@@ -85,6 +125,25 @@ Game.particles = (function () {
                 particles.push(p);
             }
         }
+    }
+
+    that.addText = function (theBlock, text) {
+        let p = {
+            position: {
+                x: theBlock.x,
+                y: theBlock.y
+            },
+            direction: 0,//Random.nextCircleVector(),
+            speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev),	// pixels per millisecond
+            rotation: 0,
+            lifetime: 2000,//Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),	// milliseconds
+            alive: 0,
+            fill: 'black',
+            string: text,
+            font: '24px Arial'
+            //stroke: 'rgb(0, 0, 0)'
+        };
+        floatingTexts.push(p);
     }
 
     return that;
