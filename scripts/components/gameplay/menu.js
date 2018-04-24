@@ -15,7 +15,7 @@ Game.menu = (function (graphics){
     }
 
     that.render = function(_upgradeKey, _sellKey, _nextKey, _gridKey, _distanceKey) {
-        graphics.drawImage({ image: background, x: 0, y: 720, w: 1280, h: 200 });
+        graphics.drawImage({ image: background, x: 0, y: 720, w: 1280, h: 200 });//where'd it go?
         graphics.drawRectangle({x: 25, y: 825 }, { width: 975, height: 1 }, lineColor);
         graphics.drawRectangle({x: 1020, y: 730 }, { width: 1, height: 180 }, lineColor);
         graphics.drawRectangle({ x: 300, y: 730 }, { width: 1, height: 80 }, lineColor);
