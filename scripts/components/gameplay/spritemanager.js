@@ -264,7 +264,7 @@ Game.spriteManager = function (graphics, sounds, theParticles) {
 		let pathLoc = theGrid.getNearestPath(loc.x, loc.y, followPath, sprite.isFlying());
 		//console.log(loc, pathLoc);
 		var angleResult = computeAngle(loc.rotation /*- 1.570796*/, loc, pathLoc);
-		if (testTolerance(angleResult.angle, 0, 0.5) === false) {
+		if (testTolerance(angleResult.angle, 0, 0.2) === false) {
 			if (angleResult.crossProduct > 0) {
 				sprite.rotateRight(elapsedTime);
 			} else {
